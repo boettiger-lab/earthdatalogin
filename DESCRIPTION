@@ -1,0 +1,29 @@
+Package: earthdatalogin
+Title: NASA EarthData Login Utilities
+Version: 0.0.0.9000
+Authors@R: 
+  person("Carl", "Boettiger", , "cboettig@gmail.com", c("aut", "cre"),
+         comment = c(ORCID = "0000-0002-1642-628X"))
+Description: Bindings to NASA EarthData Login application programming interface,
+  providing convenient authentication and access to Cloud-hosted NASA EarthData
+  products. Much of NASA's public data catalogs hosted and maintained by its 12
+  Distributed Active Archive Centers ("DAACs") are now made available on the 
+  Amazon Web Services "S3" bucket.  However, accessing this data through the
+  standard S3 API is restricted to requests coming from within Amazon's
+  "us-west-2" Data Center in Portland, Oregon, which allows NASA to avoid being
+  charged "data egress" rates for data transfers outside of the hosting data
+  center. Public access over HTTPS is possible, but requires authentication
+  with a seperate API routed through cloudfront using Bearer tokens. This
+  package seeks to streamline that authentication process, making access to this
+  wide range of earth observation data from any location straight forward and
+  compatible with R packages that are widely used with cloud native earth 
+  observation data (such as "terra"", "sf"", etc.)
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
+Imports: 
+    httr,
+    openssl,
+    purrr,
+    utils
