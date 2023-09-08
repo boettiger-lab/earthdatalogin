@@ -24,3 +24,8 @@ invisibly.  Also sets the corresponding AWS environmental variables.
 \description{
 Receive and set temporary AWS Tokens for S3 access
 }
+\examples{
+\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+edl_s3_token()
+\dontshow{\}) # examplesIf}
+}

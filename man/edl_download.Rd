@@ -36,3 +36,9 @@ of downloading unnecessary bits.  Unfortunately, certain formats do
 not support such HTTP-based range requests (e.g. HDF4), and require
 the asset is downloaded to a local POSIX filesystem first.
 }
+\examples{
+\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+href <- lpdacc_example_url()
+edl_download(href)
+\dontshow{\}) # examplesIf}
+}

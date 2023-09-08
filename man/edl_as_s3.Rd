@@ -18,3 +18,7 @@ a URI that strips basename and protocol and appends prefix
 \description{
 Replace https URLs with S3 URIs
 }
+\examples{
+href <- lpdacc_example_url()
+edl_as_s3(href)
+}

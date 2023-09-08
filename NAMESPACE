@@ -2,3 +2,5 @@
 
 export(edl_as_s3)
 export(edl_download)
+export(edl_set_token)
+export(lpdacc_example_url)

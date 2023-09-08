@@ -31,3 +31,8 @@ unwanted tokens.
 \details{
 NOTE: GDAL >= 3.6 is required to utilize GDAL_HTTP_HEADERS.
 }
+\examples{
+\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+edl_set_token()
+\dontshow{\}) # examplesIf}
+}

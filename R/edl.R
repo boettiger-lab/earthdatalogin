@@ -15,6 +15,10 @@
 #' @return the Authorization header for curl request, invisibly.
 #' Will also set the GDAL_HTTP_HEADERS environmental variable for
 #' compatibility with GDAL.
+#' @export
+#' @examplesIf interactive()
+#' edl_set_token()
+#'
 edl_set_token <- function (username = Sys.getenv("EARTHDATA_USER"),
                            password = Sys.getenv("EARTHDATA_PASSWORD"),
                            token_number = 1
@@ -33,6 +37,14 @@ edl_set_token <- function (username = Sys.getenv("EARTHDATA_USER"),
     p <- httr::content(resp, "parsed")
   }
   header = paste("Authorization: Bearer", p$access_token)
+
+  if(requireNamespace("terra", quietly = TRUE)) {
+    gdal_version <- terra::gdal()
+    if (!utils::compareVersion(gdal_version, "3.6.0") >= 0) {
+      warning(paste("GDAL VSI auth will require GDAL version >= 3.6.\n",
+                    "but found only gdal version", gdal_version))
+    }
+  }
   Sys.setenv("GDAL_HTTP_HEADERS"=header)
   invisible(header)
 }
@@ -54,7 +66,9 @@ edl_set_token <- function (username = Sys.getenv("EARTHDATA_USER"),
 #' if `use_httr=TRUE`).
 #' @return the `dest` path, invisibly
 #' @export
-#'
+#' @examplesIf interactive()
+#' href <- lpdacc_example_url()
+#' edl_download(href)
 edl_download <- function(href,
                          dest = basename(href),
                          header = edl_set_token(),
@@ -72,23 +86,18 @@ edl_download <- function(href,
   invisible(dest)
 }
 
-#' Helper function for extracting URLs from STAC
-#' @param items an items list from rstac
-#' @param assets name(s) of assets to extract
-#' @return a vector of hrefs for all discovered assets.
-edl_stac_urls <- function(items, assets = "data") {
-  purrr::map(items$features, list("assets")) |>
-    purrr::map(list(assets)) |>
-    purrr::map_chr("href")
-}
-
 
 #' Receive and set temporary AWS Tokens for S3 access
+#'
 #' @param daac the base URL for the DAAC
 #' @param username EarthDataLogin user
 #' @param password EarthDataLogin Password
 #' @return list of access key, secret key, session token and expiration,
 #' invisibly.  Also sets the corresponding AWS environmental variables.
+#'
+#' @examplesIf interactive()
+#' edl_s3_token()
+#'
 edl_s3_token <- function(daac = "https://data.lpdaac.earthdatacloud.nasa.gov",
                          username = Sys.getenv("EARTHDATA_USER"),
                          password = Sys.getenv("EARTHDATA_PASSWORD")) {
@@ -110,8 +119,43 @@ edl_s3_token <- function(daac = "https://data.lpdaac.earthdatacloud.nasa.gov",
 #' or `/vsis3`, for terra/stars/sf or other GDAL-based interfaces.
 #' @return a URI that strips basename and protocol and appends prefix
 #' @export
+#' @examples
+#' href <- lpdacc_example_url()
+#' edl_as_s3(href)
 edl_as_s3 <- function(href, prefix = "s3://") {
   p <- httr::parse_url(href)
   paste0(prefix, p$path)
 }
 
+
+#' URL for an example of an LP DAAC COG file
+#'
+#' @return The URL to a Cloud-Optimized Geotiff file from the LP DAAC.
+#'
+#' @examples
+#' lpdacc_example_url()
+#'
+#' @export
+lpdacc_example_url <- function() {
+  paste0("https://data.lpdaac.earthdatacloud.nasa.gov/lp-prod-protected/",
+         "HLSL30.020/HLS.L30.T56JKT.2023246T235950.v2.0/",
+         "HLS.L30.T56JKT.2023246T235950.v2.0.SAA.tif")
+}
+
+
+
+#' Helper function for extracting URLs from STAC
+#'
+#' @param items an items list from rstac
+#' @param assets name(s) of assets to extract
+#' @return a vector of hrefs for all discovered assets.
+#'
+edl_stac_urls <- function(items, assets = "data") {
+  purrr::map(items$features, list("assets")) |>
+    purrr::map(list(assets)) |>
+    purrr::map_chr("href")
+}
+
+edl_unset_token <- function() {
+  Sys.unsetenv("GDAL_HTTP_HEADERS")
+}
