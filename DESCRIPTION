@@ -28,5 +28,15 @@ Imports:
     purrr,
     utils
 Suggests: 
-    terra
+    knitr,
+    rmarkdown,
+    terra,
+    gdalcubes,
+    rstac,
+    spData,
+    sf,
+    stars,
+    tmap,
+    dplyr
 URL: https://boettiger-lab.github.io/earthdatalogin/
+VignetteBuilder: knitr
