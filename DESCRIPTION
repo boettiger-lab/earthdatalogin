@@ -37,6 +37,7 @@ Suggests:
     sf,
     stars,
     tmap,
-    dplyr
+    dplyr,
+    gifski
 URL: https://boettiger-lab.github.io/earthdatalogin/
 VignetteBuilder: knitr
