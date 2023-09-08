@@ -13,9 +13,10 @@ knitr::opts_chunk$set(
 )
 ```
 
-# earthdatalogin
+# earthdatalogin :artificial_satellite: :earth_asia:
 
 <!-- badges: start -->
+[![R-CMD-check](https://github.com/boettiger-lab/earthdatalogin/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/boettiger-lab/earthdatalogin/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 `earthdatalogin` seeks to streamline the process of accessing NASA data from the Earth Data cloud program _from anywhere_. Because Amazon Web Services (AWS) typically charges egress fees whenever network traffic leaves the data center which hosts it, NASA has restricted access to its data hosted by Amazon to only be accessible from AWS servers running in the same data center (`us-west-2`) when using the S3 access protocol. However, NASA also makes this cloud data available publicly to any machine using a standard HTTPS connection.  Both cases require requesting and managing credentials tied to a registered user name.  This package merely makes that process easier.

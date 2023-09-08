@@ -1,9 +1,11 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# earthdatalogin
+# earthdatalogin :artificial_satellite: :earth_asia:
 
 <!-- badges: start -->
+
+[![R-CMD-check](https://github.com/boettiger-lab/earthdatalogin/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/boettiger-lab/earthdatalogin/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 `earthdatalogin` seeks to streamline the process of accessing NASA data
