@@ -1,0 +1,111 @@
+---
+title: "Mosaic images using STAC"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Mosaic images using STAC}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## *WORK IN PROGRESS*
+
+```{r include=FALSE}
+knitr::opts_knit$set(eval=FALSE)
+```
+
+
+High-resolution satellites generate many snapshot images each with a limited field of view or spatial extent.  In order to see a larger area in space, and/or observe changes across space and time, we need to assemble these many snapshots into a mosaic or "data cube" that we can analyze as a cohesive whole. 
+
+
+[EARTHDATA STAC CATALOGS](https://radiantearth.github.io/stac-browser/#/external/cmr.earthdata.nasa.gov/stac/LPCLOUD?.language=en)
+
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, message=FALSE}
+library(earthdatalogin)
+library(rstac)
+library(gdalcubes)
+gdalcubes_options(parallel = TRUE) 
+```
+
+
+### Earth Data Authentication
+
+First let's get EDL authentication out of the way.
+For cloud data from almost any other STAC catalog (NOAA, USGS, Planetary Computer, etc), authentication is either unnecessary or already provided by the STAC API, but NASA EDL is special.  Remember to set env vars `EARTHDATA_USER` and `EARTHDATA_PASSWORD` in your .Renviron or pass them manually to `ed_set_token()`.
+(The gdalcubes package has it's own mechanism for setting GDAL config options independent of environmental variables).
+
+```{r}
+header <- edl_set_token()
+gdalcubes_set_gdal_config("GDAL_HTTP_HEADERS", header)
+```
+
+## Search via STAC
+
+We will now use the `rstac` package to search one or more NASA collections for data that falls into our desired bounding 
+
+Set a search box in space & time
+
+```{r}
+bbox <- c(xmin=-122.5, ymin=37.5, xmax=-122.0, ymax=38) 
+start <- "2022-01-01"
+end <- "2022-06-30"
+
+# Find all assets from the desired catalog:
+items <- stac("https://cmr.earthdata.nasa.gov/stac/LPCLOUD") |> 
+  stac_search(collections = "HLSL30.v2.0",
+              bbox = bbox,
+              datetime = paste(start,end, sep = "/")) |>
+  post_request() |>
+  items_fetch() |>
+  items_filter(filter_fn = \(x) {x[["eo:cloud_cover"]] < 20})
+```
+
+
+Note that `r length(items$features)` features have matched our search criteria! Each feature represents a 'snapshot' image taken by the satellite as it passes by (this is a harmonized product so actually there's quite a lot of post-processing.)  Each feature thus shares the same bounding box, projection, and timestamp, but may consist of many different 'assets', different COG files representing the different spectral bands on the satellite camera instrument.  Each feature can potentially include quite extensive metadata about the feature, including details of instrument itself or from post-processing, such as cloud cover.  Unfortunately, EarthData's STAC metadata tends to be quite sparse. 
+
+
+
+## Building a Data Cube
+
+
+```{r}
+# Desired data cube shape & resolution
+v = cube_view(srs = "EPSG:4326",
+              extent = list(t0 = as.character(start), 
+                            t1 = as.character(end),
+                            left = bbox[1], right = bbox[3],
+                            top = bbox[4], bottom = bbox[2]),
+              nx = 512, ny = 512, dt = "P1M")
+```
+
+
+```{r}
+# RGB bands + cloud cover mask
+col <- stac_image_collection(items$features, 
+                             asset_names = c("B02", "B03", "B04", "Fmask"))
+```
+
+
+```{r}
+# use a cloud mask -- not sure I have this correct
+# https://lpdaac.usgs.gov/documents/1326/HLS_User_Guide_V2.pdf
+S2.mask <- image_mask("Fmask", values=1) # mask clouds and cloud shadows
+rgb_bands <- c("B04","B03", "B02")
+
+# Here we go! note eval is lazy
+raster_cube(col, v, mask = S2.mask) |>
+  select_bands(rgb_bands) |>
+  plot(rgb=1:3)
+```
+
+
+## Scaling up
+
+
