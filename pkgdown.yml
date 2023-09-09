@@ -1,8 +1,10 @@
 pandoc: 2.19.2
 pkgdown: 2.0.7
 pkgdown_sha: ~
-articles: {}
-last_built: 2023-09-08T22:47Z
+articles:
+  gdalcubes-stac-cog: gdalcubes-stac-cog.html
+  legacy_formats: legacy_formats.html
+last_built: 2023-09-08T23:55Z
 urls:
   reference: https://boettiger-lab.github.io/earthdatalogin/reference
   article: https://boettiger-lab.github.io/earthdatalogin/articles
