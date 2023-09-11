@@ -21,7 +21,7 @@ High-resolution satellites generate many snapshot images each with a limited fie
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.path="img"
+  fig.path="img/"
 )
 ```
 
