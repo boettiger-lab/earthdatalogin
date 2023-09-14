@@ -31,6 +31,12 @@
     <loc>https://boettiger-lab.github.io/earthdatalogin/reference/edl_download.html</loc>
   </url>
   <url>
+    <loc>https://boettiger-lab.github.io/earthdatalogin/reference/edl_renviron.html</loc>
+  </url>
+  <url>
+    <loc>https://boettiger-lab.github.io/earthdatalogin/reference/edl_revoke_token.html</loc>
+  </url>
+  <url>
     <loc>https://boettiger-lab.github.io/earthdatalogin/reference/edl_s3_token.html</loc>
   </url>
   <url>
