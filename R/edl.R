@@ -22,8 +22,8 @@
 #' @examplesIf interactive()
 #' edl_set_token()
 #'
-edl_set_token <- function (username = Sys.getenv("EARTHDATA_USER"),
-                           password = Sys.getenv("EARTHDATA_PASSWORD"),
+edl_set_token <- function (username = Sys.getenv("EARTHDATA_USER", "earthaccess"),
+                           password = Sys.getenv("EARTHDATA_PASSWORD", "EDL_test1"),
                            token_number = 1
 ) {
 
