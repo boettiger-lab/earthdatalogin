@@ -5,8 +5,8 @@
 \title{Get or set an earthdata login token}
 \usage{
 edl_set_token(
-  username = Sys.getenv("EARTHDATA_USER"),
-  password = Sys.getenv("EARTHDATA_PASSWORD"),
+  username = default("user"),
+  password = default("password"),
   token_number = 1
 )
 }

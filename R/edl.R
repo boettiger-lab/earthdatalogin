@@ -2,8 +2,6 @@
 # Requires GDAL >= 3.6
 
 
-
-
 #' Get or set an earthdata login token
 #'
 #' This function will ping the EarthData API for any available tokens.
@@ -22,45 +20,59 @@
 #' @examplesIf interactive()
 #' edl_set_token()
 #'
-edl_set_token <- function (username = Sys.getenv("EARTHDATA_USER", "earthaccess"),
-                           password = Sys.getenv("EARTHDATA_PASSWORD", "EDL_test1"),
+edl_set_token <- function (username = default("user"),
+                           password = default("password"),
                            token_number = 1
-) {
-
+){
   if(username == "" || password == "") {
     message("You must provide a username and password either in .Renviron\n",
             "or using the optional arguments")
   }
 
-  base <- 'https://urs.earthdata.nasa.gov'
-  list_tokens <- "/api/users/tokens"
-  pw <- openssl::base64_encode(paste0(username, ":", password))
-  resp <- httr::GET(paste0(base,list_tokens),
-                    httr::add_headers(Authorization= paste("Basic", pw)))
-  p <- httr::content(resp, "parsed")
-  if(length(p) == 0) {
-    request_token <- "/api/users/token"
-    resp <- httr::GET(paste0(base,request_token),
-                      httr::add_headers(Authorization= paste("Basic", pw)))
-    p <- httr::content(resp, "parsed")
+  p <- edl_api("/api/users/tokens", username, password)
+  if(length(p) < token_number) {
+    p <- edl_api("/api/users/token", username, password, method = httr::POST)
   } else {
     p <- p[[token_number]]
   }
+
   header = paste("Authorization: Bearer", p$access_token)
 
   if(requireNamespace("terra", quietly = TRUE)) {
     gdal_version <- terra::gdal()
-    if (!utils::compareVersion(gdal_version, "3.6.0") >= 0) {
-      warning(paste("GDAL VSI auth will require GDAL version >= 3.6.\n",
+    if (!utils::compareVersion(gdal_version, "3.6.1") >= 0) {
+      warning(paste("GDAL VSI auth will require GDAL version >= 3.6.1\n",
                     "but found only gdal version", gdal_version))
     }
   }
   Sys.setenv("GDAL_HTTP_HEADERS"=header)
-  invisible(header)
+  invisible(p$access_token)
+}
+
+default <- function(what) {
+  switch(what,
+         user = Sys.getenv("EARTHDATA_USER", "earthaccess"),
+         password = Sys.getenv("EARTHDATA_PASSWORD", "EDL_test1"))
 }
 
 
 
+
+edl_api <- function(endpoint,
+                    username,
+                    password,
+                    ...,
+                    base = "https://urs.earthdata.nasa.gov",
+                    method = httr::GET) {
+
+  pw <- openssl::base64_encode(paste0(username, ":", password))
+  resp <- method(paste0(base, endpoint),
+                    ...,
+                    httr::add_headers(Authorization= paste("Basic", pw)))
+  httr::stop_for_status(resp)
+  p <- httr::content(resp, "parsed", "application/json")
+  p
+}
 
 #' download assets from earthdata over https using bearer tokens
 #'
@@ -87,7 +99,7 @@ edl_download <- function(href,
                          header = edl_set_token(),
                          use_httr = TRUE,
                          ...) {
-  bearer <- gsub("Authorization: ", "", header)
+  bearer <- paste("Bearer", header)
   if (use_httr) {
     httr::GET(href,
               httr::write_disk(dest, overwrite = TRUE),
@@ -112,13 +124,10 @@ edl_download <- function(href,
 #' edl_s3_token()
 #'
 edl_s3_token <- function(daac = "https://data.lpdaac.earthdatacloud.nasa.gov",
-                         username = Sys.getenv("EARTHDATA_USER"),
-                         password = Sys.getenv("EARTHDATA_PASSWORD")) {
-  endpoint <- "/s3credentials"
-  pw <- openssl::base64_encode(paste0(username, ":", password))
-  resp <- httr::GET(paste0(daac,endpoint),
-                    httr::add_headers(Authorization= paste("Basic", pw)))
-  p <- httr::content(resp, "parsed", "application/json")
+                         username = default("user"),
+                         password = default("password")) {
+
+  p <- edl_api("/s3_credentials", username, password, base = daac)
   Sys.setenv(AWS_ACCESS_KEY_ID = p$accessKeyId)
   Sys.setenv(AWS_SECRET_ACCESS_KEY = p$secretAccessKey)
   Sys.setenv(AWS_SESSION_TOKEN = p$sessionToken)
@@ -169,6 +178,45 @@ edl_stac_urls <- function(items, assets = "data") {
     purrr::map_chr("href")
 }
 
+
+
 edl_unset_token <- function() {
   Sys.unsetenv("GDAL_HTTP_HEADERS")
+}
+
+#' Revoke an EarthData token
+#'
+#' Users can only have at most 2 active tokens at any time.
+#' You don't need to keep track of a token since earthdatalogin can
+#' retrieve your tokens with your user name and password.  However,
+#' should you want to revoke a token, you can do so with this function.
+#'
+#' @inheritParams edl_set_token
+#' @return API response (invisibly)
+#' @examplesIf interactive()
+#' edl_revoke_token()
+#'
+#' @export
+edl_revoke_token <- function(
+    username = default("user"),
+    password = default("password"),
+    token_number = 1
+){
+
+  if(username == "" || password == "") {
+    message("You must provide a username and password either in .Renviron\n",
+            "or using the optional arguments")
+  }
+
+  p <- edl_api("/api/users/tokens", username, password)
+  if(length(p) == 0) {
+    message("No tokens to revoke")
+    return(invisible(NULL))
+  } else {
+    token <- p[[token_number]]$access_token
+    p2 <- edl_api(paste0("/api/users/revoke_token?token=", token),
+                  username, password, method=httr::POST)
+
+  }
+  invisible(p2)
 }

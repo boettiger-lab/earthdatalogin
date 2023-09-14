@@ -6,8 +6,8 @@
 \usage{
 edl_s3_token(
   daac = "https://data.lpdaac.earthdatacloud.nasa.gov",
-  username = Sys.getenv("EARTHDATA_USER"),
-  password = Sys.getenv("EARTHDATA_PASSWORD")
+  username = default("user"),
+  password = default("password")
 )
 }
 \arguments{

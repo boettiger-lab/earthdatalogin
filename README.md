@@ -50,13 +50,17 @@ devtools::install_github("boettiger-lab/earthdatalogin")
 ## Getting started
 
 Access to EarthData is free, but users are required to
-[register](https://urs.earthdata.nasa.gov/home). Please register and
-note your user name and password to take advantage of this package. A
-good way to keep track of your user name and password is to set these as
-environmental variables using a `.Renviron` file (see
-`usethis::edit_r_environ()`) to record these as `EARTHDATA_USER` and
-`EARTHDATA_PASSWORD` respectively. (As with any kind of access
-credentials, use a unique password and keep `.Renviron` file secure.)
+[register](https://urs.earthdata.nasa.gov/home). Currently,
+`earthdatalogin` provides it’s own default credentials for a quick
+start. Users are still encouraged to
+**[register](https://urs.earthdata.nasa.gov/home)** their own
+credentials!
+
+A good way to keep track of your user name and password is to set these
+as environmental variables using a `.Renviron` file (see `edl_renviron`)
+to record these as `EARTHDATA_USER` and `EARTHDATA_PASSWORD`
+respectively. (As with any kind of access credentials, use a unique
+password and keep `.Renviron` file secure.)
 
 ``` r
 library(earthdatalogin)
@@ -64,8 +68,10 @@ library(earthdatalogin)
 
 The easiest and most universal method of access is using the HTTP with a
 bearer token. Call `edl_set_token()` to set this token given your
-username and password (or omit those arguments to have it read those
-from the environmental variables):
+username and password (passed as optional arguments or read from the
+environmental variables. If neither provides credentials,
+`earthdatalogin` will provide it’s own credentials, but you may
+experience rate limits more readily):
 
 ``` r
 edl_set_token()
@@ -131,6 +137,26 @@ possible on some older (but still widely used) formats, like HDF4. In
 this last case, we will need to download the file to a local disk (a
 POSIX filesystem, not a hyperscale Object Store) to read it. Use
 `edl_download()` to handle authenticated downloads in this case.
+
+## Managing your User Account
+
+Once you have [registered for an
+account](https://urs.earthdata.nasa.gov/home) on the NASA EarthData
+webpage, you can have R track your username and password in your user
+`.Renviron` file by using the helper function:
+
+``` r
+edl_renviron()
+#> EARTHDATA_USER already set
+#> EARTHDATA_PASSWORD already set
+```
+
+This is a convenient way to store your user name and password on your
+own computer so you don’t have to use the default user or enter your
+password for each session. Note that this stores your user name and
+password in plain text in a hidden `~/.Renviron` file on your computer –
+this may be fine if you are working on your own private computer. Never
+reuse passwords associated with other accounts.
 
 ## Vignettes
 
