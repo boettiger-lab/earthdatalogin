@@ -42,7 +42,7 @@
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/gdalcubes-stac-cog.html">Mosaic images using STAC</a>
-    <a class="dropdown-item" href="../articles/legacy_formats.html">Legacy data formats with cloud tools</a>
+    <a class="dropdown-item" href="../articles/legacy-formats.html">Legacy data formats with cloud tools</a>
   </div>
 </li>
       </ul>
@@ -100,8 +100,6 @@ gdalcubes package has it’s own mechanism for setting GDAL config options
 independent of environmental variables).</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">header</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/edl_set_token.html">edl_set_token</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning in edl_set_token(): GDAL VSI auth will require GDAL version &gt;= 3.6.</span></span>
-<span><span class="co">#&gt;  but found only gdal version 3.4.1</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/gdalcubes/man/gdalcubes_set_gdal_config.html" class="external-link">gdalcubes_set_gdal_config</a></span><span class="op">(</span><span class="st">"GDAL_HTTP_HEADERS"</span>, <span class="va">header</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
@@ -124,8 +122,8 @@ NASA collections for data that falls into our desired bounding</p>
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">items_fetch</span>() <span class="sc">|&gt;</span></span>
 <span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">items_filter</span>(<span class="at">filter_fn =</span> \(x) {x[[<span class="st">"eo:cloud_cover"</span>]] <span class="sc">&lt;</span> <span class="dv">20</span>})</span>
 <span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="sc">|</span>                                                                            </span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  <span class="er">|======================================================================|</span> <span class="dv">100</span>%</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="sc">|</span>                                                                                                                                                                                           </span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  <span class="er">|=====================================================================================================================================================================================|</span> <span class="dv">100</span>%</span>
 <span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: In version 0.9.2, rstac changed how filter function is evaluated. In future versions, the `filter_fn` parameter will be evaluated against each feature in items instead of `properties` field.</span></span>
 <span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; See ?items_filter for more details on how to change your function.</span></span></code></pre></div>
 <p>Note that 52 features have matched our search criteria! Each feature
@@ -154,18 +152,10 @@ EarthData’s STAC metadata tends to be quite sparse.</p>
 <code class="sourceCode R"><span><span class="co"># RGB bands + cloud cover mask</span></span>
 <span><span class="va">col</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/gdalcubes/man/stac_image_collection.html" class="external-link">stac_image_collection</a></span><span class="op">(</span><span class="va">items</span><span class="op">$</span><span class="va">features</span>, </span>
 <span>                             asset_names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"B02"</span>, <span class="st">"B03"</span>, <span class="st">"B04"</span>, <span class="st">"Fmask"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning in stac_image_collection(items$features, asset_names = c("B02", : STAC</span></span>
-<span><span class="co">#&gt; asset with name 'B02' does not include eo:bands metadata and will be considered</span></span>
-<span><span class="co">#&gt; as a single band source</span></span>
-<span><span class="co">#&gt; Warning in stac_image_collection(items$features, asset_names = c("B02", : STAC</span></span>
-<span><span class="co">#&gt; asset with name 'B03' does not include eo:bands metadata and will be considered</span></span>
-<span><span class="co">#&gt; as a single band source</span></span>
-<span><span class="co">#&gt; Warning in stac_image_collection(items$features, asset_names = c("B02", : STAC</span></span>
-<span><span class="co">#&gt; asset with name 'B04' does not include eo:bands metadata and will be considered</span></span>
-<span><span class="co">#&gt; as a single band source</span></span>
-<span><span class="co">#&gt; Warning in stac_image_collection(items$features, asset_names = c("B02", : STAC</span></span>
-<span><span class="co">#&gt; asset with name 'Fmask' does not include eo:bands metadata and will be</span></span>
-<span><span class="co">#&gt; considered as a single band source</span></span></code></pre></div>
+<span><span class="co">#&gt; Warning in stac_image_collection(items$features, asset_names = c("B02", : STAC asset with name 'B02' does not include eo:bands metadata and will be considered as a single band source</span></span>
+<span><span class="co">#&gt; Warning in stac_image_collection(items$features, asset_names = c("B02", : STAC asset with name 'B03' does not include eo:bands metadata and will be considered as a single band source</span></span>
+<span><span class="co">#&gt; Warning in stac_image_collection(items$features, asset_names = c("B02", : STAC asset with name 'B04' does not include eo:bands metadata and will be considered as a single band source</span></span>
+<span><span class="co">#&gt; Warning in stac_image_collection(items$features, asset_names = c("B02", : STAC asset with name 'Fmask' does not include eo:bands metadata and will be considered as a single band source</span></span></code></pre></div>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># use a cloud mask -- not sure I have this correct</span></span>
 <span><span class="co"># https://lpdaac.usgs.gov/documents/1326/HLS_User_Guide_V2.pdf</span></span>
@@ -175,14 +165,10 @@ EarthData’s STAC metadata tends to be quite sparse.</p>
 <span><span class="co"># Here we go! note eval is lazy</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/gdalcubes/man/raster_cube.html" class="external-link">raster_cube</a></span><span class="op">(</span><span class="va">col</span>, <span class="va">v</span>, mask <span class="op">=</span> <span class="va">S2.mask</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/gdalcubes/man/select_bands.html" class="external-link">select_bands</a></span><span class="op">(</span><span class="va">rgb_bands</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span>rgb<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning in min(x): no non-missing arguments to min; returning Inf</span></span>
-<span><span class="co">#&gt; Warning in max(x): no non-missing arguments to max; returning -Inf</span></span>
-<span><span class="co">#&gt; Warning in min(x): no non-missing arguments to min; returning Inf</span></span>
-<span><span class="co">#&gt; Warning in max(x): no non-missing arguments to max; returning -Inf</span></span>
-<span><span class="co">#&gt; Warning in min(x): no non-missing arguments to min; returning Inf</span></span>
-<span><span class="co">#&gt; Warning in max(x): no non-missing arguments to max; returning -Inf</span></span></code></pre></div>
-<p><img src="gdalcubes-stac-cog_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span>rgb<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span></span></code></pre></div>
+<div class="figure">
+<img src="img/unnamed-chunk-7-1.png" alt=""><p class="caption">plot of chunk unnamed-chunk-7</p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="scaling-up">Scaling up<a class="anchor" aria-label="anchor" href="#scaling-up"></a>
