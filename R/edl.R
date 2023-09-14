@@ -1,6 +1,9 @@
 # Proto-package functions for dealing with NASA's earthdata login
 # Requires GDAL >= 3.6
 
+
+
+
 #' Get or set an earthdata login token
 #'
 #' This function will ping the EarthData API for any available tokens.
@@ -19,10 +22,16 @@
 #' @examplesIf interactive()
 #' edl_set_token()
 #'
-edl_set_token <- function (username = Sys.getenv("EARTHDATA_USER"),
-                           password = Sys.getenv("EARTHDATA_PASSWORD"),
+edl_set_token <- function (username = Sys.getenv("EARTHDATA_USER", "rpackage"),
+                           password = Sys.getenv("EARTHDATA_PASSWORD", "EarthData2023!"),
                            token_number = 1
 ) {
+
+  if(username == "" || password == "") {
+    message("You must provide a username and password either in .Renviron\n",
+            "or using the optional arguments")
+  }
+
   base <- 'https://urs.earthdata.nasa.gov'
   list_tokens <- "/api/users/tokens"
   pw <- openssl::base64_encode(paste0(username, ":", password))
@@ -49,6 +58,9 @@ edl_set_token <- function (username = Sys.getenv("EARTHDATA_USER"),
   Sys.setenv("GDAL_HTTP_HEADERS"=header)
   invisible(header)
 }
+
+
+
 
 #' download assets from earthdata over https using bearer tokens
 #'
