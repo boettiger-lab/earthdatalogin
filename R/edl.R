@@ -28,13 +28,14 @@ edl_set_token <- function (username = Sys.getenv("EARTHDATA_USER"),
   pw <- openssl::base64_encode(paste0(username, ":", password))
   resp <- httr::GET(paste0(base,list_tokens),
                     httr::add_headers(Authorization= paste("Basic", pw)))
-  p <- httr::content(resp, "parsed")[[token_number]]
-
-  if(is.null(p$access_token)) {
+  p <- httr::content(resp, "parsed")
+  if(length(p) == 0) {
     request_token <- "/api/users/token"
     resp <- httr::GET(paste0(base,request_token),
                       httr::add_headers(Authorization= paste("Basic", pw)))
     p <- httr::content(resp, "parsed")
+  } else {
+    p <- p[[token_number]]
   }
   header = paste("Authorization: Bearer", p$access_token)
 
