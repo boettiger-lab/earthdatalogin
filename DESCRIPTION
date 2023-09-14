@@ -38,6 +38,7 @@ Suggests:
     stars,
     tmap,
     dplyr,
-    gifski
+    gifski,
+    rsconnect
 URL: https://boettiger-lab.github.io/earthdatalogin/
 VignetteBuilder: knitr
