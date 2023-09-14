@@ -21,7 +21,9 @@ High-resolution satellites generate many snapshot images each with a limited fie
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.path="img/"
+  fig.path="img/",
+  message = FALSE,
+  warning = FALSE
 )
 ```
 
@@ -98,7 +100,7 @@ S2.mask <- image_mask("Fmask", values=1) # mask clouds and cloud shadows
 rgb_bands <- c("B04","B03", "B02")
 
 # Here we go! note eval is lazy
-raster_cube(col, v, mask = S2.mask) |>
+raster_cube(col, v) |>
   select_bands(rgb_bands) |>
   plot(rgb=1:3)
 ```

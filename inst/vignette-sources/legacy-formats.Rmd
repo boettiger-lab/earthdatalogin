@@ -17,7 +17,9 @@ Aside: note that in many cases, these same data products may be available in clo
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.path="img/"
+  fig.path="img/",
+  message = FALSE,
+  warning = FALSE
 )
 ```
 
