@@ -59,6 +59,11 @@ default <- function(what) {
 #'
 #' Return the http authentication header for curl-based requests
 #' @param token the authentication token, e.g. from `edl_set_token`
+#' @return the token in the header format required gdal config header.
+#' @export
+#' @examplesIf interactive()
+#' edl_header()
+#'
 edl_header <- function(token = edl_set_token()) {
   paste("Authorization: Bearer", token)
 }

@@ -38,12 +38,13 @@ gdalcubes_options(parallel = TRUE)
 ### Earth Data Authentication
 
 First let's get EDL authentication out of the way.
-For cloud data from almost any other STAC catalog (NOAA, USGS, Planetary Computer, etc), authentication is either unnecessary or already provided by the STAC API, but NASA EDL is special.  Remember to set env vars `EARTHDATA_USER` and `EARTHDATA_PASSWORD` in your .Renviron or pass them manually to `ed_set_token()`.
+For cloud data from almost any other STAC catalog (NOAA, USGS, Planetary Computer, etc), authentication is either unnecessary or already provided by the STAC API, but NASA EDL is special.  Remember to set env vars `EARTHDATA_USER` and `EARTHDATA_PASSWORD` in your .Renviron or pass them manually to `edl_set_token()`.
 (The gdalcubes package has it's own mechanism for setting GDAL config options independent of environmental variables).
 
 ```{r}
-header <- edl_set_token()
-gdalcubes_set_gdal_config("GDAL_HTTP_HEADERS", header)
+library(earthdatalogin)
+edl_set_token()
+# gdalcubes_set_gdal_config("GDAL_HTTP_HEADERS", edl_header())
 ```
 
 ## Search via STAC
