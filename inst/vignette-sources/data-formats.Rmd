@@ -1,0 +1,70 @@
+---
+title: "Cloud-native methods across Data Formats"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Mosaic images using STAC}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r}
+library(earthdatalogin)
+edl_unset_token()
+```
+
+(Right now thes are somewhat generic examples, not necessarily based on NASA's EarthData sources and therefore not requiring authentication, but the workflow should be identical after calling `edl_set_token()`)
+
+
+```{r setup}
+library(stars)
+library(terra)
+```
+
+## netcdf, 1 GB file 
+
+Cloud-read data from a public AWS S3 bucket, over https:
+
+```{r}
+url <- paste0("https://era5-pds.s3.amazonaws.com",
+              "/1979/01/data/air_pressure_at_mean_sea_level.nc")
+r <- terra::rast(url, vsi=TRUE)
+```
+
+Cloud read of the same data, over S3 protocol:
+
+```{r}
+Sys.setenv("AWS_NO_SIGN_REQUEST"=TRUE)
+s3uri <- "s3://era5-pds/1979/01/data/air_pressure_at_mean_sea_level.nc"
+r <- terra::rast(s3uri)
+Sys.unsetenv("AWS_NO_SIGN_REQUEST")
+```
+
+## Zarr
+
+Cloud read of a 31 Terrabyte Zarr archive (S3, public https)
+
+```{r}
+url <- "https://mur-sst.s3.us-west-2.amazonaws.com/zarr-v1"
+prefixes <- 'ZARR:\"/vsicurl/'
+slice <- '\":/analysed_sst:0"'
+addr <- paste0(prefixes, url, slice)
+y = terra::rast(addr)
+```
+
+
+```{r}
+india <- 
+  spData::world |>
+  dplyr::filter(name_long == "India") |> 
+  vect() |> 
+  ext()
+
+```
+
+
+```{r}
+st_crs(y) <- 4326 # stars doesn't see crs?
+india <- spData::world |> dplyr::filter(name_long == "India") |> st_bbox()
+india_sst <- x |> st_crop(india)
+plot(india_sst)
+```

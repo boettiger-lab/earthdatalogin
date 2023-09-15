@@ -36,7 +36,7 @@ edl_set_token <- function (username = default("user"),
     p <- p[[token_number]]
   }
 
-  header = paste("Authorization: Bearer", p$access_token)
+  header = edl_header(p$access_token)
 
   if(requireNamespace("terra", quietly = TRUE)) {
     gdal_version <- terra::gdal()
@@ -55,7 +55,13 @@ default <- function(what) {
          password = Sys.getenv("EARTHDATA_PASSWORD", "EDL_test1"))
 }
 
-
+#' edl_header
+#'
+#' Return the http authentication header for curl-based requests
+#' @param token the authentication token, e.g. from `edl_set_token`
+edl_header <- function(token = edl_set_token()) {
+  paste("Authorization: Bearer", token)
+}
 
 
 edl_api <- function(endpoint,
@@ -179,7 +185,10 @@ edl_stac_urls <- function(items, assets = "data") {
 }
 
 
-
+#' unset token
+#'
+#' External sources that don't need the token may error if token is set
+#' Call `edl_unset_token`
 edl_unset_token <- function() {
   Sys.unsetenv("GDAL_HTTP_HEADERS")
 }
