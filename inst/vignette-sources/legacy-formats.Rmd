@@ -80,9 +80,11 @@ v = cube_view(srs = "EPSG:4326",
 ```{r}
 raster_cube(col, v) |> 
   select_bands("NDVI") |> 
-  animate(col = viridisLite::mako, fps=2)
+  animate(col = viridisLite::mako, fps=2, 
+          save_as="img/ndvi.gif")
 ```
 
+![](img/ndvi.gif)
 
 ```{r}
 library(tmap)

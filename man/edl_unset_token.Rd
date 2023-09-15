@@ -7,6 +7,9 @@
 edl_unset_token()
 }
 \description{
-External sources that don't need the token may error if token is set
-Call \code{edl_unset_token}
+External sources that don't need the token may error if token is set.
+Call \code{edl_unset_token} before accessing non-EarthData URLs.
+}
+\examples{
+edl_unset_token()
 }
