@@ -209,8 +209,12 @@ edl_stac_urls <- function(items, assets = "data") {
 
 #' unset token
 #'
-#' External sources that don't need the token may error if token is set
-#' Call `edl_unset_token`
+#' External sources that don't need the token may error if token is set.
+#' Call `edl_unset_token` before accessing non-EarthData URLs.
+#' @export
+#'
+#' @examples
+#' edl_unset_token()
 edl_unset_token <- function() {
   Sys.unsetenv("GDAL_HTTP_HEADERS")
 }
