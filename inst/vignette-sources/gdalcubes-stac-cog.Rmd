@@ -38,14 +38,25 @@ gdalcubes_options(parallel = TRUE)
 ### Earth Data Authentication
 
 First let's get EDL authentication out of the way.
-For cloud data from almost any other STAC catalog (NOAA, USGS, Planetary Computer, etc), authentication is either unnecessary or already provided by the STAC API, but NASA EDL is special.  Remember to set env vars `EARTHDATA_USER` and `EARTHDATA_PASSWORD` in your .Renviron or pass them manually to `edl_set_token()`.
-(The gdalcubes package has it's own mechanism for setting GDAL config options independent of environmental variables).
+For cloud data from almost any other STAC catalog (NOAA, USGS, Planetary Computer, etc), authentication is either unnecessary or already provided by the STAC API, but NASA EDL is special. 
+
 
 ```{r}
 library(earthdatalogin)
-edl_set_token()
-# gdalcubes_set_gdal_config("GDAL_HTTP_HEADERS", edl_header())
 ```
+
+We could just use `edl_set_token()` here as usual to set the environmental variable. 
+This works fine but can problems if we do not remember to `edl_unset_token()` before accessing other non-EDL resources over the http interface.
+When using the `gdalcubes` package, we have support for a somewhat nicer, more localized authentication that uses the configuration options instead.
+We tell `edl_set_token` not to set the environmental variable globally, but to return
+in the header format which we can pass to `gdalcubes_set_gdal_config()`:
+
+```{r}
+header <- edl_set_token(set_env_var = FALSE, format = "header")
+gdalcubes_set_gdal_config("GDAL_HTTP_HEADERS", header)
+```
+
+
 
 ## Search via STAC
 
@@ -109,4 +120,47 @@ raster_cube(col, v) |>
 
 ## Scaling up
 
+```{r}
+library(sf)
+library(tmap)
+data(World)
+
+World$geometry[World$name == "India"] |> sf::st_bbox()
+```
+
+
+
+```{r}
+start <- "2022-01-01"
+end <- "2022-01-30"
+items <- stac("https://cmr.earthdata.nasa.gov/stac/LPCLOUD") |> 
+  stac_search(collections = "HLSL30.v2.0",
+              bbox = c(bbox),
+              datetime = paste(start,end, sep = "/")) |>
+  post_request() |>
+  items_fetch() |>
+  items_filter(filter_fn = \(x) {x[["eo:cloud_cover"]] < 20})
+```
+
+
+```{r}
+#
+# Desired data cube shape & resolution
+v = cube_view(srs = "EPSG:4326",
+              extent = list(t0 = as.character(start), 
+                            t1 = as.character(end),
+                            left = bbox[1], right = bbox[3],
+                            top = bbox[4], bottom = bbox[2]),
+              nx = 512, ny = 512, dt = "P1M")
+```
+
+
+```{r}
+rgb_bands <- c("B04","B03", "B02")
+
+# Here we go! note eval is lazy
+raster_cube(col, v) |>
+  select_bands(rgb_bands) |>
+  plot(rgb=1:3)
+```
 

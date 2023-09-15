@@ -7,7 +7,9 @@
 edl_set_token(
   username = default("user"),
   password = default("password"),
-  token_number = 1
+  token_number = 1,
+  set_env_var = TRUE,
+  format = c("token", "header")
 )
 }
 \arguments{
@@ -16,20 +18,35 @@ edl_set_token(
 \item{password}{EarthData Login Password}
 
 \item{token_number}{Which token (1 or 2)}
+
+\item{set_env_var}{Should we set the GDAL_HTTP_HEADERS
+environmental variable?  logical, default TRUE.}
+
+\item{format}{One of "token" or "header".  The latter adds the prefix
+used by http headers to the return string.}
 }
 \value{
-the Authorization header for curl request, invisibly.
-Will also set the GDAL_HTTP_HEADERS environmental variable for
-compatibility with GDAL.
+A text string containing only the token (format=token),
+or a token with the header prefix included, \verb{Authorization: Bearer <token>}
 }
 \description{
 This function will ping the EarthData API for any available tokens.
 If a token is not found, it will request one.  You may only have
 two active tokens at any given time.  Use edl_revoke_token to remove
-unwanted tokens.
+unwanted tokens.  By default, the function will also set an environmental
+variable for the active R session to store the token.  This allows
+popular R packages which use gdal to immediately authenticate any http
+addresses to NASA EarthData assets.
 }
 \details{
-NOTE: GDAL >= 3.6 is required to utilize GDAL_HTTP_HEADERS.
+IMPORTANT: it is necessary to unset this token using \code{edl_unset_token()}
+\strong{before} trying to access HTTP resources that are not part of EarthData,
+as setting this token will cause those calls to fail!
+
+NOTE: GDAL >= 3.6.1 is required to recognize the GDAL_HTTP_HEADERS variable.
+The function can still generate and access tokens without GDAL, and curl
+requests can still use the token (e.g. edl_download()). This function will
+try and warn the user if an older version of GDAL is found.
 }
 \examples{
 \dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}

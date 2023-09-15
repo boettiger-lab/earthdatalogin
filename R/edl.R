@@ -7,37 +7,61 @@
 #' This function will ping the EarthData API for any available tokens.
 #' If a token is not found, it will request one.  You may only have
 #' two active tokens at any given time.  Use edl_revoke_token to remove
-#' unwanted tokens.
+#' unwanted tokens.  By default, the function will also set an environmental
+#' variable for the active R session to store the token.  This allows
+#' popular R packages which use gdal to immediately authenticate any http
+#' addresses to NASA EarthData assets.
 #'
-#' NOTE: GDAL >= 3.6 is required to utilize GDAL_HTTP_HEADERS.
+#' IMPORTANT: it is necessary to unset this token using `edl_unset_token()`
+#' **before** trying to access HTTP resources that are not part of EarthData,
+#' as setting this token will cause those calls to fail!
+#'
+#' NOTE: GDAL >= 3.6.1 is required to recognize the GDAL_HTTP_HEADERS variable.
+#' The function can still generate and access tokens without GDAL, and curl
+#' requests can still use the token (e.g. edl_download()). This function will
+#' try and warn the user if an older version of GDAL is found.
+#'
 #' @param username EarthData Login User
 #' @param password EarthData Login Password
 #' @param token_number Which token (1 or 2)
-#' @return the Authorization header for curl request, invisibly.
-#' Will also set the GDAL_HTTP_HEADERS environmental variable for
-#' compatibility with GDAL.
+#' @param set_env_var Should we set the GDAL_HTTP_HEADERS
+#' environmental variable?  logical, default TRUE.
+#' @param format One of "token" or "header".  The latter adds the prefix
+#' used by http headers to the return string.
+#' @return A text string containing only the token (format=token),
+#' or a token with the header prefix included, `Authorization: Bearer <token>`
 #' @export
 #' @examplesIf interactive()
 #' edl_set_token()
-#'
 edl_set_token <- function (username = default("user"),
                            password = default("password"),
-                           token_number = 1
+                           token_number = 1,
+                           set_env_var = TRUE,
+                           format = c("token", "header")
 ){
-  if(username == "" || password == "") {
-    message("You must provide a username and password either in .Renviron\n",
-            "or using the optional arguments")
-  }
 
   p <- edl_api("/api/users/tokens", username, password)
+
   if(length(p) < token_number) {
     p <- edl_api("/api/users/token", username, password, method = httr::POST)
   } else {
     p <- p[[token_number]]
   }
+  token <- p$access_token
 
-  header = edl_header(p$access_token)
+  if (set_env_var) {
+    edl_setenv(token)
+  }
 
+  out <- switch(format,
+                token = token,
+                header = edl_header(token)
+  )
+  invisible(out)
+}
+
+
+edl_setenv <- function(token) {
   if(requireNamespace("terra", quietly = TRUE)) {
     gdal_version <- terra::gdal()
     if (!utils::compareVersion(gdal_version, "3.6.1") >= 0) {
@@ -45,8 +69,9 @@ edl_set_token <- function (username = default("user"),
                     "but found only gdal version", gdal_version))
     }
   }
+  header = edl_header(token)
   Sys.setenv("GDAL_HTTP_HEADERS"=header)
-  invisible(p$access_token)
+
 }
 
 default <- function(what) {
@@ -55,16 +80,8 @@ default <- function(what) {
          password = Sys.getenv("EARTHDATA_PASSWORD", "EDL_test1"))
 }
 
-#' edl_header
-#'
-#' Return the http authentication header for curl-based requests
-#' @param token the authentication token, e.g. from `edl_set_token`
-#' @return the token in the header format required gdal config header.
-#' @export
-#' @examplesIf interactive()
-#' edl_header()
-#'
-edl_header <- function(token = edl_set_token()) {
+
+edl_header <- function(token) {
   paste("Authorization: Bearer", token)
 }
 
