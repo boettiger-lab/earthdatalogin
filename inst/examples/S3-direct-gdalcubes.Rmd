@@ -1,0 +1,78 @@
+
+```{r, message=FALSE, warning=FALSE}
+library(rstac)
+library(gdalcubes)
+library(stars)
+library(tmap)
+data(World)
+
+gdalcubes_options(parallel = TRUE) 
+bbox <- World$geometry[World$name == "India"] |> sf::st_bbox()
+```
+
+
+
+```{r, message=FALSE, warning=FALSE}
+start <- "2022-01-01"
+end <- "2022-01-30"
+items <- 
+  stac("https://earth-search.aws.element84.com/v0/") |>
+  stac_search(collections = "sentinel-s2-l2a-cogs",
+              bbox = c(bbox),
+              datetime = paste(start, end, sep="/")) |>
+  post_request() |>
+  items_fetch() |>
+  items_filter(filter_fn = \(x) {x[["eo:cloud_cover"]] < 20})
+```
+
+
+```{r, message=FALSE, warning=FALSE}
+#
+# Desired data cube shape & resolution
+india_view <- cube_view(srs = "EPSG:4326",
+                        extent = list(t0 = as.character(start), 
+                                      t1 = as.character(end),
+                                      left = bbox[1], right = bbox[3],
+                                      top = bbox[4], bottom = bbox[2]),
+                        nx = 2400, ny = 2400, dt = "P1M")
+india_assets <- stac_image_collection(items$features, 
+                             asset_names = c("B02", "B03", "B04", "B08", "SCL"))
+```
+
+```{r}
+col <-
+  stac_image_collection(items$features,
+                        asset_names = c("B04","B08", "SCL"),
+                        property_filter = \(x) {x[["eo:cloud_cover"]] < 20})
+
+cube <- cube_view(srs = "EPSG:4326",  
+                  extent = list(t0 = start, t1 = end,
+                                left = bbox[1], right = bbox[3],
+                                top = bbox[4], bottom = bbox[2]),
+                  nx = 2400, ny = 2400, dt = "P1D",
+                  aggregation = "median", resampling = "average")
+
+S2.mask <- image_mask("SCL", values=c(3,8,9)) # mask clouds and cloud shadows
+
+```
+
+```{r}
+ndvi <- raster_cube(col, cube, mask = S2.mask) |>
+  select_bands(c("B04", "B08")) |>
+  apply_pixel("(B08-B04)/(B08+B04)", "NDVI") |>
+  reduce_time(c("mean(NDVI)")) |>
+  st_as_stars()
+```
+
+```{r}
+tm_shape(ndvi) +
+  tm_raster(palette = viridisLite::mako(40),
+            n = 40, legend.show = FALSE)
+```
+
+```{r}
+raster_cube(india_assets, india_view, mask = S2.mask) |>
+  select_bands(c("B04", "B03", "B02")) |>
+  plot(rgb=1:3)
+```
+
