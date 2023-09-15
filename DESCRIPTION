@@ -42,5 +42,6 @@ Suggests:
     dplyr,
     gifski,
     rsconnect
-URL: https://boettiger-lab.github.io/earthdatalogin/
+URL: https://boettiger-lab.github.io/earthdatalogin/, https://github.com/cboettig/duckdbfs
+BugReports: https://github.com/cboettig/duckdbfs/issues
 VignetteBuilder: knitr
