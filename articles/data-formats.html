@@ -102,12 +102,11 @@ but the workflow should be identical after calling
 <span><span class="va">r</span></span>
 <span><span class="co">#&gt; class       : SpatRaster </span></span>
 <span><span class="co">#&gt; dimensions  : 721, 1440, 744  (nrow, ncol, nlyr)</span></span>
-<span><span class="co">#&gt; resolution  : 0.25, 0.25  (x, y)</span></span>
-<span><span class="co">#&gt; extent      : -0.125, 359.875, -90.125, 90.125  (xmin, xmax, ymin, ymax)</span></span>
+<span><span class="co">#&gt; resolution  : 1, 1  (x, y)</span></span>
+<span><span class="co">#&gt; extent      : 0, 1440, 0, 721  (xmin, xmax, ymin, ymax)</span></span>
 <span><span class="co">#&gt; coord. ref. :  </span></span>
 <span><span class="co">#&gt; source      : air_pressure_at_mean_sea_level.nc </span></span>
-<span><span class="co">#&gt; names       : air_p~vel_1, air_p~vel_2, air_p~vel_3, air_p~vel_4, air_p~vel_5, air_p~vel_6, ... </span></span>
-<span><span class="co">#&gt; unit        :          Pa,          Pa,          Pa,          Pa,          Pa,          Pa, ...</span></span></code></pre></div>
+<span><span class="co">#&gt; names       : air_p~vel_1, air_p~vel_2, air_p~vel_3, air_p~vel_4, air_p~vel_5, air_p~vel_6, ...</span></span></code></pre></div>
 <p>Cloud read of the same data, over S3 protocol:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html" class="external-link">Sys.setenv</a></span><span class="op">(</span><span class="st">"AWS_NO_SIGN_REQUEST"</span><span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>

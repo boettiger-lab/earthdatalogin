@@ -94,7 +94,7 @@ STAC CATALOGS</a></p>
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://boettiger-lab.github.io/earthdatalogin/">earthdatalogin</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://brazil-data-cube.github.io/rstac/" class="external-link">rstac</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/appelmar/gdalcubes" class="external-link">gdalcubes</a></span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/gdalcubes/man/gdalcubes_options.html" class="external-link">gdalcubes_options</a></span><span class="op">(</span>parallel <span class="op">=</span> <span class="fl">4</span><span class="op">)</span> </span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/pkg/gdalcubes/man/gdalcubes_options.html" class="external-link">gdalcubes_options</a></span><span class="op">(</span>parallel <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> </span></code></pre></div>
 <div class="section level3">
 <h3 id="earth-data-authentication">Earth Data Authentication<a class="anchor" aria-label="anchor" href="#earth-data-authentication"></a>
 </h3>
@@ -137,8 +137,8 @@ NASA collections for data that falls into our desired bounding</p>
 <span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">items_fetch</span>() <span class="sc">|&gt;</span></span>
 <span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">items_filter</span>(<span class="at">filter_fn =</span> \(x) {x[[<span class="st">"eo:cloud_cover"</span>]] <span class="sc">&lt;</span> <span class="dv">20</span>})</span>
 <span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  <span class="sc">|</span>                                                                                                 </span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  <span class="er">|===========================================================================================|</span> <span class="dv">100</span>%</span></code></pre></div>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  <span class="sc">|</span>                                                                                     </span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  <span class="er">|===============================================================================|</span> <span class="dv">100</span>%</span></code></pre></div>
 <p>Note that 52 features have matched our search criteria! Each feature
 represents a ‘snapshot’ image taken by the satellite as it passes by
 (this is a harmonized product so actually there’s quite a lot of
@@ -182,15 +182,10 @@ EarthData’s STAC metadata tends to be quite sparse.</p>
 <div class="section level2">
 <h2 id="scaling-up">Scaling up<a class="anchor" aria-label="anchor" href="#scaling-up"></a>
 </h2>
+<p>Same code with larger search box (10 degree x 10 degree)</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-tmap.github.io/tmap/" class="external-link">tmap</a></span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">World</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">bbox</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>xmin<span class="op">=</span><span class="op">-</span><span class="fl">122.5</span>, ymin<span class="op">=</span><span class="fl">34</span>, xmax<span class="op">=</span><span class="op">-</span><span class="fl">112.5</span>, ymax<span class="op">=</span><span class="fl">44</span><span class="op">)</span> </span>
 <span></span>
-<span><span class="va">bbox</span> <span class="op">&lt;-</span> <span class="va">World</span><span class="op">$</span><span class="va">geometry</span><span class="op">[</span><span class="va">World</span><span class="op">$</span><span class="va">name</span> <span class="op">==</span> <span class="st">"India"</span><span class="op">]</span> <span class="op">|&gt;</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_bbox.html" class="external-link">st_bbox</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">start</span> <span class="op">&lt;-</span> <span class="st">"2022-01-01"</span></span>
-<span><span class="va">end</span> <span class="op">&lt;-</span> <span class="st">"2022-01-30"</span></span>
 <span><span class="va">items</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://brazil-data-cube.github.io/rstac/reference/stac.html" class="external-link">stac</a></span><span class="op">(</span><span class="st">"https://cmr.earthdata.nasa.gov/stac/LPCLOUD"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://brazil-data-cube.github.io/rstac/reference/stac_search.html" class="external-link">stac_search</a></span><span class="op">(</span>collections <span class="op">=</span> <span class="st">"HLSL30.v2.0"</span>,</span>
 <span>              bbox <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">bbox</span><span class="op">)</span>,</span>
@@ -198,25 +193,24 @@ EarthData’s STAC metadata tends to be quite sparse.</p>
 <span>  <span class="fu"><a href="https://brazil-data-cube.github.io/rstac/reference/request.html" class="external-link">post_request</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://brazil-data-cube.github.io/rstac/reference/items_functions.html" class="external-link">items_fetch</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://brazil-data-cube.github.io/rstac/reference/items_functions.html" class="external-link">items_filter</a></span><span class="op">(</span>filter_fn <span class="op">=</span> \<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span><span class="va">x</span><span class="op">[[</span><span class="st">"eo:cloud_cover"</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;</span> <span class="fl">20</span><span class="op">}</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Error: Request error. Operation was aborted by an application callback</span></span></code></pre></div>
+<span><span class="co">#&gt; Error: HTTP status '500'. If the problem persists please contact cmr-support@earthdata.nasa.gov</span></span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">view</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/gdalcubes/man/cube_view.html" class="external-link">cube_view</a></span><span class="op">(</span>srs <span class="op">=</span> <span class="st">"EPSG:4326"</span>,</span>
+<span>                        extent <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>t0 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">start</span><span class="op">)</span>, </span>
+<span>                                      t1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">end</span><span class="op">)</span>,</span>
+<span>                                      left <span class="op">=</span> <span class="va">bbox</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, right <span class="op">=</span> <span class="va">bbox</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span>,</span>
+<span>                                      top <span class="op">=</span> <span class="va">bbox</span><span class="op">[</span><span class="fl">4</span><span class="op">]</span>, bottom <span class="op">=</span> <span class="va">bbox</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span>,</span>
+<span>                        nx <span class="op">=</span> <span class="fl">1024</span>, ny <span class="op">=</span> <span class="fl">1024</span>, dt <span class="op">=</span> <span class="st">"P1M"</span><span class="op">)</span></span>
+<span><span class="va">assets</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/gdalcubes/man/stac_image_collection.html" class="external-link">stac_image_collection</a></span><span class="op">(</span><span class="va">items</span><span class="op">$</span><span class="va">features</span>, </span>
+<span>                             asset_names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"B02"</span>, <span class="st">"B03"</span>, <span class="st">"B04"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#</span></span>
-<span><span class="co"># Desired data cube shape &amp; resolution</span></span>
-<span><span class="va">v</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/gdalcubes/man/cube_view.html" class="external-link">cube_view</a></span><span class="op">(</span>srs <span class="op">=</span> <span class="st">"EPSG:4326"</span>,</span>
-<span>              extent <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>t0 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">start</span><span class="op">)</span>, </span>
-<span>                            t1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">end</span><span class="op">)</span>,</span>
-<span>                            left <span class="op">=</span> <span class="va">bbox</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, right <span class="op">=</span> <span class="va">bbox</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span>,</span>
-<span>                            top <span class="op">=</span> <span class="va">bbox</span><span class="op">[</span><span class="fl">4</span><span class="op">]</span>, bottom <span class="op">=</span> <span class="va">bbox</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span>,</span>
-<span>              nx <span class="op">=</span> <span class="fl">512</span>, ny <span class="op">=</span> <span class="fl">512</span>, dt <span class="op">=</span> <span class="st">"P1M"</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">rgb_bands</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"B04"</span>,<span class="st">"B03"</span>, <span class="st">"B02"</span><span class="op">)</span></span>
-<span></span>
+<code class="sourceCode R"><span></span>
 <span><span class="co"># Here we go! note eval is lazy</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/gdalcubes/man/raster_cube.html" class="external-link">raster_cube</a></span><span class="op">(</span><span class="va">col</span>, <span class="va">v</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/gdalcubes/man/select_bands.html" class="external-link">select_bands</a></span><span class="op">(</span><span class="va">rgb_bands</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span>rgb<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/pkg/gdalcubes/man/raster_cube.html" class="external-link">raster_cube</a></span><span class="op">(</span><span class="va">assets</span>, <span class="va">view</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/pkg/gdalcubes/man/select_bands.html" class="external-link">select_bands</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"B04"</span>,<span class="st">"B03"</span>, <span class="st">"B02"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span>rgb<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
-<img src="img/unnamed-chunk-11-1.png" alt=""><p class="caption">plot of chunk unnamed-chunk-11</p>
+<img src="img/unnamed-chunk-10-1.png" alt=""><p class="caption">plot of chunk unnamed-chunk-10</p>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
