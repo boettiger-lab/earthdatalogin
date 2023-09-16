@@ -86,4 +86,4 @@ st_as_stars(y) |>
   plot()
 ```
 
-![plot of chunk unnamed-chunk-7](img/unnamed-chunk-7-1.png)
+![plot of chunk zarr_sst](img/zarr_sst-1.png)

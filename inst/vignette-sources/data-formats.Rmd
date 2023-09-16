@@ -74,7 +74,7 @@ india <-st_bbox( World$geometry[World$name == "India"] )
 ```
 
 
-```{r}
+```{r zarr_sst}
 st_as_stars(y) |>
   st_crop(india) |>
   plot()

@@ -105,7 +105,7 @@ col <- stac_image_collection(items$features,
 ```
 
 
-```{r}
+```{r sf_bay}
 # use a cloud mask -- not sure I have this correct
 # https://lpdaac.usgs.gov/documents/1326/HLS_User_Guide_V2.pdf
 S2.mask <- image_mask("Fmask", values=1) # mask clouds and cloud shadows
@@ -128,7 +128,7 @@ bbox <- c(xmin=-122.5, ymin=34, xmax=-112.5, ymax=44)
 items <- stac("https://cmr.earthdata.nasa.gov/stac/LPCLOUD") |> 
   stac_search(collections = "HLSL30.v2.0",
               bbox = c(bbox),
-              datetime = paste(start,end, sep = "/")) |>
+              datetime = "2022-01-01/2022-01-30") |>
   post_request() |>
   items_fetch() |>
   items_filter(filter_fn = \(x) {x[["eo:cloud_cover"]] < 20})
@@ -147,9 +147,7 @@ assets <- stac_image_collection(items$features,
 ```
 
 
-```{r}
-
-# Here we go! note eval is lazy
+```{r scalingup}
 raster_cube(assets, view) |>
     select_bands(c("B04","B03", "B02")) |>
     plot(rgb=1:3)

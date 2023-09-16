@@ -117,7 +117,7 @@ raster_cube(col, v) |>
   plot(rgb=1:3)
 ```
 
-![plot of chunk unnamed-chunk-7](img/unnamed-chunk-7-1.png)
+![plot of chunk sf_bay](img/sf_bay-1.png)
 
 
 ## Scaling up
@@ -135,7 +135,7 @@ items <- stac("https://cmr.earthdata.nasa.gov/stac/LPCLOUD") |>
   post_request() |>
   items_fetch() |>
   items_filter(filter_fn = \(x) {x[["eo:cloud_cover"]] < 20})
-#> Error: HTTP status '500'. If the problem persists please contact cmr-support@earthdata.nasa.gov
+#>   |                                                                                       |===============================================================================| 100%
 ```
 
 
@@ -154,12 +154,10 @@ assets <- stac_image_collection(items$features,
 
 
 ```r
-
-# Here we go! note eval is lazy
 raster_cube(assets, view) |>
     select_bands(c("B04","B03", "B02")) |>
     plot(rgb=1:3)
 ```
 
-![plot of chunk unnamed-chunk-10](img/unnamed-chunk-10-1.png)
+![plot of chunk scalingup](img/scalingup-1.png)
 
