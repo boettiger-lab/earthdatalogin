@@ -52,7 +52,7 @@ edl_set_token <- function (username = default("user"),
   if (set_env_var) {
     edl_setenv(token)
   }
-
+  format <- match.arg(format)
   out <- switch(format,
                 token = token,
                 header = edl_header(token)
