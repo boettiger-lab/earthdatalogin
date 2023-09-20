@@ -35,7 +35,8 @@ Suggests:
     terra (>= 1.7.39),
     rsconnect,
     testthat (>= 3.0.0),
-    curl
+    curl,
+    sf
 URL: https://boettiger-lab.github.io/earthdatalogin/, https://github.com/cboettig/duckdbfs
 BugReports: https://github.com/cboettig/duckdbfs/issues
 VignetteBuilder: knitr
