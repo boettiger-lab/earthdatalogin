@@ -51,7 +51,12 @@ header <- edl_set_token(set_env_var = FALSE, format = "header")
 gdalcubes_set_gdal_config("GDAL_HTTP_HEADERS", header)
 ```
 
+`earthdatalogin` also includes optional configuration settings for GDAL which can improve performance of cloud-based data access.  Set the GDAL environmental variables using `gdal_cloud_config()`
 
+
+```r
+gdal_cloud_config()
+```
 
 ## Search via STAC
 
@@ -73,7 +78,7 @@ items <- stac("https://cmr.earthdata.nasa.gov/stac/LPCLOUD") |>
   post_request() |>
   items_fetch() |>
   items_filter(filter_fn = \(x) {x[["eo:cloud_cover"]] < 20})
-#>   |                                                                                       |===============================================================================| 100%
+#>   |                                                                              |======================================================================| 100%
 ```
 
 
@@ -108,11 +113,11 @@ col <- stac_image_collection(items$features,
 ```r
 # use a cloud mask -- not sure I have this correct
 # https://lpdaac.usgs.gov/documents/1326/HLS_User_Guide_V2.pdf
-S2.mask <- image_mask("Fmask", values=1) # mask clouds and cloud shadows
+cloud_mask <- image_mask("Fmask", values=1) # mask clouds and cloud shadows
 rgb_bands <- c("B04","B03", "B02")
 
 # Here we go! note eval is lazy
-raster_cube(col, v) |>
+raster_cube(col, v, mask=cloud_mask) |>
   select_bands(rgb_bands) |>
   plot(rgb=1:3)
 ```
@@ -122,20 +127,22 @@ raster_cube(col, v) |>
 
 ## Scaling up
 
-Same code with larger search box (10 degree x 10 degree)
+Same code with larger search box:
 
 
 ```r
-bbox <- c(xmin=-122.5, ymin=34, xmax=-112.5, ymax=44) 
+bbox <- c(xmin=-123, ymin=37, xmax=-121, ymax=39) 
 
+start <- "2023-01-01"
+end <-  "2023-01-31"
 items <- stac("https://cmr.earthdata.nasa.gov/stac/LPCLOUD") |> 
   stac_search(collections = "HLSL30.v2.0",
               bbox = c(bbox),
-              datetime = paste(start,end, sep = "/")) |>
+              datetime =paste(start,end, sep = "/")) |>
   post_request() |>
   items_fetch() |>
   items_filter(filter_fn = \(x) {x[["eo:cloud_cover"]] < 20})
-#>   |                                                                                       |===============================================================================| 100%
+#>   |                                                                              |======================================================================| 100%
 ```
 
 
@@ -148,7 +155,7 @@ view <- cube_view(srs = "EPSG:4326",
                                       top = bbox[4], bottom = bbox[2]),
                         nx = 1024, ny = 1024, dt = "P1M")
 assets <- stac_image_collection(items$features, 
-                             asset_names = c("B02", "B03", "B04"))
+                             asset_names = c("B02", "B03", "B04", "Fmask"))
 ```
 
 

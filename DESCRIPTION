@@ -33,15 +33,10 @@ Suggests:
     knitr,
     rmarkdown,
     terra (>= 1.7.39),
-    gdalcubes,
-    rstac,
-    spData,
-    sf,
-    stars,
-    tmap,
-    dplyr,
-    gifski,
-    rsconnect
+    rsconnect,
+    testthat (>= 3.0.0),
+    curl
 URL: https://boettiger-lab.github.io/earthdatalogin/, https://github.com/cboettig/duckdbfs
 BugReports: https://github.com/cboettig/duckdbfs/issues
 VignetteBuilder: knitr
+Config/testthat/edition: 3
