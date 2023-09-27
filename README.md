@@ -88,9 +88,6 @@ variable. This means that popular R packages such as `terra`, `sf` or
 utilize this token for any operations reading from HTTPS (using the
 `vsicurl` prefix).
 
-PLEASE NOTE. This requires GDAL \>= 3.6.0 (see `terra::gdal()`). We
-strongly recommend upgrading GDAL if you are on an older version!
-
 ``` r
 library(terra)
 #> terra 1.7.39
@@ -147,8 +144,7 @@ webpage, you can have R track your username and password in your user
 
 ``` r
 edl_renviron()
-#> EARTHDATA_USER already set
-#> EARTHDATA_PASSWORD already set
+#> cache set!
 ```
 
 This is a convenient way to store your user name and password on your

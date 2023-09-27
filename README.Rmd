@@ -55,7 +55,6 @@ edl_set_token()
 
 This function takes care of managing tokens for you. If you don't have any tokens, it will request one be minted. If your user name has tokens already, it will look them up and re-use them.  (EDL will issue at most two tokens per user, and tokens expire after 6 month, but users shouldn't need to worry about this since `edl_set_token()` handles it).  This function will also set the token in as a GDAL environmental variable.  This means that popular R packages such as `terra`, `sf` or `stars` that all involve bindings to GDAL will automatically be able to utilize this token for any operations reading from HTTPS (using the `vsicurl` prefix).
 
-PLEASE NOTE. This requires GDAL >= 3.6.0 (see `terra::gdal()`).  We strongly recommend upgrading GDAL if you are on an older version!
 
 ```{r}
 library(terra)
