@@ -62,15 +62,22 @@ edl_set_token <- function (username = default("user"),
 
 
 edl_setenv <- function(token) {
-  if(requireNamespace("terra", quietly = TRUE)) {
-    gdal_version <- terra::gdal()
-    if (!utils::compareVersion(gdal_version, "3.6.1") >= 0) {
-      warning(paste("GDAL VSI auth will require GDAL version >= 3.6.1\n",
-                    "but found only gdal version", gdal_version))
-    }
-  }
+
+  # NOTE: GDAL_HTTP_HEADER_FILE is supported in any GDAL
+  #if(requireNamespace("terra", quietly = TRUE)) {
+  #  gdal_version <- terra::gdal()
+  #  if (!utils::compareVersion(gdal_version, "3.6.1") >= 0) {
+  #    warning(paste("GDAL VSI auth will require GDAL version >= 3.6.1\n",
+  #                  "but found only gdal version", gdal_version))
+  #  }
+  #}
+
   header = edl_header(token)
-  Sys.setenv("GDAL_HTTP_HEADERS"=header)
+  #Sys.setenv("GDAL_HTTP_HEADERS"=header)
+
+  headerfile <- tempfile(pattern="GDAL_HTTP_HEADERS", fileext = "")
+  writeLines(header, headerfile)
+  Sys.setenv("GDAL_HTTP_HEADER_FILE"=headerfile)
 
 }
 
@@ -216,7 +223,7 @@ edl_stac_urls <- function(items, assets = "data") {
 #' @examples
 #' edl_unset_token()
 edl_unset_token <- function() {
-  Sys.unsetenv("GDAL_HTTP_HEADERS")
+  Sys.unsetenv("GDAL_HTTP_HEADER_FILE")
 }
 
 #' Revoke an EarthData token
