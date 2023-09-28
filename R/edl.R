@@ -157,12 +157,15 @@ edl_download <- function(href,
 #'
 #' @examplesIf interactive()
 #' edl_s3_token()
-#'
+#' @export
 edl_s3_token <- function(daac = "https://data.lpdaac.earthdatacloud.nasa.gov",
                          username = default("user"),
                          password = default("password")) {
 
-  p <- edl_api("/s3_credentials", username, password, base = daac)
+  p <- edl_api(endpoint = "/s3credentials",
+               username = username,
+               password = password,
+               base = daac)
   Sys.setenv(AWS_ACCESS_KEY_ID = p$accessKeyId)
   Sys.setenv(AWS_SECRET_ACCESS_KEY = p$secretAccessKey)
   Sys.setenv(AWS_SESSION_TOKEN = p$sessionToken)
