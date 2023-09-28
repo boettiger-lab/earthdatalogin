@@ -1,6 +1,10 @@
+## This example can be run only on AWS us-west2 compute, because
+## these credentials DO NOT ALLOW DATA EGRESS FROM AMAZON'S OREGON DATACENTER
+
 library(earthdatalogin)
 
 # Set auth tokens -- assumes LPDAAC, specify your DAAC!
+# NB: These tokens expire in 1-hr!
 edl_s3_token()
 
 # A random example COG from LPDAAC
