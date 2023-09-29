@@ -16,11 +16,37 @@ It may seem intuitive that upload a few kb of code is better than downloading te
 However, this logic can easily be deeply misleading, even if it is lucratively profitable for cloud providers.
 
 If you are fortunate enough to care nothing about costs or have someone else covering those costs, the technical logic of this statement is accurate, though even then not in the way it is often understood.
-But the rest of us must consider the financial cost of renting compute from a cloud provider far outweighs this network egress charges.  
+The rest of us must consider the financial cost of renting compute from a cloud provider far outweighs charges for data egress.
+But wait! Isn't it just unfeasible to download terrabytes of data?
+That is where this quip is particularly misleading.
+Cloud native workflows access data using _range requests_ rather than downloading the entire dataset to the disks of a local filesystem -- that is, we never really 'download' entire files, but instead 'stream' only the parts of each file we are actively using --
+just as we consume Netflix by 'streaming' the data to our local computers rather than waiting for a download that must be stored on a harddisk.
+Anyone with a network connection capable of streaming video can also stream research data.
+
+What about all the computing power? Many users of compute instances from cloud providers are in fact renting virtual machines with less computational power than the laptops or desktops (even cell phones) they already own. Moreover, well-designed cloud-native data workflows frequently avoid onerous demands on disk speed, memory, or even cpu threads.  The limiting resource in most cloud-native workflows is network bandwidth.
+If you have a network connection capable of streaming high-definition video, you probably already have a setup that will allow cloud-based computing.  
+Even if you don't, small virtual machines are offered in a free tier by most major cloud providers. 
+GitHub Codespaces is particularly easy environment for anyone to get started using.
+Free-tier machines may have limited resources -- only a few cores, a few GB of RAM and limited disk space -- but they almost always have high bandwidth network with speeds easily above 100 Mb/s range -- ideal for cloud-native workflows.  
+
+This is not to say that it never makes sense to 'send the code to the data'.
+As network bandwidth is often rate-limiting, anyone in search of the best performance will naturally want to seek out the fastest network connection to the data -- the local area network of the specific regional data center housing the data. Inside the data center, the network is the fastest and most reliable (dropped packets or timeouts can be significant issues elsewhere). 
+Even small compute inside the center can have impressive performance, and it will be the compute you can afford rather than the network speed that can hold you back.
+
+Pricing reflects this reality. Inside the data center, there are no bandwidth charges for accessing the data, because data never 'egresses' from the data center over the internet. 
+In contrast, sending large amounts of data over public internet networks is not free to Amazon or the other cloud providers, and so they pass these charges onto their customers as egress rates (around $0.02/GB in `us-west-2`). Amazon is happy to levy these charges against either the requester or the provider of the data (and may waive the charges in the case of some public datasets -- of course as a consumer it is not possible to distinguish this from a provider-pays contract).  
+
+NASA EarthData has taken a somewhat novel approach to this situation. To allow users to access these publicly funded data resources without paying Amazon for the privilege, NASA has created an EarthDataLogin system that routes public https requests to these data products through a system of redirects in a CloudFlare content distribution network. This routing requires users to register and provide an authentication token, both which are freely available through the EarthDataLogin platform and API.
 
 
 
-NASA EarthData can also be accessed over the S3 protocol directly, but _only if you are using Amazon compute based inside Amazon's `us-west-2` data center_ in Oregon.
+If users are willing to pay Amazon for compute inside `us-west-2`, they can take advantage
+of extremely fast network without paying egress charges (since no data egress occurs.)
+Perhaps surprisingly, this internal access still requires authentication to generate AWS access tokens
+(an id, secret token, and a session token).  These tokens will only work from compute inside the AWS data center -- trying to use these tokens from other machines will throw an Access Denied error. 
+More inconveniently, these tokens are specific to each of NASA's 12 different DAACs (despite all 12 DAACs using us-west-2 to host their data. This gives the DAACs some insight into use statistics that could also be obtained by the S3 logs anyway). Most inconveniently of all, these tokens **expire after one hour** and must be renewed, potentially interrupting precisely the kind of intensive, long-running computations a user would want to be inside the local area network to run. 
+
+
 
 
 
