@@ -1,0 +1,134 @@
+---
+title: "Send code to the data? Non-egress S3 Access"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Mosaic images using STAC}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+A commonly repeated but _often misguided_ quip about cloud-based workflows is 
+
+> send the compute to the data, not the data to the compute.
+
+It may seem intuitive that upload a few kb of code is better than downloading terrabytes of data.
+However, this logic can easily be deeply misleading, even if it is lucratively profitable for cloud providers.
+
+If you are fortunate enough to care nothing about costs or have someone else covering those costs, the technical logic of this statement is accurate, though even then not in the way it is often understood.
+But the rest of us must consider the financial cost of renting compute from a cloud provider far outweighs this network egress charges.  
+
+
+
+NASA EarthData can also be accessed over the S3 protocol directly, but _only if you are using Amazon compute based inside Amazon's `us-west-2` data center_ in Oregon.
+
+
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path="img/",
+  message = FALSE,
+  warning = FALSE
+)
+```
+
+```{r setup, message=FALSE}
+library(earthdatalogin)
+library(rstac)
+library(gdalcubes)
+gdalcubes_options(parallel = TRUE) 
+```
+
+
+### Earth Data Authentication
+
+First let's get EDL authentication out of the way.
+For cloud data from almost any other STAC catalog (NOAA, USGS, Planetary Computer, etc), authentication is either unnecessary or already provided by the STAC API, but NASA EDL is special. 
+
+
+```{r}
+library(earthdatalogin)
+```
+
+We could just use `edl_set_token()` here as usual to set the environmental variable. 
+This works fine but can problems if we do not remember to `edl_unset_token()` before accessing other non-EDL resources over the http interface.
+When using the `gdalcubes` package, we have support for a somewhat nicer, more localized authentication that uses the configuration options instead.
+We tell `edl_set_token` not to set the environmental variable globally, but to return
+in the header format which we can pass to `gdalcubes_set_gdal_config()`:
+
+```{r}
+#header <- edl_set_token(set_env_var = FALSE, format = "header")
+#gdalcubes_set_gdal_config("GDAL_HTTP_HEADERS", header)
+```
+
+`earthdatalogin` also includes optional configuration settings for GDAL which can improve performance of cloud-based data access.  Set the GDAL environmental variables using `gdal_cloud_config()`
+
+```{r}
+gdal_cloud_config()
+```
+
+## Search via STAC
+
+We will now use the `rstac` package to search one or more NASA collections for data that falls into our desired bounding 
+
+Set a search box in space & time
+
+```{r}
+bbox <- c(xmin=-122.5, ymin=37.5, xmax=-122.0, ymax=38) 
+start <- "2022-01-01"
+end <- "2022-06-30"
+
+# Find all assets from the desired catalog:
+items <- stac("https://cmr.earthdata.nasa.gov/stac/LPCLOUD") |> 
+  stac_search(collections = "HLSL30.v2.0",
+              bbox = bbox,
+              datetime = paste(start,end, sep = "/")) |>
+  post_request() |>
+  items_fetch() |>
+  items_filter(filter_fn = \(x) {x[["eo:cloud_cover"]] < 20})
+```
+
+
+Note that `r length(items$features)` features have matched our search criteria! Each feature represents a 'snapshot' image taken by the satellite as it passes by (this is a harmonized product so actually there's quite a lot of post-processing.)  Each feature thus shares the same bounding box, projection, and timestamp, but may consist of many different 'assets', different COG files representing the different spectral bands on the satellite camera instrument.  Each feature can potentially include quite extensive metadata about the feature, including details of instrument itself or from post-processing, such as cloud cover.  Unfortunately, EarthData's STAC metadata tends to be quite sparse. 
+
+
+
+## Building a Data Cube
+
+
+```{r}
+# Desired data cube shape & resolution
+v = cube_view(srs = "EPSG:4326",
+              extent = list(t0 = as.character(start), 
+                            t1 = as.character(end),
+                            left = bbox[1], right = bbox[3],
+                            top = bbox[4], bottom = bbox[2]),
+                nx = 2048, ny = 2048, dt = "P1M")
+```
+
+
+```{r}
+# RGB bands + cloud cover mask
+edl_s3_token()
+
+s3url <- function(url) edl_as_s3(url, prefix="/vsis3/")
+col <- stac_image_collection(items$features, 
+                             asset_names = c("B02", "B03", "B04", "Fmask"),
+                             url_fun = s3url)
+```
+
+
+```{r sf_bay}
+# use a cloud mask -- not sure I have this correct
+# https://lpdaac.usgs.gov/documents/1326/HLS_User_Guide_V2.pdf
+cloud_mask <- image_mask("Fmask", values=1) # mask clouds and cloud shadows
+rgb_bands <- c("B04","B03", "B02")
+
+# Here we go! note eval is lazy
+raster_cube(col, v, mask=cloud_mask) |>
+  select_bands(rgb_bands) |>
+  plot(rgb=1:3)
+```
+
