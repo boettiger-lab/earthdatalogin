@@ -1,0 +1,19 @@
+
+```{r}
+library(earthdatalogin)
+edl_set_token()
+```
+
+3 terrabyte GPKG mosaic
+
+```{r}
+tree <- ("/vsicurl/https://daac.ornl.gov/daacdata/global_vegetation/Semi-Arid_Tree_Carbon_50cm/data/utm_28/SSAr2_32628_GE01-QB02-WV02-WV03_PV_001_027_mosaic.gpkg")
+ex <- sf::read_sf(tree)
+```
+
+
+
+```{r}
+tree_density <- "/vsicurl/https://daac.ornl.gov/daacdata/global_vegetation/Semi-Arid_Tree_Carbon_50cm/data/wgs_84_mosaic_100m_tree_carbon_density.tif"
+```
+

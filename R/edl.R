@@ -16,18 +16,18 @@
 #' **before** trying to access HTTP resources that are not part of EarthData,
 #' as setting this token will cause those calls to fail!
 #'
-#' NOTE: GDAL >= 3.6.1 is required to recognize the GDAL_HTTP_HEADERS variable.
-#' The function can still generate and access tokens without GDAL, and curl
-#' requests can still use the token (e.g. edl_download()). This function will
-#' try and warn the user if an older version of GDAL is found.
+#' NOTE: Because GDAL >= 3.6.1 is required to recognize the GDAL_HTTP_HEADERS,
+#' but all versions recognize GDAL_HTTP_HEADER_FILE. So we set the Bearer token
+#' in a temporary file and provide this path as GDAL_HTTP_HEADER_FILE to
+#' improve compatibility with older versions.
 #'
 #' @param username EarthData Login User
 #' @param password EarthData Login Password
 #' @param token_number Which token (1 or 2)
-#' @param set_env_var Should we set the GDAL_HTTP_HEADERS
+#' @param set_env_var Should we set the GDAL_HTTP_HEADER_FILE
 #' environmental variable?  logical, default TRUE.
-#' @param format One of "token" or "header".  The latter adds the prefix
-#' used by http headers to the return string.
+#' @param format One of "token", "header" or "file."  "header" adds the prefix
+#' used by http headers to the return string.  "file" returns
 #' @return A text string containing only the token (format=token),
 #' or a token with the header prefix included, `Authorization: Bearer <token>`
 #' @export
@@ -37,7 +37,7 @@ edl_set_token <- function (username = default("user"),
                            password = default("password"),
                            token_number = 1,
                            set_env_var = TRUE,
-                           format = c("token", "header")
+                           format = c("token", "header", "file")
 ){
 
   p <- edl_api("/api/users/tokens", username, password)
@@ -55,30 +55,23 @@ edl_set_token <- function (username = default("user"),
   format <- match.arg(format)
   out <- switch(format,
                 token = token,
-                header = edl_header(token)
+                header = edl_header(token),
+                file = edl_headerfile(token)
   )
   invisible(out)
 }
 
-
-edl_setenv <- function(token) {
-
-  # NOTE: GDAL_HTTP_HEADER_FILE is supported in any GDAL
-  #if(requireNamespace("terra", quietly = TRUE)) {
-  #  gdal_version <- terra::gdal()
-  #  if (!utils::compareVersion(gdal_version, "3.6.1") >= 0) {
-  #    warning(paste("GDAL VSI auth will require GDAL version >= 3.6.1\n",
-  #                  "but found only gdal version", gdal_version))
-  #  }
-  #}
-
+edl_headerfile <- function(token) {
   header = edl_header(token)
-  #Sys.setenv("GDAL_HTTP_HEADERS"=header)
-
   headerfile <- tempfile(pattern="GDAL_HTTP_HEADERS", fileext = "")
   writeLines(header, headerfile)
-  Sys.setenv("GDAL_HTTP_HEADER_FILE"=headerfile)
+  invisible(headerfile)
 
+}
+
+edl_setenv <- function(token) {
+  headerfile <- edl_headerfile(token)
+  Sys.setenv("GDAL_HTTP_HEADER_FILE"=headerfile)
 }
 
 default <- function(what) {

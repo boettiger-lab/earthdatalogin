@@ -1,10 +1,15 @@
 ---
-title: "Send code to the data? Non-egress S3 Access"
+title: "Motivations: What is Cloud-Native Access Anyway?"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Mosaic images using STAC}
+  %\VignetteIndexEntry{Motivations}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+---
+
+
+tl;dr: cloud-based object stores, not cloud-based compute, are the game changer.
+
 ---
 
 
@@ -17,7 +22,7 @@ However, this logic can easily be deeply misleading, even if it is lucratively p
 
 If you are fortunate enough to care nothing about costs or have someone else covering those costs, the technical logic of this statement is accurate, though even then not in the way it is often understood.
 The rest of us must consider the financial cost of renting compute from a cloud provider far outweighs charges for data egress.
-But wait! Isn't it just unfeasible to download terrabytes of data?
+But wait! Isn't it just unfeasible to download terabytes of data?
 That is where this quip is particularly misleading.
 Cloud native workflows access data using _range requests_ rather than downloading the entire dataset to the disks of a local filesystem -- that is, we never really 'download' entire files, but instead 'stream' only the parts of each file we are actively using --
 just as we consume Netflix by 'streaming' the data to our local computers rather than waiting for a download that must be stored on a harddisk.
@@ -36,8 +41,15 @@ Even small compute inside the center can have impressive performance, and it wil
 Pricing reflects this reality. Inside the data center, there are no bandwidth charges for accessing the data, because data never 'egresses' from the data center over the internet. 
 In contrast, sending large amounts of data over public internet networks is not free to Amazon or the other cloud providers, and so they pass these charges onto their customers as egress rates (around $0.02/GB in `us-west-2`). Amazon is happy to levy these charges against either the requester or the provider of the data (and may waive the charges in the case of some public datasets -- of course as a consumer it is not possible to distinguish this from a provider-pays contract).  
 
-NASA EarthData has taken a somewhat novel approach to this situation. To allow users to access these publicly funded data resources without paying Amazon for the privilege, NASA has created an EarthDataLogin system that routes public https requests to these data products through a system of redirects in a CloudFlare content distribution network. This routing requires users to register and provide an authentication token, both which are freely available through the EarthDataLogin platform and API.
+## Earthdata
 
+NASA EarthData has taken a somewhat novel approach to this situation. To allow users to access these publicly funded data resources without paying Amazon for the privilege, NASA has created an EarthDataLogin system that routes public https requests to these data products through a system of redirects in a CloudFlare content distribution network. 
+Adding this extra routing gives NASA a mechanism for imposing rate-limits -- reducing egress costs by throttling the rate or amount of data any one user can access.
+(AWS does not offer data providers the ability to set such rate limits directly.)
+This routing requires users to register and provide an authentication token, both which are freely available through the EarthDataLogin platform and API.
+I prefer this mechanism as the default, because code written to use this mechanism is portable to any compute where a network connection is available.
+This approach actually supports a two different implementations.
+One approach is to use HTTP Basic Auth, supplying a user name and password (typically using a `.netrc` file). Another uses a `Bearer <token>` in the request header, an authentication mechanism introduced by [HTTP OAuth 2.0](https://www.rfc-editor.org/rfc/rfc6750).  
 
 
 If users are willing to pay Amazon for compute inside `us-west-2`, they can take advantage
@@ -46,115 +58,4 @@ Perhaps surprisingly, this internal access still requires authentication to gene
 (an id, secret token, and a session token).  These tokens will only work from compute inside the AWS data center -- trying to use these tokens from other machines will throw an Access Denied error. 
 More inconveniently, these tokens are specific to each of NASA's 12 different DAACs (despite all 12 DAACs using us-west-2 to host their data. This gives the DAACs some insight into use statistics that could also be obtained by the S3 logs anyway). Most inconveniently of all, these tokens **expire after one hour** and must be renewed, potentially interrupting precisely the kind of intensive, long-running computations a user would want to be inside the local area network to run. 
 
-
-
-
-
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  fig.path="img/",
-  message = FALSE,
-  warning = FALSE
-)
-```
-
-```{r setup, message=FALSE}
-library(earthdatalogin)
-library(rstac)
-library(gdalcubes)
-gdalcubes_options(parallel = TRUE) 
-```
-
-
-### Earth Data Authentication
-
-First let's get EDL authentication out of the way.
-For cloud data from almost any other STAC catalog (NOAA, USGS, Planetary Computer, etc), authentication is either unnecessary or already provided by the STAC API, but NASA EDL is special. 
-
-
-```{r}
-library(earthdatalogin)
-```
-
-We could just use `edl_set_token()` here as usual to set the environmental variable. 
-This works fine but can problems if we do not remember to `edl_unset_token()` before accessing other non-EDL resources over the http interface.
-When using the `gdalcubes` package, we have support for a somewhat nicer, more localized authentication that uses the configuration options instead.
-We tell `edl_set_token` not to set the environmental variable globally, but to return
-in the header format which we can pass to `gdalcubes_set_gdal_config()`:
-
-```{r}
-#header <- edl_set_token(set_env_var = FALSE, format = "header")
-#gdalcubes_set_gdal_config("GDAL_HTTP_HEADERS", header)
-```
-
-`earthdatalogin` also includes optional configuration settings for GDAL which can improve performance of cloud-based data access.  Set the GDAL environmental variables using `gdal_cloud_config()`
-
-```{r}
-gdal_cloud_config()
-```
-
-## Search via STAC
-
-We will now use the `rstac` package to search one or more NASA collections for data that falls into our desired bounding 
-
-Set a search box in space & time
-
-```{r}
-bbox <- c(xmin=-122.5, ymin=37.5, xmax=-122.0, ymax=38) 
-start <- "2022-01-01"
-end <- "2022-06-30"
-
-# Find all assets from the desired catalog:
-items <- stac("https://cmr.earthdata.nasa.gov/stac/LPCLOUD") |> 
-  stac_search(collections = "HLSL30.v2.0",
-              bbox = bbox,
-              datetime = paste(start,end, sep = "/")) |>
-  post_request() |>
-  items_fetch() |>
-  items_filter(filter_fn = \(x) {x[["eo:cloud_cover"]] < 20})
-```
-
-
-Note that `r length(items$features)` features have matched our search criteria! Each feature represents a 'snapshot' image taken by the satellite as it passes by (this is a harmonized product so actually there's quite a lot of post-processing.)  Each feature thus shares the same bounding box, projection, and timestamp, but may consist of many different 'assets', different COG files representing the different spectral bands on the satellite camera instrument.  Each feature can potentially include quite extensive metadata about the feature, including details of instrument itself or from post-processing, such as cloud cover.  Unfortunately, EarthData's STAC metadata tends to be quite sparse. 
-
-
-
-## Building a Data Cube
-
-
-```{r}
-# Desired data cube shape & resolution
-v = cube_view(srs = "EPSG:4326",
-              extent = list(t0 = as.character(start), 
-                            t1 = as.character(end),
-                            left = bbox[1], right = bbox[3],
-                            top = bbox[4], bottom = bbox[2]),
-                nx = 2048, ny = 2048, dt = "P1M")
-```
-
-
-```{r}
-# RGB bands + cloud cover mask
-edl_s3_token()
-
-s3url <- function(url) edl_as_s3(url, prefix="/vsis3/")
-col <- stac_image_collection(items$features, 
-                             asset_names = c("B02", "B03", "B04", "Fmask"),
-                             url_fun = s3url)
-```
-
-
-```{r sf_bay}
-# use a cloud mask -- not sure I have this correct
-# https://lpdaac.usgs.gov/documents/1326/HLS_User_Guide_V2.pdf
-cloud_mask <- image_mask("Fmask", values=1) # mask clouds and cloud shadows
-rgb_bands <- c("B04","B03", "B02")
-
-# Here we go! note eval is lazy
-raster_cube(col, v, mask=cloud_mask) |>
-  select_bands(rgb_bands) |>
-  plot(rgb=1:3)
-```
 
