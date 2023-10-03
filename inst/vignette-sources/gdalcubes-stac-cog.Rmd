@@ -104,10 +104,10 @@ col <- stac_image_collection(items$features,
 cloud_mask <- image_mask("Fmask", values=1)
 ```
 
-```{r sf_bay}
+```{r sf_bay, cache=TRUE}
 
 # Here we go! note eval is lazy
-raster_cube(col, v) |>
+raster_cube(col, v, mask=cloud_mask) |>
   select_bands(c("B02","B03", "B04")) |>
   plot(rgb=3:1)
 ```

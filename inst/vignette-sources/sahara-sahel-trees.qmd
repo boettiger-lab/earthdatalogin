@@ -1,4 +1,12 @@
 
+
+Exploring vector & raster ORNL
+
+- [Tucker et al, _Nature_ 2023](https://doi.org/10.1038/s41586-022-05653-6)
+- [Visualization tool](https://trees.pgc.umn.edu/app)
+- [Data on ORNL DAAC](https://doi.org/10.3334/ORNLDAAC/2117)
+- [github repo](https://github.com/ankitkariryaa/An-unexpectedly-large-count-of-trees-in-the-western-Sahara-and-Sahel/)
+
 ```{r}
 library(earthdatalogin)
 edl_set_token()
