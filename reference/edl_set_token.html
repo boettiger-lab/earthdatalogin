@@ -81,7 +81,7 @@ addresses to NASA EarthData assets.</p>
 <span>  password <span class="op">=</span> <span class="fu">default</span><span class="op">(</span><span class="st">"password"</span><span class="op">)</span>,</span>
 <span>  token_number <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  set_env_var <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  format <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"token"</span>, <span class="st">"header"</span><span class="op">)</span></span>
+<span>  format <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"token"</span>, <span class="st">"header"</span>, <span class="st">"file"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -100,13 +100,13 @@ addresses to NASA EarthData assets.</p>
 
 
 <dt>set_env_var</dt>
-<dd><p>Should we set the GDAL_HTTP_HEADERS
+<dd><p>Should we set the GDAL_HTTP_HEADER_FILE
 environmental variable?  logical, default TRUE.</p></dd>
 
 
 <dt>format</dt>
-<dd><p>One of "token" or "header".  The latter adds the prefix
-used by http headers to the return string.</p></dd>
+<dd><p>One of "token", "header" or "file."  "header" adds the prefix
+used by http headers to the return string.  "file" returns</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -123,10 +123,10 @@ or a token with the header prefix included, <code>Authorization: Bearer &lt;toke
     <p>IMPORTANT: it is necessary to unset this token using <code><a href="edl_unset_token.html">edl_unset_token()</a></code>
 <strong>before</strong> trying to access HTTP resources that are not part of EarthData,
 as setting this token will cause those calls to fail!</p>
-<p>NOTE: GDAL &gt;= 3.6.1 is required to recognize the GDAL_HTTP_HEADERS variable.
-The function can still generate and access tokens without GDAL, and curl
-requests can still use the token (e.g. edl_download()). This function will
-try and warn the user if an older version of GDAL is found.</p>
+<p>NOTE: Because GDAL &gt;= 3.6.1 is required to recognize the GDAL_HTTP_HEADERS,
+but all versions recognize GDAL_HTTP_HEADER_FILE. So we set the Bearer token
+in a temporary file and provide this path as GDAL_HTTP_HEADER_FILE to
+improve compatibility with older versions.</p>
     </div>
 
     <div class="section level2">
