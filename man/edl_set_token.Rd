@@ -9,7 +9,7 @@ edl_set_token(
   password = default("password"),
   token_number = 1,
   set_env_var = TRUE,
-  format = c("token", "header")
+  format = c("token", "header", "file")
 )
 }
 \arguments{
@@ -19,11 +19,11 @@ edl_set_token(
 
 \item{token_number}{Which token (1 or 2)}
 
-\item{set_env_var}{Should we set the GDAL_HTTP_HEADERS
+\item{set_env_var}{Should we set the GDAL_HTTP_HEADER_FILE
 environmental variable?  logical, default TRUE.}
 
-\item{format}{One of "token" or "header".  The latter adds the prefix
-used by http headers to the return string.}
+\item{format}{One of "token", "header" or "file."  "header" adds the prefix
+used by http headers to the return string.  "file" returns}
 }
 \value{
 A text string containing only the token (format=token),
@@ -43,10 +43,10 @@ IMPORTANT: it is necessary to unset this token using \code{edl_unset_token()}
 \strong{before} trying to access HTTP resources that are not part of EarthData,
 as setting this token will cause those calls to fail!
 
-NOTE: GDAL >= 3.6.1 is required to recognize the GDAL_HTTP_HEADERS variable.
-The function can still generate and access tokens without GDAL, and curl
-requests can still use the token (e.g. edl_download()). This function will
-try and warn the user if an older version of GDAL is found.
+NOTE: Because GDAL >= 3.6.1 is required to recognize the GDAL_HTTP_HEADERS,
+but all versions recognize GDAL_HTTP_HEADER_FILE. So we set the Bearer token
+in a temporary file and provide this path as GDAL_HTTP_HEADER_FILE to
+improve compatibility with older versions.
 }
 \examples{
 \dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
