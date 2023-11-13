@@ -13,9 +13,9 @@ edl_download(
 )
 }
 \arguments{
-\item{href}{the https URL of the earthdata asset}
+\item{href}{the https URL of the asset}
 
-\item{dest}{lcoal filepath destination}
+\item{dest}{local destination}
 
 \item{header}{the Authorization header (\verb{Bearer <token>}).  Will be
 requested automatically if not provided.}
