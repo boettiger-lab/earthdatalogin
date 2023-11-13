@@ -1,5 +1,12 @@
 
 #' Search for data products using the EarthData API
+#'
+#' **NOTE**: Use as a fallback method only! Users are strongly encouraged
+#'  to rely on the STAC endpoints for NASA EarthData, as shown in the
+#'  package vignettes.  STAC is a widely used metadata standard by both
+#'  NASA and many other providers, and can be searched using the feature-rich
+#'  `rstac` package.  STAC return items can be more easily parsed as well.
+#'
 #' @param short_name dataset short name e.g. ATL08
 #' @param version dataset version
 #' @param doi DOI for a dataset
@@ -49,7 +56,11 @@ edl_search <- function(short_name = NULL,
   resp
 }
 
-#' data access URLs
+#' Extract data URLs from edl_search
+#'
+#' **NOTE** this function uses heuristic rules to extract data
+#' from edl_search(). Users are strongly encouraged to rely on
+#' STAC searches instead.
 #'
 #' @param resp a response object from edl_search
 #' @return a character vector of URLs

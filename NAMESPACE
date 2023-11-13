@@ -2,11 +2,9 @@
 
 export(edl_as_s3)
 export(edl_download)
-export(edl_extract_urls)
 export(edl_renviron)
 export(edl_revoke_token)
 export(edl_s3_token)
-export(edl_search)
 export(edl_set_token)
 export(edl_unset_token)
 export(gdal_cloud_config)
