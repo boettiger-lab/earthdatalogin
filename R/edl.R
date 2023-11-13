@@ -110,8 +110,8 @@ edl_api <- function(endpoint,
 #' of downloading unnecessary bits.  Unfortunately, certain formats do
 #' not support such HTTP-based range requests (e.g. HDF4), and require
 #' the asset is downloaded to a local POSIX filesystem first.
-#' @param href the https URL of the earthdata asset
-#' @param dest lcoal filepath destination
+#' @param href the https URL of the asset
+#' @param dest local destination
 #' @param header the Authorization header (`Bearer <token>`).  Will be
 #' requested automatically if not provided.
 #' @param use_httr logical, default TRUE. Should we use httr or base method?
@@ -214,6 +214,7 @@ edl_stac_urls <- function(items, assets = "data") {
 #'
 #' External sources that don't need the token may error if token is set.
 #' Call `edl_unset_token` before accessing non-EarthData URLs.
+#' @return unsets environmental variables token (no return object)
 #' @export
 #'
 #' @examples

@@ -1,7 +1,8 @@
 
 #' Renviron Helper utility
 #'
-#' Asks user for their username and password and store the result in Rprofile.
+#' Asks user for their username and password and store the result in
+#' an Renviron file.
 #' @param user your EDL username (created at
 #'  <https://urs.earthdata.nasa.gov/home>)
 #' @param password your EDL password (created at

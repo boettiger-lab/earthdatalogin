@@ -2,7 +2,6 @@
 
 export(edl_as_s3)
 export(edl_download)
-export(edl_renviron)
 export(edl_revoke_token)
 export(edl_s3_token)
 export(edl_set_token)
