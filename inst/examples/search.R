@@ -1,3 +1,9 @@
+# edl_search() is an alternative to STAC search for NASA EarthData
+# It is less general but can return additional metadata and is often
+# much faster than STAC search.  We encourage users to rely on
+# the standard STAC, for now this is included only as an example of
+# of the NASA CMR API and not an officially supported mechanism
+# within the earthdatalogin package.
 
 #' Search for data products using the EarthData API
 #'
