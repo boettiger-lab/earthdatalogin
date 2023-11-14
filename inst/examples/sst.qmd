@@ -1,0 +1,136 @@
+
+```{r setup}
+library(earthdatalogin)
+library(rstac)
+```
+
+
+
+```{r}
+start = "2020-01-01"
+end = "2020-12-31"
+items <- stac("https://cmr.earthdata.nasa.gov/stac/POCLOUD") |>
+  stac_search(collections = "MUR-JPL-L4-GLOB-v4.1",
+              datetime = paste(start,end, sep = "/")) |>
+  post_request() |>
+  items_fetch()
+```
+
+
+# Old way
+
+A typical approach might download all the assets, either all at once like this or one by one as an analysis loops over files.  Examples of this approach can be [seen frequently](https://medium.com/coiled-hq/processing-terabyte-scale-nasa-cloud-datasets-with-coiled-70ab552f35ec), including those intended to operate "on the cloud", where downloads are faster.  
+
+```{r eval=FALSE}
+down <- function(urls) lapply(urls, edl_download)
+
+bench::bench_time({
+  rstac::assets_download(items, asset_names="data", download_fn = down)
+})
+```
+
+
+
+## A better way
+
+```{r}
+urls <- rstac::assets_url(items, asset_names = "data")
+edl_set_token()
+
+library(terra)
+box <- ext(-93, -76, 41, 49)
+
+for(file in urls) {
+  ds <- rast(url) |> crop(box)
+}
+```
+
+# An even better way
+
+
+```{r}
+library(gdalcubes)
+gdalcubes_set_gdal_config("GDAL_NUM_THREADS", "ALL_CPUS")
+gdalcubes_options(parallel = TRUE)
+```
+
+
+Unfortunately, NASA's netcdf files lack some typical metadata regarding projection and extent (bounding box) of the data.  Some tools are happy to ignore this, just assuming a regular grid, but because GDAL supports explicitly spatial extraction, it wants to know this information.  Nor is this information even provided in the STAC entries! Oh well -- here we provide it rather manually using GDAL's "virtual dataset" prefix-suffix syntax (e.g. note the `a_srs=OGC:CRS84`), so that GDAL does not complain that the CRS (coordinate reference system) is missing.  Additional metadata such as the timestamp for each image is always included in a STAC entry and so can be automatically extracted by `stac_image_collection`.  
+
+```{r}
+vrt <- function(url) {
+  prefix <-  "vrt://NETCDF:/vsicurl/"
+  suffix <- ":analysed_sst?a_srs=OGC:CRS84&a_ullr=-180,90,180,-90"
+  paste0(prefix, url, suffix)
+}
+```
+
+```{r}
+col <- stac_image_collection(items$features,
+                             asset_names = "data",
+                             url_fun = vrt)
+```
+
+Access to NASA's EarthData collection requires an authentication token.
+The `earthdatalogin` package exists only to handle this!  
+Unlike `sf`, `terra` etc, the way `gdalcubes` calls `gdal` 
+does not inherit global environmental variables, so 
+we set the variables it uses with it's own configuration utility:
+
+```{r}
+header <- edl_set_token(format="header", set_env_var = FALSE)
+gdalcubes_set_gdal_config("GDAL_HTTP_HEADERS", header)
+```
+
+
+A classic workflow will often work through file-by-file (or even pixel by pixel).
+However, good, user friendly computing interfaces often provide higher-level abstractions.
+As a user, we don't particularly care about the details of how the data is sliced into
+individual files, but we do want a workflow that does not download more bytes than we need.
+
+In this case, these sea-surface-temperatures where each file covers the full earth surface but are organized into 1 netcdf file for each day of the year.  In contrast, most satellite imagery products may have many different images that must be tiled together into a mosaic to cover the whole earth.  Different data products will also be computed at different spatial resolutions -- is a pixel 100m or 50cm? -- and expressed in different spatial projections.  A workflow will typically need to crop or subset each data layer, and potentially also transform it to a common projection and common resolution.
+
+To facilitate this, `gdalcubes` defines the concept of a `cube_view`: a specification of the projection, extent, and resolution desired.  These may or may not match the projection, extent, or resolution of the data -- the `gdalwarp` utility can efficiently handle these transformations on accessing each remote resource.  In our case, we will use the same projection (`ESPG:4326`, lat/long), and the same resolution (0.01 degree resolution in space, daily resolution in time), but we will crop the spatial extent to a specific location.
+
+```{r}
+v = cube_view(srs = "EPSG:4326",
+              extent = list(t0 = as.character(start), 
+                            t1 = as.character(end),
+                            left = -93, right = -76,
+                            bottom = 41, top = 49),
+              dx = .01, dy = 0.01, dt = "P1D")
+```
+
+We can then apply our view to the image collection to create our data cube.
+
+```{r}
+data_cube <- raster_cube(col, v)
+```
+
+Note the data cube contains all the information it will need to do an operations on this data, but so far we have not touched the data files themslves.  The software knows just how many data files are involved, but 
+
+```{r}
+bench::bench_time({
+ data_cube |>
+  gdalcubes::write_tif("~/sst2")
+})
+```
+
+`create_image_collection()` Takes a vector of URLs (in virtual filesystem syntax, or local paths), and a vector of datetimes (each image representing x/y dimensions at one time, along with a vector of time defines the space-time "cube"), and returns an image collection that can be used in `raster_cube()`.
+
+
+Instead of applying a `cube_view` to a cube (i.e. setting the projection, extent in space and time, and resolution) desired, we may just want to work with whatever the native projection, extent, and resolution are.  In this case we don't want a separate `image_collection()` and `cube_view()`, we can simply create a cube with the images as they are using 
+`stack_cube()`.  Our serialized files provide a good example of this -- we've already dealt with sub-setting this data and have stored a local copy.  We can now perform additional operations on this very quickly:
+
+
+```{r}
+## Now we can quickly manipulate, aggregate and plot
+files <- fs::dir_ls("~/sst2")
+dates_values <- stringr::str_extract(files, "\\d{4}-\\d{2}-\\d{2}")
+
+stack_cube(files, datetime_values = dates_values) |> 
+  aggregate_time("P1M", method="mean") |>
+  plot(col = viridisLite::viridis(30), nbreaks=31)
+
+```
+
