@@ -1,6 +1,6 @@
 Package: earthdatalogin
 Title: NASA EarthData Login Utilities
-Version: 0.0.1
+Version: 0.0.1.9000
 Authors@R: 
   person("Carl", "Boettiger", , "cboettig@gmail.com", c("aut", "cre"),
          comment = c(ORCID = "0000-0002-1642-628X"))
