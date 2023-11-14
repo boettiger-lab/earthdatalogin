@@ -11,7 +11,7 @@ vignette: >
 High-resolution satellites generate many snapshot images each with a limited field of view or spatial extent.  In order to see a larger area in space, and/or observe changes across space and time, we need to assemble these many snapshots into a mosaic or "data cube" that we can analyze as a cohesive whole. 
 
 
-[EARTHDATA STAC CATALOGS](https://radiantearth.github.io/stac-browser/#/external/cmr.earthdata.nasa.gov/stac/LPCLOUD?.language=en)
+[EARTHDATA STAC CATALOGS](https://radiantearth.github.io/stac-browser/#/external/cmr.earthdata.nasa.gov/stac/)
 
 
 ```{r, include = FALSE}

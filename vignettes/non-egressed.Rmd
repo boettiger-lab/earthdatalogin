@@ -11,7 +11,7 @@ If you have access to machine running inside Amazon `us-west-2` (e.g. a NASA [Op
 This may offer slightly better performance than using the universal https interface which routes data through a proxy, but is rarely necessary.  This approach is documented only for the sake of completeness. 
 Use the http interface whenever possible!
 
-(In future, this mechanism may also work with private S3 credentials in a 'requester-pays' model, charging for data egress rather than compute.  For more context on access mechanisms for NASA EarthData see the [motivations](motivations) vignette). 
+(In future, this mechanism may also work with private S3 credentials in a 'requester-pays' model, charging for data egress rather than compute.  For more context on access mechanisms for NASA EarthData see the [motivations](https://boettiger-lab.github.io/earthdatalogin/articles/motivations.html) vignette). 
 
 
 
