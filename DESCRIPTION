@@ -1,9 +1,15 @@
 Package: earthdatalogin
 Title: NASA 'EarthData' Login Utilities
-Version: 0.0.1
+Version: 0.0.1.99
 Authors@R: 
-  person("Carl", "Boettiger", , "cboettig@gmail.com", c("aut", "cre"),
-         comment = c(ORCID = "0000-0002-1642-628X"))
+  c(person(given = "Carl", family = "Boettiger", , "cboettig@gmail.com", c("aut", "cre"),
+         comment = c(ORCID = "0000-0002-1642-628X")),
+    person("Luis", "López", role = "aut",
+         comment = c(ORCID = "0000-0003-4896-3263")),
+    person("Bri", "Lind", role = "aut",
+         comment = c(ORCID = "0000-0002-5306-9963")),
+    person("Openscapes", role = "aut")
+         )
 Description: Providing easy, portable access to NASA 'EarthData' products
   through the use of bearer tokens. Much of NASA's public data catalogs hosted
   and maintained by its 12 Distributed Active Archive Centers ('DAACs') are
