@@ -70,15 +70,6 @@ The defining feature that makes 'cloud native' access fast is that this access i
 
 *However*, not all data formats are equally amenable to this approach.  Requesting a few bytes from a file across hundreds of miles of network connection is not the same thing as requesting a few bytes across the six inches of PCI connection between your processor and your hard-drive. More recent formats like "Cloud Optimized Geotiff" (COG) files are, as the name suggests, optimized for this.  Complex older formats like HDF5 or GRIB are much less efficient. Network based range requests are not possible on some older (but still widely used) formats, like HDF4.  In this last case, we will need to download the file to a local disk (a POSIX filesystem, not a hyperscale Object Store) to read it.  Use `edl_download()` to handle authenticated downloads in this case.
 
-## Managing your User Account
-
-Once you have [registered for an account](https://urs.earthdata.nasa.gov/home) on the NASA EarthData webpage, you can have R track your username and password in your user `.Renviron` file by using the helper function:
-
-```{r}
-edl_renviron()
-```
-
-This is a convenient way to store your user name and password on your own computer so you don't have to use the default user or enter your password for each session.  Note that this stores your user name and password in plain text in a hidden `~/.Renviron` file on your computer -- this may be fine if you are working on your own private computer. Never reuse passwords associated with other accounts.
 
 
 ## Vignettes
