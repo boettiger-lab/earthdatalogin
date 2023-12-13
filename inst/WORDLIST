@@ -25,6 +25,7 @@ NETRC
 NOAA
 OAuth
 PCI
+QGIS
 STAC
 Terrabyte
 URI
@@ -34,6 +35,7 @@ VM
 VSI
 Zarr
 asia
+config
 cpu
 dr
 earthdata
@@ -62,4 +64,5 @@ terra
 terrabytes
 tl
 unsets
+wget
 zarr

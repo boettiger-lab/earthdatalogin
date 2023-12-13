@@ -102,33 +102,11 @@ edl_api <- function(endpoint,
   p
 }
 
-#' download assets from earthdata over https using bearer tokens
-#'
-#' NOTE: This should be used primarily as a fallback mechanism!
-#' EarthData Cloud resources are often best accessed directly over
-#' HTTPS without download.  This allows subsets to be extracted instead
-#' of downloading unnecessary bits.  Unfortunately, certain formats do
-#' not support such HTTP-based range requests (e.g. HDF4), and require
-#' the asset is downloaded to a local POSIX filesystem first.
-#' @param href the https URL of the asset
-#' @param dest local destination
-#' @param header the Authorization header (`Bearer <token>`).  Will be
-#' requested automatically if not provided.
-#' @param use_httr logical, default TRUE. Should we use httr or base method?
-#' @param ... additional arguments to the [utils::download.file()] (ignored
-#' if `use_httr=TRUE`).
-#' @return the `dest` path, invisibly
-#' @export
-#' @examplesIf interactive()
-#' href <- lpdacc_example_url()
-#' edl_download(href)
-edl_download <- function(href,
-                         dest = basename(href),
-                         header = edl_set_token(),
-                         use_httr = TRUE,
-                         ...) {
+
+download_using_token <- function(href, dest, method, ...) {
+  header <- edl_set_token()
   bearer <- paste("Bearer", header)
-  if (use_httr) {
+  if (method == "httr") {
     httr::GET(href,
               httr::write_disk(dest, overwrite = TRUE),
               httr::add_headers(Authorization = bearer))
@@ -136,9 +114,7 @@ edl_download <- function(href,
     utils::download.file(href, dest, ...,
                          header = list(Authorization = bearer))
   }
-  invisible(dest)
 }
-
 
 #' Receive and set temporary AWS Tokens for S3 access
 #'

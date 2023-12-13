@@ -1,0 +1,41 @@
+#' download assets from earthdata over https using bearer tokens
+#'
+#' NOTE: This should be used primarily as a fallback mechanism!
+#' EarthData Cloud resources are often best accessed directly over
+#' HTTPS without download.  This allows subsets to be extracted instead
+#' of downloading unnecessary bits.  Unfortunately, certain formats do
+#' not support such HTTP-based range requests (e.g. HDF4), and require
+#' the asset is downloaded to a local POSIX filesystem first.
+#' @param href the https URL of the asset
+#' @param dest local destination
+#' @param auth the authentication method ("token" for Bearer tokens
+#' or "netrc" for netrc.)
+#' @param method The download method, either "httr", "curl", or "wget".
+#' @inheritParams edl_netrc
+#' @param ... additional arguments to `download.file()`
+#' @return the `dest` path, invisibly
+#' @export
+#' @examplesIf interactive()
+#' href <- lpdacc_example_url()
+#' edl_download(href)
+edl_download <- function(href,
+                         dest = basename(href),
+                         auth = "token",
+                         method = "curl",
+                         netrc_path = edl_netrc_path(),
+                         cookie_path = edl_cookie_path(),
+                         ...) {
+
+  if (auth == "token") {
+    download_using_token(href, dest, method, ...)
+
+  } else {
+    curl_args <- paste("--netrc-file", netrc_path,
+                       "-b", cookie_path,
+                       "-c", cookie_path)
+    utils::download.file(href, dest, method = "curl",
+                         extra = curl_args, ...)
+  }
+  invisible(dest)
+}
+
