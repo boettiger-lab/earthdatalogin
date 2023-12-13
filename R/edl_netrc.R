@@ -5,16 +5,16 @@ edl_netrc <- function(username = default("user"),
                       cookie_path = edl_cookie_path()) {
 
   contents <- paste("machine urs.earthdata.nasa.gov login",
-                    username, "password", paste0("'", password, "'"))
+                    username, "password", password)
   writeLines(contents, netrc_path)
   Sys.setenv("GDAL_HTTP_NETRC" = TRUE)
   Sys.setenv("GDAL_HTTP_NETRC_FILE" = netrc_path)  # GDAL >= 3.7.0
 
   # GDAL < 3.7 cannot use an alternative location for .netrc
-  if(!file.exists("~/.netrc")) {
-    file.link(netrc_path, "~/.netrc")
-    reg.finalizer(.GlobalEnv, function() unlink("~/.netrc"), onexit = FALSE)
-  }
+#  if(!file.exists("~/.netrc")) {
+#    file.link(netrc_path, "~/.netrc")
+#    reg.finalizer(.GlobalEnv, function() unlink("~/.netrc"), onexit = FALSE)
+#  }
 
   edl_cookies(cookie_path)
 
