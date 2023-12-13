@@ -1,4 +1,31 @@
 
+
+#' Set up Earthdata Login (EDL) credentials using a .netrc file
+#'
+#' This function creates a .netrc file with Earthdata Login (EDL) credentials
+#' (username and password) and sets the necessary environment variables for GDAL
+#' to use the .netrc file.
+#'
+#' @inheritParams edl_set_token
+#' @param netrc_path Path to the .netrc file to be created. Defaults to the
+#'   appropriate R package configuration location given by [tools::R_user_dir()].
+#' @param cookie_path Path to the file where cookies will be stored.  Defaults
+#'   to the appropriate R package configuration location given by
+#'   [tools::R_user_dir()].
+#'
+#' @details The function sets the environment variables \code{GDAL_HTTP_NETRC}
+#'   and \code{GDAL_HTTP_NETRC_FILE} to enable GDAL to use the .netrc file for
+#'   EDL authentication. GDAL_HTTP_COOKIEFILE and GDAL_HTTP_COOKIEJAR are also
+#'   set to allow the authentication to store and read access cookies.
+#'
+#'   Additionally, it manages the creation of a symbolic
+#'   link to the .netrc file if GDAL version is less than 3.7.0 (and thus
+#'   does not support GDAL_HTTP_NETRC_FILE location).
+#'
+#' @examplesIf interactive()
+#' edl_netrc()
+#'
+#' @export
 edl_netrc <- function(username = default("user"),
                       password = default("password"),
                       netrc_path = edl_netrc_path(),
@@ -13,7 +40,11 @@ edl_netrc <- function(username = default("user"),
   # GDAL < 3.7 cannot use an alternative location for .netrc
   if(!file.exists("~/.netrc")) {
     file.link(netrc_path, "~/.netrc")
-    reg.finalizer(.GlobalEnv, function() unlink("~/.netrc"), onexit = FALSE)
+
+    ## still leaves file behind?
+    e <- environment()
+    f <- function() { unlink("~/.netrc") }
+    reg.finalizer(e, f, onexit = TRUE)
   }
 
   edl_cookies(cookie_path)

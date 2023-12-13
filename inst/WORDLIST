@@ -1,6 +1,8 @@
 Auth
 CMD
 COGs
+COOKIEFILE
+COOKIEJAR
 CloudFlare
 Codespaces
 DAAC
@@ -19,9 +21,9 @@ HDF
 HTTPS
 JupyterHub
 MODIS
+NETRC
 NOAA
 OAuth
-Openscapes
 PCI
 STAC
 Terrabyte
@@ -32,12 +34,10 @@ VM
 VSI
 Zarr
 asia
-cloudfront
 cpu
 dr
 earthdata
 edl
-filepath
 filesystem
 gdal
 gdalcubes
@@ -50,11 +50,11 @@ httr
 hyperscale
 india
 kb
-lcoal
 modis
 native’
 ndvi
 netcdf
+netrc
 programmatically
 rstac
 sst
