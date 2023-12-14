@@ -11,8 +11,16 @@ with_gdalcubes(env = Sys.getenv())
 is usually best, which will configure all relevant global environmental
 variables for gdalcubes.}
 }
+\value{
+NULL, invisibly.
+}
 \description{
 expose any \verb{GDAL_*} or \verb{VSI_*} environmental variables to
 gdalcubes, which calls GDAL in an isolated environment
 and does not respect the global environmental variables.
+}
+\examples{
+\dontshow{if (requireNamespace("gdalcubes", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+ with_gdalcubes()
+\dontshow{\}) # examplesIf}
 }

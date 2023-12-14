@@ -33,11 +33,21 @@ edl_download <- function(href,
 
     edl_netrc(netrc_path = edl_netrc_path(),
               cookie_path = edl_cookie_path())
-    curl_args <- paste("--netrc-file", netrc_path,
-                       "-b", cookie_path,
-                       "-c", cookie_path)
-    utils::download.file(href, dest, method = "curl",
-                         extra = curl_args, ...)
+
+    if (method == "httr") {
+      httr::GET(href,
+                httr::config(netrc_file = netrc_path,
+                             cookiefile = cookie_path,
+                             cookiejar = cookie_path),
+                httr::write_disk(dest, overwrite = TRUE))
+    } else {
+      curl_args <- paste("-n",
+                         "--netrc-file", netrc_path,
+                         "-b", cookie_path,
+                         "-c", cookie_path)
+      utils::download.file(href, dest, method = "curl",
+                           extra = curl_args, ...)
+    }
   }
   invisible(dest)
 }
