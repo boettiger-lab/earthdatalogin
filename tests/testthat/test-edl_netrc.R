@@ -2,12 +2,20 @@
 
 test_that("edl_netrc", {
 
+  skip_on_cran()
+  skip_if_offline()
+
   # test in clean setting
   edl_unset_token()
   unlink( edl_cookie_path() )
+
+  # here we go
   edl_netrc()
 
-  r <- terra::rast("/vsicurl/https://data.lpdaac.earthdatacloud.nasa.gov/lp-prod-protected/HLSL30.020/HLS.L30.T56JKT.2023246T235950.v2.0/HLS.L30.T56JKT.2023246T235950.v2.0.SAA.tif")
-
+  url <- lpdacc_example_url()
+  r <- terra::rast(url, vsi=TRUE)
   expect_true(inherits(r, "SpatRaster"))
+
+  edl_unset_netrc()
+
   })

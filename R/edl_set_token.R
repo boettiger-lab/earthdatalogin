@@ -1,7 +1,3 @@
-# Proto-package functions for dealing with NASA's earthdata login
-# Requires GDAL >= 3.6
-
-
 #' Get or set an earthdata login token
 #'
 #' This function will ping the EarthData API for any available tokens.
@@ -12,9 +8,10 @@
 #' popular R packages which use gdal to immediately authenticate any http
 #' addresses to NASA EarthData assets.
 #'
-#' IMPORTANT: it is necessary to unset this token using `edl_unset_token()`
-#' **before** trying to access HTTP resources that are not part of EarthData,
-#' as setting this token will cause those calls to fail!
+#' IMPORTANT: it is necessary to unset this token using [edl_unset_token()]
+#' before trying to access HTTP resources that are not part of EarthData,
+#' as setting this token will cause those calls to fail! OR simply use
+#' [edl_netrc()] to authenticate without facing this issue.
 #'
 #' NOTE: Because GDAL >= 3.6.1 is required to recognize the GDAL_HTTP_HEADERS,
 #' but all versions recognize GDAL_HTTP_HEADER_FILE. So we set the Bearer token
@@ -33,12 +30,16 @@
 #' @export
 #' @examplesIf interactive()
 #' edl_set_token()
+#' edl_unset_token()
 edl_set_token <- function (username = default("user"),
                            password = default("password"),
                            token_number = 1,
                            set_env_var = TRUE,
                            format = c("token", "header", "file")
 ){
+
+  done <- we_prefer_netrc(username, password)
+  if (done) return(invisible(NULL))
 
   p <- edl_api("/api/users/tokens", username, password)
 
@@ -60,6 +61,8 @@ edl_set_token <- function (username = default("user"),
   )
   invisible(out)
 }
+
+
 
 edl_headerfile <- function(token) {
   header = edl_header(token)
@@ -103,59 +106,6 @@ edl_api <- function(endpoint,
 }
 
 
-download_using_token <- function(href, dest, method, ...) {
-  header <- edl_set_token()
-  bearer <- paste("Bearer", header)
-  if (method == "httr") {
-    httr::GET(href,
-              httr::write_disk(dest, overwrite = TRUE),
-              httr::add_headers(Authorization = bearer))
-  } else {
-    utils::download.file(href, dest, ...,
-                         header = list(Authorization = bearer))
-  }
-}
-
-#' Receive and set temporary AWS Tokens for S3 access
-#'
-#' @param daac the base URL for the DAAC
-#' @param username EarthDataLogin user
-#' @param password EarthDataLogin Password
-#' @return list of access key, secret key, session token and expiration,
-#' invisibly.  Also sets the corresponding AWS environmental variables.
-#'
-#' @examplesIf interactive()
-#' edl_s3_token()
-#' @export
-edl_s3_token <- function(daac = "https://data.lpdaac.earthdatacloud.nasa.gov",
-                         username = default("user"),
-                         password = default("password")) {
-
-  p <- edl_api(endpoint = "/s3credentials",
-               username = username,
-               password = password,
-               base = daac)
-  Sys.setenv(AWS_ACCESS_KEY_ID = p$accessKeyId)
-  Sys.setenv(AWS_SECRET_ACCESS_KEY = p$secretAccessKey)
-  Sys.setenv(AWS_SESSION_TOKEN = p$sessionToken)
-
-  invisible(p)
-}
-
-#' Replace https URLs with S3 URIs
-#' @param href a https URL from an EarthData Cloud address
-#' @param prefix the preferred s3 prefix, e.g. `s3://` (understood by gdalcubes),
-#' or `/vsis3`, for terra/stars/sf or other GDAL-based interfaces.
-#' @return a URI that strips basename and protocol and appends prefix
-#' @export
-#' @examples
-#' href <- lpdacc_example_url()
-#' edl_as_s3(href)
-edl_as_s3 <- function(href, prefix = "s3://") {
-  p <- httr::parse_url(href)
-  paste0(prefix, p$path)
-}
-
 
 #' URL for an example of an LP DAAC COG file
 #'
@@ -172,18 +122,6 @@ lpdacc_example_url <- function() {
 }
 
 
-
-#' Helper function for extracting URLs from STAC
-#'
-#' @param items an items list from rstac
-#' @param assets name(s) of assets to extract
-#' @return a vector of hrefs for all discovered assets.
-#'
-edl_stac_urls <- function(items, assets = "data") {
-  purrr::map(items$features, list("assets")) |>
-    purrr::map(list(assets)) |>
-    purrr::map_chr("href")
-}
 
 
 #' unset token
@@ -234,4 +172,21 @@ edl_revoke_token <- function(
 
   }
   invisible(p2)
+}
+
+
+
+
+
+
+#' Helper function for extracting URLs from STAC
+#'
+#' @param items an items list from rstac
+#' @param assets name(s) of assets to extract
+#' @return a vector of hrefs for all discovered assets.
+#'
+edl_stac_urls <- function(items, assets = "data") {
+  purrr::map(items$features, list("assets")) |>
+    purrr::map(list(assets)) |>
+    purrr::map_chr("href")
 }

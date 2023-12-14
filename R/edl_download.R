@@ -10,9 +10,9 @@
 #' @param dest local destination
 #' @param auth the authentication method ("token" for Bearer tokens
 #' or "netrc" for netrc.)
-#' @param method The download method, either "httr", "curl", or "wget".
+#' @param method The download method, either "httr" or "curl".
 #' @inheritParams edl_netrc
-#' @param ... additional arguments to `download.file()`
+#' @param ... additional arguments to `download.file()`, e.g. quiet = TRUE.
 #' @return the `dest` path, invisibly
 #' @export
 #' @examplesIf interactive()
@@ -21,7 +21,7 @@
 edl_download <- function(href,
                          dest = basename(href),
                          auth = "token",
-                         method = "curl",
+                         method = "httr",
                          netrc_path = edl_netrc_path(),
                          cookie_path = edl_cookie_path(),
                          ...) {
@@ -39,3 +39,19 @@ edl_download <- function(href,
   invisible(dest)
 }
 
+
+
+
+
+download_using_token <- function(href, dest, method, ...) {
+  header <- edl_set_token()
+  bearer <- paste("Bearer", header)
+  if (method == "httr") {
+    httr::GET(href,
+              httr::write_disk(dest, overwrite = TRUE),
+              httr::add_headers(Authorization = bearer))
+  } else {
+    utils::download.file(href, dest, ...,
+                         header = list(Authorization = bearer))
+  }
+}

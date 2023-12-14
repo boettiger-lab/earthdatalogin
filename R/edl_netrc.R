@@ -1,5 +1,4 @@
 
-
 #' Set up Earthdata Login (EDL) credentials using a .netrc file
 #'
 #' This function creates a .netrc file with Earthdata Login (EDL) credentials
@@ -23,7 +22,10 @@
 #'   does not support GDAL_HTTP_NETRC_FILE location).
 #'
 #' @examplesIf interactive()
+#'
 #' edl_netrc()
+#' url <- lpdacc_example_url()
+#' terra::rast(url, vsi=TRUE)
 #'
 #' @export
 edl_netrc <- function(username = default("user"),
@@ -37,7 +39,7 @@ edl_netrc <- function(username = default("user"),
   writeLines(contents, netrc_path)
 
   # set GDAL env vars to use this netrc
-  Sys.setenv("GDAL_HTTP_NETRC" = TRUE)
+  Sys.setenv("GDAL_HTTP_NETRC" = "YES")
   Sys.setenv("GDAL_HTTP_NETRC_FILE" = netrc_path)  # GDAL >= 3.7.0
 
   # GDAL < 3.7 cannot use an alternative location for .netrc
@@ -46,6 +48,47 @@ edl_netrc <- function(username = default("user"),
   # Set cookie paths as GDAL env vars
   Sys.setenv("GDAL_HTTP_COOKIEFILE" = cookie_path)
   Sys.setenv("GDAL_HTTP_COOKIEJAR" = cookie_path)
+}
+
+#' edl_unset_netrc
+#'
+#'
+#' Unsets environmental variables set by edl_netrc() and removes
+#' configuration files set by [edl_netrc()].
+#'
+#' Note that this function should rarely be necessary, as unlike bearer
+#' token-based auth, netrc is mapped by domain name and will not interfere
+#' with access to non-earthdata-based URLs.  It may still be necessary
+#' to deactivate in order to use one of the other earthdatalogin authentication
+#' methods.
+#'
+#' To unset environmental variables without removing files, set that file
+#' path argument to `""` (see examples)
+#'
+#' Note that GDAL_HTTP_NETRC defaults to YES.
+#'
+#' @inheritParams edl_netrc
+#' @return invisible TRUE, if successful (even if no env is set.)
+#' @examplesIf interactive()
+#'
+#'  edl_unset_netrc()
+#'
+#'  # unset environmental variables only
+#'  edl_unset_netrc("", "")
+#'
+#' @export
+edl_unset_netrc <- function(netrc_path = edl_netrc_path(),
+                            cookie_path = edl_cookie_path()) {
+
+  unlink(netrc_path)
+  unlink(cookie_path)
+
+  Sys.unsetenv("GDAL_HTTP_NETRC")
+  Sys.unsetenv("GDAL_HTTP_NETRC_FILE")
+
+  # Set cookie paths as GDAL env vars
+  Sys.unsetenv("GDAL_HTTP_COOKIEFILE")
+  Sys.unsetenv("GDAL_HTTP_COOKIEJAR")
 }
 
 
@@ -67,7 +110,6 @@ old_gdal_compatibility <- function (netrc_path, contents) {
   }
 
 }
-
 
 edl_cookie_path <- function() {
   path <- file.path(tools::R_user_dir("earthdatalogin"), "urs_cookies")
@@ -92,5 +134,20 @@ edl_netrc_path <- function() {
 }
 
 
-# wget --load-cookies $GDAL_HTTP_COOKIEFILE --save-cookies $GDAL_HTTP_COOKIEJAR --keep-session-cookies https://data.lpdaac.earthdatacloud.nasa.gov/lp-prod-protected/HLSL30.020/HLS.L30.T13QFD.2013161T171945.v2.0/HLS.L30.T13QFD.2013161T171945.v2.0.SAA.tif
 
+we_prefer_netrc <- function(username, password) {
+  done <- FALSE
+  if(interactive()){
+    message(paste(
+      " Consider using edl_netrc() instead.\n",
+      "edl_netrc() works everywhere, inside and outside `us-west-2`.\n"
+    ))
+    choose_netrc <- utils::askYesNo("Use edl_netrc() instead?")
+    if(choose_netrc) {
+      message("configuring netrc-based auth instead as requested...")
+      edl_netrc(username, password)
+      done <- TRUE
+    }
+  }
+  done
+}
