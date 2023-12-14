@@ -23,6 +23,7 @@
 #'   link to the .netrc file if GDAL version is less than 3.7.0 (and thus
 #'   does not support GDAL_HTTP_NETRC_FILE location).
 #'
+#' @returns TRUE invisibly if successful
 #' @examplesIf interactive()
 #'
 #' edl_netrc()

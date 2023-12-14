@@ -27,6 +27,9 @@ to the appropriate R package configuration location given by
 \item{cloud_config}{set \code{\link[=gdal_cloud_config]{gdal_cloud_config()}} env vars as well? logical,
 default \code{TRUE}.}
 }
+\value{
+TRUE invisibly if successful
+}
 \description{
 This function creates a .netrc file with Earthdata Login (EDL) credentials
 (username and password) and sets the necessary environment variables for GDAL

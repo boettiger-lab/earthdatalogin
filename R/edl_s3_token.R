@@ -22,7 +22,7 @@ edl_s3_token <- function(daac = "https://data.lpdaac.earthdatacloud.nasa.gov",
                          password = default("password")) {
 
   done <- we_prefer_netrc(username, password)
-  if (done) return(invisible(NULL))
+  if (done) return(invisible(TRUE))
 
   p <- edl_api(endpoint = "/s3credentials",
                username = username,

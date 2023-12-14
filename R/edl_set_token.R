@@ -39,7 +39,7 @@ edl_set_token <- function (username = default("user"),
 ){
 
   done <- we_prefer_netrc(username, password)
-  if (done) return(invisible(NULL))
+  if (done) return(invisible(TRUE))
 
   p <- edl_api("/api/users/tokens", username, password)
 
