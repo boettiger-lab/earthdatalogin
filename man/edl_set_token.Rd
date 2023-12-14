@@ -9,7 +9,8 @@ edl_set_token(
   password = default("password"),
   token_number = 1,
   set_env_var = TRUE,
-  format = c("token", "header", "file")
+  format = c("token", "header", "file"),
+  prompt_for_netrc = interactive()
 )
 }
 \arguments{
@@ -24,6 +25,9 @@ environmental variable?  logical, default TRUE.}
 
 \item{format}{One of "token", "header" or "file."  "header" adds the prefix
 used by http headers to the return string.  "file" returns}
+
+\item{prompt_for_netrc}{Often netrc is preferable, so this function will by
+default prompt the user to switch.  Set to FALSE to silence this.}
 }
 \value{
 A text string containing only the token (format=token),

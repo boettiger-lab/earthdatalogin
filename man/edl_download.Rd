@@ -9,6 +9,8 @@ edl_download(
   dest = basename(href),
   auth = "netrc",
   method = "httr",
+  username = default("user"),
+  password = default("password"),
   netrc_path = edl_netrc_path(),
   cookie_path = edl_cookie_path(),
   ...
@@ -23,6 +25,10 @@ edl_download(
 or "netrc" for netrc.)}
 
 \item{method}{The download method, either "httr" or "curl".}
+
+\item{username}{EarthData Login User}
+
+\item{password}{EarthData Login Password}
 
 \item{netrc_path}{Path to the .netrc file to be created. Defaults to the
 appropriate R package configuration location given by \code{\link[tools:userdir]{tools::R_user_dir()}}.}

@@ -7,7 +7,8 @@
 edl_s3_token(
   daac = "https://data.lpdaac.earthdatacloud.nasa.gov",
   username = default("user"),
-  password = default("password")
+  password = default("password"),
+  prompt_for_netrc = interactive()
 )
 }
 \arguments{
@@ -16,6 +17,9 @@ edl_s3_token(
 \item{username}{EarthDataLogin user}
 
 \item{password}{EarthDataLogin Password}
+
+\item{prompt_for_netrc}{Often netrc is preferable, so this function will by
+default prompt the user to switch.  Set to FALSE to silence this.}
 }
 \value{
 list of access key, secret key, session token and expiration,

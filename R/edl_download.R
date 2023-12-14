@@ -22,6 +22,8 @@ edl_download <- function(href,
                          dest = basename(href),
                          auth = "netrc",
                          method = "httr",
+                         username = default("user"),
+                         password = default("password"),
                          netrc_path = edl_netrc_path(),
                          cookie_path = edl_cookie_path(),
                          ...) {
@@ -32,16 +34,20 @@ edl_download <- function(href,
 
   } else {
 
-    edl_netrc(netrc_path = edl_netrc_path(),
+    edl_netrc(username = default("user"),
+              password = default("password"),
+              netrc_path = edl_netrc_path(),
               cookie_path = edl_cookie_path(),
               cloud_config = FALSE)
 
 
     if (method == "httr") {
+      pw <- openssl::base64_encode(paste0(username, ":", password))
       httr::GET(href,
-                httr::config(netrc_file = netrc_path,
+                httr::config(#netrc_file = netrc_path,
                              cookiefile = cookie_path,
                              cookiejar = cookie_path),
+                httr::add_headers(Authorization= paste("Basic", pw)),
                 httr::write_disk(dest, overwrite = TRUE))
 
     } else {
