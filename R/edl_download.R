@@ -30,6 +30,9 @@ edl_download <- function(href,
     download_using_token(href, dest, method, ...)
 
   } else {
+
+    edl_netrc(netrc_path = edl_netrc_path(),
+              cookie_path = edl_cookie_path())
     curl_args <- paste("--netrc-file", netrc_path,
                        "-b", cookie_path,
                        "-c", cookie_path)
