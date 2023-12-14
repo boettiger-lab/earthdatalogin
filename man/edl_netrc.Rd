@@ -8,7 +8,8 @@ edl_netrc(
   username = default("user"),
   password = default("password"),
   netrc_path = edl_netrc_path(),
-  cookie_path = edl_cookie_path()
+  cookie_path = edl_cookie_path(),
+  cloud_config = TRUE
 )
 }
 \arguments{
@@ -22,6 +23,9 @@ appropriate R package configuration location given by \code{\link[tools:userdir]
 \item{cookie_path}{Path to the file where cookies will be stored.  Defaults
 to the appropriate R package configuration location given by
 \code{\link[tools:userdir]{tools::R_user_dir()}}.}
+
+\item{cloud_config}{set \code{\link[=gdal_cloud_config]{gdal_cloud_config()}} env vars as well? logical,
+default \code{TRUE}.}
 }
 \description{
 This function creates a .netrc file with Earthdata Login (EDL) credentials

@@ -31,15 +31,18 @@ Terrabyte
 URI
 URIs
 USGS
+Unsets
 VM
 VSI
 Zarr
 asia
+auth
 config
 cpu
 dr
 earthdata
 edl
+env
 filesystem
 gdal
 gdalcubes
@@ -64,5 +67,4 @@ terra
 terrabytes
 tl
 unsets
-wget
 zarr

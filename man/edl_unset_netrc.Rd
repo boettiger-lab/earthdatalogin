@@ -4,7 +4,11 @@
 \alias{edl_unset_netrc}
 \title{edl_unset_netrc}
 \usage{
-edl_unset_netrc(netrc_path = edl_netrc_path(), cookie_path = edl_cookie_path())
+edl_unset_netrc(
+  netrc_path = edl_netrc_path(),
+  cookie_path = edl_cookie_path(),
+  cloud_config = TRUE
+)
 }
 \arguments{
 \item{netrc_path}{Path to the .netrc file to be created. Defaults to the
@@ -13,6 +17,9 @@ appropriate R package configuration location given by \code{\link[tools:userdir]
 \item{cookie_path}{Path to the file where cookies will be stored.  Defaults
 to the appropriate R package configuration location given by
 \code{\link[tools:userdir]{tools::R_user_dir()}}.}
+
+\item{cloud_config}{set \code{\link[=gdal_cloud_config]{gdal_cloud_config()}} env vars as well? logical,
+default \code{TRUE}.}
 }
 \value{
 invisible TRUE, if successful (even if no env is set.)

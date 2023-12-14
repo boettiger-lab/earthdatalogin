@@ -11,6 +11,8 @@
 #' @param cookie_path Path to the file where cookies will be stored.  Defaults
 #'   to the appropriate R package configuration location given by
 #'   [tools::R_user_dir()].
+#' @param cloud_config set [gdal_cloud_config()] env vars as well? logical,
+#' default `TRUE`.
 #'
 #' @details The function sets the environment variables \code{GDAL_HTTP_NETRC}
 #'   and \code{GDAL_HTTP_NETRC_FILE} to enable GDAL to use the .netrc file for
@@ -31,7 +33,8 @@
 edl_netrc <- function(username = default("user"),
                       password = default("password"),
                       netrc_path = edl_netrc_path(),
-                      cookie_path = edl_cookie_path()) {
+                      cookie_path = edl_cookie_path(),
+                      cloud_config = TRUE) {
 
   # Create a .netrc for earthdatalogin
   contents <- paste("machine urs.earthdata.nasa.gov login",
@@ -48,6 +51,11 @@ edl_netrc <- function(username = default("user"),
   # Set cookie paths as GDAL env vars
   Sys.setenv("GDAL_HTTP_COOKIEFILE" = cookie_path)
   Sys.setenv("GDAL_HTTP_COOKIEJAR" = cookie_path)
+
+  if (cloud_config) {
+    gdal_cloud_config()
+  }
+
 }
 
 #' edl_unset_netrc
@@ -78,7 +86,8 @@ edl_netrc <- function(username = default("user"),
 #'
 #' @export
 edl_unset_netrc <- function(netrc_path = edl_netrc_path(),
-                            cookie_path = edl_cookie_path()) {
+                            cookie_path = edl_cookie_path(),
+                            cloud_config = TRUE) {
 
   unlink(netrc_path)
   unlink(cookie_path)
@@ -89,6 +98,10 @@ edl_unset_netrc <- function(netrc_path = edl_netrc_path(),
   # Set cookie paths as GDAL env vars
   Sys.unsetenv("GDAL_HTTP_COOKIEFILE")
   Sys.unsetenv("GDAL_HTTP_COOKIEJAR")
+
+  if (cloud_config) {
+    gdal_cloud_unconfig()
+  }
 }
 
 

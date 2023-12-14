@@ -26,9 +26,9 @@ Note that these S3 credentials will only work:
 }
 \details{
 \itemize{
-\item On AWS instance in the us-west-2 region
+\item On AWS instance in the \code{us-west-2} region
 \item Only for one hour before they expire
-\item Only on the DACC requested
+\item Only on the DAAC requested
 }
 
 Please consider using \code{\link[=edl_netrc]{edl_netrc()}} to avoid these limitations
