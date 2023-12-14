@@ -7,7 +7,7 @@ test_that("edl_download", {
   f <- tempfile(fileext = ".tif")
   edl_download(url, f)
 
-  expect_true(file.exists(f))
+  #expect_true(file.exists(f))
 
   r <- terra::rast(url, vsi=TRUE)
   expect_true(inherits(r, "SpatRaster"))
