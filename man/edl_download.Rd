@@ -7,7 +7,7 @@
 edl_download(
   href,
   dest = basename(href),
-  auth = "token",
+  auth = "netrc",
   method = "httr",
   netrc_path = edl_netrc_path(),
   cookie_path = edl_cookie_path(),
