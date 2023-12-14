@@ -2,9 +2,9 @@
 #'
 #' Note that these S3 credentials will only work:
 #'
-#' - On AWS instance in the us-west-2 region
+#' - On AWS instance in the `us-west-2` region
 #' - Only for one hour before they expire
-#' - Only on the DACC requested
+#' - Only on the DAAC requested
 #'
 #' Please consider using [edl_netrc()] to avoid these limitations
 #'

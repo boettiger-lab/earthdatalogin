@@ -40,6 +40,9 @@ does not support GDAL_HTTP_NETRC_FILE location).
 }
 \examples{
 \dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+
 edl_netrc()
+url <- lpdacc_example_url()
+terra::rast(url, vsi=TRUE)
 \dontshow{\}) # examplesIf}
 }

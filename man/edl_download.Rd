@@ -8,7 +8,7 @@ edl_download(
   href,
   dest = basename(href),
   auth = "token",
-  method = "curl",
+  method = "httr",
   netrc_path = edl_netrc_path(),
   cookie_path = edl_cookie_path(),
   ...
@@ -22,7 +22,7 @@ edl_download(
 \item{auth}{the authentication method ("token" for Bearer tokens
 or "netrc" for netrc.)}
 
-\item{method}{The download method, either "httr", "curl", or "wget".}
+\item{method}{The download method, either "httr" or "curl".}
 
 \item{netrc_path}{Path to the .netrc file to be created. Defaults to the
 appropriate R package configuration location given by \code{\link[tools:userdir]{tools::R_user_dir()}}.}
@@ -31,7 +31,7 @@ appropriate R package configuration location given by \code{\link[tools:userdir]
 to the appropriate R package configuration location given by
 \code{\link[tools:userdir]{tools::R_user_dir()}}.}
 
-\item{...}{additional arguments to \code{download.file()}}
+\item{...}{additional arguments to \code{download.file()}, e.g. quiet = TRUE.}
 }
 \value{
 the \code{dest} path, invisibly
