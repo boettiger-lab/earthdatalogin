@@ -11,6 +11,8 @@
 #' @param daac the base URL for the DAAC
 #' @param username EarthDataLogin user
 #' @param password EarthDataLogin Password
+#' @param prompt_for_netrc Often netrc is preferable, so this function will by
+#' default prompt the user to switch.  Set to FALSE to silence this.
 #' @return list of access key, secret key, session token and expiration,
 #' invisibly.  Also sets the corresponding AWS environmental variables.
 #'
@@ -19,10 +21,13 @@
 #' @export
 edl_s3_token <- function(daac = "https://data.lpdaac.earthdatacloud.nasa.gov",
                          username = default("user"),
-                         password = default("password")) {
+                         password = default("password"),
+                         prompt_for_netrc = interactive()) {
 
-  done <- we_prefer_netrc(username, password)
-  if (done) return(invisible(TRUE))
+  if (prompt_for_netrc) {
+    done <- we_prefer_netrc(username, password)
+    if (done) return(invisible(TRUE))
+  }
 
   p <- edl_api(endpoint = "/s3credentials",
                username = username,

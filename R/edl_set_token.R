@@ -25,6 +25,8 @@
 #' environmental variable?  logical, default TRUE.
 #' @param format One of "token", "header" or "file."  "header" adds the prefix
 #' used by http headers to the return string.  "file" returns
+#' @param prompt_for_netrc Often netrc is preferable, so this function will by
+#' default prompt the user to switch.  Set to FALSE to silence this.
 #' @return A text string containing only the token (format=token),
 #' or a token with the header prefix included, `Authorization: Bearer <token>`
 #' @export
@@ -35,11 +37,14 @@ edl_set_token <- function (username = default("user"),
                            password = default("password"),
                            token_number = 1,
                            set_env_var = TRUE,
-                           format = c("token", "header", "file")
+                           format = c("token", "header", "file"),
+                           prompt_for_netrc = interactive()
 ){
 
-  done <- we_prefer_netrc(username, password)
-  if (done) return(invisible(TRUE))
+  if(prompt_for_netrc){
+    done <- we_prefer_netrc(username, password)
+    if (done) return(invisible(TRUE))
+  }
 
   p <- edl_api("/api/users/tokens", username, password)
 

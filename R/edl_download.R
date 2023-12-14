@@ -27,12 +27,15 @@ edl_download <- function(href,
                          ...) {
 
   if (auth == "token") {
+
     download_using_token(href, dest, method, ...)
 
   } else {
 
     edl_netrc(netrc_path = edl_netrc_path(),
-              cookie_path = edl_cookie_path())
+              cookie_path = edl_cookie_path(),
+              cloud_config = FALSE)
+
 
     if (method == "httr") {
       httr::GET(href,
@@ -40,9 +43,11 @@ edl_download <- function(href,
                              cookiefile = cookie_path,
                              cookiejar = cookie_path),
                 httr::write_disk(dest, overwrite = TRUE))
+
     } else {
-      curl_args <- paste("-n",
-                         "--netrc-file", netrc_path,
+
+      ## check syntax, curl_args not working properly
+      curl_args <- paste("--netrc-file", netrc_path,
                          "-b", cookie_path,
                          "-c", cookie_path)
       utils::download.file(href, dest, method = "curl",

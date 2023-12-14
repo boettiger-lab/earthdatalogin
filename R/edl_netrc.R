@@ -37,6 +37,9 @@ edl_netrc <- function(username = default("user"),
                       cookie_path = edl_cookie_path(),
                       cloud_config = TRUE) {
 
+  # Bearer auth can conflict
+  edl_unset_token()
+
   # Create a .netrc for earthdatalogin
   contents <- paste("machine urs.earthdata.nasa.gov login",
                     username, "password", password)

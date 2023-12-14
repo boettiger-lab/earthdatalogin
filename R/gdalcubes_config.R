@@ -21,6 +21,9 @@ with_gdalcubes <- function(env = Sys.getenv()) {
   vsi_vars <- grepl("^VSI_", names(env))
   gdalcubes_config(env[vsi_vars])
 
+  cpl_var <- grepl("^CPL_VSIL_", names(env))
+  gdalcubes_config(env[cpl_var])
+
 }
 
 
