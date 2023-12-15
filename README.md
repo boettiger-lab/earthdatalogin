@@ -113,6 +113,8 @@ variable. This means that popular R packages such as `terra`, `sf` or
 utilize this token for any operations reading from HTTPS (using the
 `vsicurl` prefix).
 
+## Cloud native workflows
+
 Because NASA EarthData is also the first introduction to cloud-hosted
 data for many researchers, the fact that NASA tries to minimize egress
 charges by restricting S3 access to requests coming from AWS `us-west-2`
@@ -140,17 +142,17 @@ that despite the barrier of `earthdatalogin`, the R code required for
 cloud-native access is now matches the standard strategies we would use
 for cloud-native access of any other data source.
 
-The defining feature that makes ‘cloud native’ access fast is that this
-access is *lazy*. All though these individual files could be quite
-large, our request has not downloaded the entire file – it has instead
-used its knowledge of spatial data formats to read just those bytes of
-the file that provide critical metadata such as extent, projection,
-bands and coordinate ranges. Using that information, we can extract just
-the bits of data (locations, variables) we care about without having to
-download everything else as well. This saves the RAM on our computer,
-and drive space on our disks, as well as speeding up download. Without
-these techniques, processing the massive amounts of data coming from
-modern earth observation methods would be impractical.
+A key feature that makes ‘cloud native’ access fast is that this access
+is *lazy*. All though these individual files could be quite large, our
+request has not downloaded the entire file – it has instead used its
+knowledge of spatial data formats to read just those bytes of the file
+that provide critical metadata such as extent, projection, bands and
+coordinate ranges. Using that information, we can extract just the bits
+of data (locations, variables) we care about without having to download
+everything else as well. This saves the RAM on our computer, and drive
+space on our disks, as well as speeding up download. Without these
+techniques, processing the massive amounts of data coming from modern
+earth observation methods would be impractical.
 
 *However*, not all data formats are equally amenable to this approach.
 Requesting a few bytes from a file across hundreds of miles of network
