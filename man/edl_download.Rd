@@ -8,7 +8,7 @@ edl_download(
   href,
   dest = basename(href),
   auth = "netrc",
-  method = "curl",
+  method = "httr",
   username = default("user"),
   password = default("password"),
   netrc_path = edl_netrc_path(),

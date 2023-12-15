@@ -22,18 +22,13 @@
 edl_download <- function(href,
                          dest = basename(href),
                          auth = "netrc",
-                         method = "curl",
+                         method = "httr",
                          username = default("user"),
                          password = default("password"),
                          netrc_path = edl_netrc_path(),
                          cookie_path = edl_cookie_path(),
                          quiet = TRUE,
                          ...) {
-
-  if(Sys.which("curl") == "" | (Sys.info()[['sysname']] == "Darwin")) {
-    message("curl not found, falling back on token-based authentication")
-    auth <- "token"
-  }
 
   if (auth == "token") {
 
@@ -49,23 +44,12 @@ edl_download <- function(href,
 
 
     if (method == "httr") {
-
-      if(!getOption("earthdata.download.fallback", FALSE)) {
-        httr::GET(href,
-                httr::config(netrc_file = netrc_path,
-                             cookiefile = cookie_path,
-                             cookiejar = cookie_path),
-                httr::write_disk(dest, overwrite = TRUE))
-
-      } else {
-        pw <- openssl::base64_encode(paste0(username, ":", password))
-        httr::GET(href,
-                  httr::config(cookiefile = cookie_path,
-                               cookiejar = cookie_path),
-                  httr::add_headers(Authorization= paste("Basic", pw)),
-                  httr::write_disk(dest, overwrite = TRUE))
-      }
-
+      httr::GET(href,
+              httr::config(netrc = TRUE,
+                           netrc_file = netrc_path,
+                           cookiefile = cookie_path,
+                           cookiejar = cookie_path),
+              httr::write_disk(dest, overwrite = TRUE))
     } else {
       ## check syntax, curl_args not working properly
       curl_args <- paste("--netrc-file", netrc_path,
