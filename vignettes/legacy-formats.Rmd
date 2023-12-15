@@ -43,7 +43,7 @@ items <- stac("https://cmr.earthdata.nasa.gov/stac/LPCLOUD") |>
               datetime = paste(start,end, sep = "/")) |>
   post_request() |>
   items_fetch()
-#>   |                                                                                                                                                                                                                                       |===============================================================================================================================================================================================================================| 100%
+#>   |                                                                                                                                                                                                                                                                  |==========================================================================================================================================================================================================================================================| 100%
 ```
 
 HDF4 doesn't support cloud (range-request-based) access / VSI.
@@ -62,6 +62,7 @@ Rather than create an image collection using STAC metadata, we can use the recog
 
 
 ```r
+paths <- fs::dir_ls(".", glob="*.hdf")
 col <- gdalcubes::create_image_collection(paths, format = "MxD13Q1")
 ```
 
@@ -82,7 +83,7 @@ raster_cube(col, v) |>
   select_bands("NDVI") |> 
   animate(col = viridisLite::mako, fps=2, 
           save_as="img/ndvi.gif")
-#> [1] "img/ndvi.gif"
+#> [1] "/home/cboettig/boettiger-lab/earthdatalogin/inst/vignette-sources/img/ndvi.gif"
 ```
 
 ![](img/ndvi.gif)

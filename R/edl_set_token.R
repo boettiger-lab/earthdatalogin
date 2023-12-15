@@ -82,11 +82,6 @@ edl_setenv <- function(token) {
   Sys.setenv("GDAL_HTTP_HEADER_FILE"=headerfile)
 }
 
-default <- function(what) {
-  switch(what,
-         user = Sys.getenv("EARTHDATA_USER", "earthaccess"),
-         password = Sys.getenv("EARTHDATA_PASSWORD", "EDL_test1"))
-}
 
 
 edl_header <- function(token) {

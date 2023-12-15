@@ -13,11 +13,6 @@ This vignette illustrates cloud-native access of across a range of common format
 
 
 
-```r
-library(earthdatalogin)
-edl_unset_token()
-```
-
 (Right now these are somewhat generic examples, not necessarily based on NASA's EarthData sources and therefore not requiring authentication, but the workflow should be identical after calling `edl_set_token()`)
 
 
@@ -39,11 +34,12 @@ r <- terra::rast(url, vsi=TRUE)
 r
 #> class       : SpatRaster 
 #> dimensions  : 721, 1440, 744  (nrow, ncol, nlyr)
-#> resolution  : 1, 1  (x, y)
-#> extent      : 0, 1440, 0, 721  (xmin, xmax, ymin, ymax)
+#> resolution  : 0.25, 0.25  (x, y)
+#> extent      : -0.125, 359.875, -90.125, 90.125  (xmin, xmax, ymin, ymax)
 #> coord. ref. :  
 #> source      : air_pressure_at_mean_sea_level.nc 
-#> names       : air_p~vel_1, air_p~vel_2, air_p~vel_3, air_p~vel_4, air_p~vel_5, air_p~vel_6, ...
+#> names       : air_p~vel_1, air_p~vel_2, air_p~vel_3, air_p~vel_4, air_p~vel_5, air_p~vel_6, ... 
+#> unit        :          Pa,          Pa,          Pa,          Pa,          Pa,          Pa, ...
 ```
 
 Cloud read of the same data, over S3 protocol:
