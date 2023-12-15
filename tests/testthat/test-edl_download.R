@@ -98,12 +98,13 @@ test_that("httr download via auth", {
   # netrc_file does not seem to be respected
   # attempts non-basic auth instead,
   # though succeeds anyway if cookie is already set
-  if (FALSE) {
+
     r <- httr::GET(url,
                    httr::config(netrc_file = edl_netrc_path(),
                                 cookiefile = edl_cookie_path(),
                                 cookiejar = edl_cookie_path()),
                    httr::write_disk(dest, overwrite = TRUE))
-  }
+    expect_true(httr::status_code(r) < 300)
+
 })
 
