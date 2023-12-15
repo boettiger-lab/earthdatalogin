@@ -30,7 +30,7 @@ edl_download <- function(href,
                          quiet = TRUE,
                          ...) {
 
-  if(Sys.which("curl") == "") {
+  if(Sys.which("curl") == "" | (Sys.info()[['sysname']] == "Darwin")) {
     message("curl not found, falling back on token-based authentication")
     auth <- "token"
   }

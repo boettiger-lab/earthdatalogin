@@ -9,3 +9,4 @@
 ^img$
 ^cran-comments\.md$
 ^CRAN-SUBMISSION$
+.Renviron
