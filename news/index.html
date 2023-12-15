@@ -62,9 +62,11 @@
 <code><a href="../reference/edl_netrc.html">edl_netrc()</a></code> sets up netrc-based access.</li>
 <li>
 <code><a href="../reference/edl_unset_netrc.html">edl_unset_netrc()</a></code> reverses this, but should rarely be needed.</li>
-</ul><p>Using other authentication methods in interactive mode will now prompt users to switch to edl_netrc() as the default.</p>
+</ul><p>Using other authentication methods in interactive mode will now prompt users to switch to <code><a href="../reference/edl_netrc.html">edl_netrc()</a></code> as the default. <code><a href="../reference/edl_download.html">edl_download()</a></code> will also use netrc auth by default for greater portability.</p>
 </li>
-<li><p><code><a href="../reference/gdal_cloud_config.html">gdal_cloud_config()</a></code> sets recommended settings for GDAL cloud configuration, see <a href="https://gdalcubes.github.io/source/concepts/config.html#recommended-settings-for-cloud-access" class="external-link uri">https://gdalcubes.github.io/source/concepts/config.html#recommended-settings-for-cloud-access</a></p></li>
+<li><p><code><a href="../reference/gdal_cloud_config.html">gdal_cloud_config()</a></code> sets recommended settings for GDAL cloud configuration, see <a href="https://gdalcubes.github.io/source/concepts/config.html#recommended-settings-for-cloud-access" class="external-link uri">https://gdalcubes.github.io/source/concepts/config.html#recommended-settings-for-cloud-access</a>. By default, <code><a href="../reference/edl_netrc.html">edl_netrc()</a></code> will automatically configure this as well.</p></li>
+<li><p>Because the <code>gdalcubes</code> package does not read environmental variables set by <code><a href="../reference/edl_netrc.html">edl_netrc()</a></code> and other authentication methods, a new helper function, <code><a href="../reference/with_gdalcubes.html">with_gdalcubes()</a></code> will set the gdal configuration for the gdalcubes package.</p></li>
+<li><p>Documentation is also updated.</p></li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.0.1" id="earthdatalogin-001">earthdatalogin 0.0.1<a class="anchor" aria-label="anchor" href="#earthdatalogin-001"></a></h2><p class="text-muted">CRAN release: 2023-11-16</p>
