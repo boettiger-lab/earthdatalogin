@@ -30,6 +30,11 @@ edl_download <- function(href,
                          quiet = TRUE,
                          ...) {
 
+  if(Sys.which("curl") == "") {
+    message("curl not found, falling back on token-based authentication")
+    auth <- "token"
+  }
+
   if (auth == "token") {
 
     download_using_token(href, dest, method, quiet = quiet, ...)
