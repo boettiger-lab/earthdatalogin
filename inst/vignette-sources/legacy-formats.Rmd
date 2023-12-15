@@ -65,6 +65,7 @@ paths <- items$features |>
 Rather than create an image collection using STAC metadata, we can use the recognized format and the local paths:
 
 ```{r}
+paths <- fs::dir_ls(".", glob="*.hdf")
 col <- gdalcubes::create_image_collection(paths, format = "MxD13Q1")
 ```
 

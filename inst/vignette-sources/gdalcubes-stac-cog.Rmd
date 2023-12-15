@@ -94,7 +94,7 @@ col <- stac_image_collection(items$features,
 cloud_mask <- image_mask("Fmask", values=1)
 ```
 
-```{r sf_bay, cache=TRUE}
+```{r sf_bay}
 
 # Here we go! note eval is lazy
 raster_cube(col, v, mask=cloud_mask) |>

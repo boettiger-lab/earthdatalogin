@@ -8,11 +8,12 @@ edl_download(
   href,
   dest = basename(href),
   auth = "netrc",
-  method = "httr",
+  method = "curl",
   username = default("user"),
   password = default("password"),
   netrc_path = edl_netrc_path(),
   cookie_path = edl_cookie_path(),
+  quiet = TRUE,
   ...
 )
 }
@@ -36,6 +37,8 @@ appropriate R package configuration location given by \code{\link[tools:userdir]
 \item{cookie_path}{Path to the file where cookies will be stored.  Defaults
 to the appropriate R package configuration location given by
 \code{\link[tools:userdir]{tools::R_user_dir()}}.}
+
+\item{quiet}{logical default TRUE. Show progress in download?}
 
 \item{...}{additional arguments to \code{download.file()}, e.g. quiet = TRUE.}
 }
