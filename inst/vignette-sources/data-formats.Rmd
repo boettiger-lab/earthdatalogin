@@ -20,10 +20,6 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r}
-library(earthdatalogin)
-edl_unset_token()
-```
 
 (Right now these are somewhat generic examples, not necessarily based on NASA's EarthData sources and therefore not requiring authentication, but the workflow should be identical after calling `edl_set_token()`)
 

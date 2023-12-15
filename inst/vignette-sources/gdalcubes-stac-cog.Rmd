@@ -36,25 +36,15 @@ gdalcubes_options(parallel = TRUE)
 First let's get EDL authentication out of the way.
 For cloud data from almost any other STAC catalog (NOAA, USGS, Planetary Computer, etc), authentication is either unnecessary or already provided by the STAC API, but NASA EDL is special. 
 
+As usual, we can handle this with `edl_netrc()`.  Because the `gdalcubes` package doesn't respect global environmental variables, we use a helper utility to export those into it's configuration as well. 
+
 
 ```{r}
 library(earthdatalogin)
+edl_netrc()
+with_gdalcubes()
 ```
 
-When using the `gdalcubes` package, we have support for a somewhat nicer, more localized authentication that uses the configuration options instead.
-We tell `edl_set_token` not to set the environmental variable globally, but to return
-in the header format which we can pass to `gdalcubes_set_gdal_config()`:
-
-```{r}
-filepath <- edl_set_token(set_env_var = FALSE, format="file")
-gdalcubes_set_gdal_config("GDAL_HTTP_HEADER_FILE", filepath)
-```
-
-`earthdatalogin` also includes optional configuration settings for GDAL which can improve performance of cloud-based data access.  Set the GDAL environmental variables using `gdal_cloud_config()`
-
-```{r}
-gdal_cloud_config()
-```
 
 ## Search via STAC
 
@@ -63,7 +53,7 @@ We will now use the `rstac` package to search one or more NASA collections for d
 ```{r}
 bbox <- c(xmin=-123, ymin=37.25, xmax=-122.0, ymax=38.25) 
 start <- "2021-12-01"
-end <- "2022-05-30"
+end <- "2022-05-31"
 
 # Find all assets from the desired catalog:
 items <- stac("https://cmr.earthdata.nasa.gov/stac/LPCLOUD") |> 
@@ -104,7 +94,7 @@ col <- stac_image_collection(items$features,
 cloud_mask <- image_mask("Fmask", values=1)
 ```
 
-```{r sf_bay, cache=TRUE}
+```{r sf_bay}
 
 # Here we go! note eval is lazy
 raster_cube(col, v, mask=cloud_mask) |>

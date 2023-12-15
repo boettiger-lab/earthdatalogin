@@ -7,7 +7,8 @@
 gdal_cloud_config()
 }
 \value{
-sets recommended environmental variables
+sets recommended environmental variables and returns invisible TRUE
+if successful.
 }
 \description{
 Sets GDAL environmental variables to recommended optimum settings for
@@ -20,5 +21,11 @@ Based on
 \examples{
 \dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 gdal_cloud_config()
+
+# remove settings:
+gdal_cloud_unconfig()
 \dontshow{\}) # examplesIf}
+}
+\seealso{
+\code{\link[=gdal_cloud_unconfig]{gdal_cloud_unconfig()}}
 }
