@@ -86,34 +86,32 @@
     
 <p>This vignette illustrates cloud-native access of across a range of
 common formats, including netcdf, Zarr, hdf5, hdf4, and COGs.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://boettiger-lab.github.io/earthdatalogin/">earthdatalogin</a></span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/edl_unset_token.html">edl_unset_token</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>(Right now these are somewhat generic examples, not necessarily based
 on NASA’s EarthData sources and therefore not requiring authentication,
 but the workflow should be identical after calling
 <code><a href="../reference/edl_set_token.html">edl_set_token()</a></code>)</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/stars/" class="external-link">stars</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/" class="external-link">terra</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="netcdf-1-gb-file">netcdf, 1 GB file<a class="anchor" aria-label="anchor" href="#netcdf-1-gb-file"></a>
 </h2>
 <p>Cloud-read data from a public AWS S3 bucket, over https:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">url</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"https://era5-pds.s3.amazonaws.com"</span>,</span>
 <span>              <span class="st">"/1979/01/data/air_pressure_at_mean_sea_level.nc"</span><span class="op">)</span></span>
 <span><span class="va">r</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">url</span>, vsi<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">r</span></span>
 <span><span class="co">#&gt; class       : SpatRaster </span></span>
 <span><span class="co">#&gt; dimensions  : 721, 1440, 744  (nrow, ncol, nlyr)</span></span>
-<span><span class="co">#&gt; resolution  : 1, 1  (x, y)</span></span>
-<span><span class="co">#&gt; extent      : 0, 1440, 0, 721  (xmin, xmax, ymin, ymax)</span></span>
+<span><span class="co">#&gt; resolution  : 0.25, 0.25  (x, y)</span></span>
+<span><span class="co">#&gt; extent      : -0.125, 359.875, -90.125, 90.125  (xmin, xmax, ymin, ymax)</span></span>
 <span><span class="co">#&gt; coord. ref. :  </span></span>
 <span><span class="co">#&gt; source      : air_pressure_at_mean_sea_level.nc </span></span>
-<span><span class="co">#&gt; names       : air_p~vel_1, air_p~vel_2, air_p~vel_3, air_p~vel_4, air_p~vel_5, air_p~vel_6, ...</span></span></code></pre></div>
+<span><span class="co">#&gt; names       : air_p~vel_1, air_p~vel_2, air_p~vel_3, air_p~vel_4, air_p~vel_5, air_p~vel_6, ... </span></span>
+<span><span class="co">#&gt; unit        :          Pa,          Pa,          Pa,          Pa,          Pa,          Pa, ...</span></span></code></pre></div>
 <p>Cloud read of the same data, over S3 protocol:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html" class="external-link">Sys.setenv</a></span><span class="op">(</span><span class="st">"AWS_NO_SIGN_REQUEST"</span><span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">s3uri</span> <span class="op">&lt;-</span> <span class="st">"s3://era5-pds/1979/01/data/air_pressure_at_mean_sea_level.nc"</span></span>
 <span><span class="va">r</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">s3uri</span><span class="op">)</span></span>
@@ -123,18 +121,18 @@ but the workflow should be identical after calling
 <h2 id="zarr-31-tb">Zarr, 31 TB<a class="anchor" aria-label="anchor" href="#zarr-31-tb"></a>
 </h2>
 <p>Cloud read of a 31 Terrabyte Zarr archive (S3, public https)</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">url</span> <span class="op">&lt;-</span> <span class="st">"https://mur-sst.s3.us-west-2.amazonaws.com/zarr-v1"</span></span>
 <span><span class="va">prefixes</span> <span class="op">&lt;-</span> <span class="st">'ZARR:\"/vsicurl/'</span></span>
 <span><span class="va">slice</span> <span class="op">&lt;-</span> <span class="st">'\":/analysed_sst:0"'</span></span>
 <span><span class="va">addr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">prefixes</span>, <span class="va">url</span>, <span class="va">slice</span><span class="op">)</span></span>
 <span><span class="va">y</span> <span class="op">=</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">addr</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-tmap.github.io/tmap/" class="external-link">tmap</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">World</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">india</span> <span class="op">&lt;-</span><span class="fu">st_bbox</span><span class="op">(</span> <span class="va">World</span><span class="op">$</span><span class="va">geometry</span><span class="op">[</span><span class="va">World</span><span class="op">$</span><span class="va">name</span> <span class="op">==</span> <span class="st">"India"</span><span class="op">]</span> <span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">st_as_stars</span><span class="op">(</span><span class="va">y</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">st_crop</span><span class="op">(</span><span class="va">india</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -150,7 +148,7 @@ but the workflow should be identical after calling
 
     <footer><div class="pkgdown-footer-left">
   <p></p>
-<p>Developed by <a href="https://carlboettiger.info" class="external-link">Carl Boettiger</a>, <a href="https://betolink.dev/" class="external-link">Luis López</a>, Bri Lind, <a href="https://openscapes.org" class="external-link"><img src="https://nasa-openscapes.github.io/images/nasa-openscapes.png" alt="Openscapes" height="32" style="margin-bottom: 3px;"></a>.</p>
+<p>Developed by <a href="https://carlboettiger.info" class="external-link">Carl Boettiger</a>, <a href="https://betolink.dev" class="external-link">Luis López</a>, <a href="http://yuvi.in" class="external-link">Yuvi Panda</a>, Bri Lind, <a href="https://openscapes.org" class="external-link"><img src="https://nasa-openscapes.github.io/images/nasa-openscapes.png" alt="Openscapes" height="32" style="margin-bottom: 3px;"></a>.</p>
 </div>
 
 <div class="pkgdown-footer-right">

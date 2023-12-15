@@ -55,14 +55,27 @@
     </div>
 
     <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.0.2" id="earthdatalogin-002">earthdatalogin 0.0.2<a class="anchor" aria-label="anchor" href="#earthdatalogin-002"></a></h2>
+<ul><li>
+<p>Adds support for netrc-based authentication. <code><a href="../reference/edl_set_token.html">edl_set_token()</a></code> works only outside of <code>us-west-2</code>, <code><a href="../reference/edl_s3_token.html">edl_s3_token()</a></code> works only inside <code>us-west-2</code>, netrc works anywhere. Additionally, netrc-based auth does not to be deactivated when accessing non-earthdatalogin URLs.</p>
+<ul><li>
+<code><a href="../reference/edl_netrc.html">edl_netrc()</a></code> sets up netrc-based access.</li>
+<li>
+<code><a href="../reference/edl_unset_netrc.html">edl_unset_netrc()</a></code> reverses this, but should rarely be needed.</li>
+</ul><p>Using other authentication methods in interactive mode will now prompt users to switch to edl_netrc() as the default.</p>
+</li>
+<li><p><code><a href="../reference/gdal_cloud_config.html">gdal_cloud_config()</a></code> sets recommended settings for GDAL cloud configuration, see <a href="https://gdalcubes.github.io/source/concepts/config.html#recommended-settings-for-cloud-access" class="external-link uri">https://gdalcubes.github.io/source/concepts/config.html#recommended-settings-for-cloud-access</a></p></li>
+</ul></div>
+    <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.0.1" id="earthdatalogin-001">earthdatalogin 0.0.1<a class="anchor" aria-label="anchor" href="#earthdatalogin-001"></a></h2><p class="text-muted">CRAN release: 2023-11-16</p>
 <ul><li>Initial CRAN submission.</li>
 </ul></div>
-  </main></div>
+  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p></p><p>Developed by <a href="https://carlboettiger.info" class="external-link">Carl Boettiger</a>, <a href="https://betolink.dev/" class="external-link">Luis López</a>, Bri Lind, <a href="https://openscapes.org" class="external-link"><img src="https://nasa-openscapes.github.io/images/nasa-openscapes.png" alt="Openscapes" height="32" style="margin-bottom: 3px;"></a>.</p>
+  <p></p><p>Developed by <a href="https://carlboettiger.info" class="external-link">Carl Boettiger</a>, <a href="https://betolink.dev" class="external-link">Luis López</a>, <a href="http://yuvi.in" class="external-link">Yuvi Panda</a>, Bri Lind, <a href="https://openscapes.org" class="external-link"><img src="https://nasa-openscapes.github.io/images/nasa-openscapes.png" alt="Openscapes" height="32" style="margin-bottom: 3px;"></a>.</p>
 </div>
 
 <div class="pkgdown-footer-right">

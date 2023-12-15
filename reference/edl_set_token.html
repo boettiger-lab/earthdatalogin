@@ -63,7 +63,7 @@ addresses to NASA EarthData assets."><!-- mathjax --><script src="https://cdnjs.
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Get or set an earthdata login token</h1>
-      <small class="dont-index">Source: <a href="https://github.com/boettiger-lab/earthdatalogin/blob/HEAD/R/edl.R" class="external-link"><code>R/edl.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/boettiger-lab/earthdatalogin/blob/HEAD/R/edl_set_token.R" class="external-link"><code>R/edl_set_token.R</code></a></small>
       <div class="d-none name"><code>edl_set_token.Rd</code></div>
     </div>
 
@@ -84,7 +84,8 @@ addresses to NASA EarthData assets.</p>
 <span>  password <span class="op">=</span> <span class="fu">default</span><span class="op">(</span><span class="st">"password"</span><span class="op">)</span>,</span>
 <span>  token_number <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  set_env_var <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  format <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"token"</span>, <span class="st">"header"</span>, <span class="st">"file"</span><span class="op">)</span></span>
+<span>  format <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"token"</span>, <span class="st">"header"</span>, <span class="st">"file"</span><span class="op">)</span>,</span>
+<span>  prompt_for_netrc <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -111,6 +112,11 @@ environmental variable?  logical, default TRUE.</p></dd>
 <dd><p>One of "token", "header" or "file."  "header" adds the prefix
 used by http headers to the return string.  "file" returns</p></dd>
 
+
+<dt>prompt_for_netrc</dt>
+<dd><p>Often netrc is preferable, so this function will by
+default prompt the user to switch.  Set to FALSE to silence this.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -124,8 +130,9 @@ or a token with the header prefix included, <code>Authorization: Bearer &lt;toke
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>IMPORTANT: it is necessary to unset this token using <code><a href="edl_unset_token.html">edl_unset_token()</a></code>
-<strong>before</strong> trying to access HTTP resources that are not part of EarthData,
-as setting this token will cause those calls to fail!</p>
+before trying to access HTTP resources that are not part of EarthData,
+as setting this token will cause those calls to fail! OR simply use
+<code><a href="edl_netrc.html">edl_netrc()</a></code> to authenticate without facing this issue.</p>
 <p>NOTE: Because GDAL &gt;= 3.6.1 is required to recognize the GDAL_HTTP_HEADERS,
 but all versions recognize GDAL_HTTP_HEADER_FILE. So we set the Bearer token
 in a temporary file and provide this path as GDAL_HTTP_HEADER_FILE to
@@ -136,6 +143,7 @@ improve compatibility with older versions.</p>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># interactive()</span></span></span>
 <span class="r-in"><span><span class="fu">edl_set_token</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="edl_unset_token.html">edl_unset_token</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
@@ -144,7 +152,7 @@ improve compatibility with older versions.</p>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p></p><p>Developed by <a href="https://carlboettiger.info" class="external-link">Carl Boettiger</a>, <a href="https://betolink.dev/" class="external-link">Luis López</a>, Bri Lind, <a href="https://openscapes.org" class="external-link"><img src="https://nasa-openscapes.github.io/images/nasa-openscapes.png" alt="Openscapes" height="32" style="margin-bottom: 3px;"></a>.</p>
+  <p></p><p>Developed by <a href="https://carlboettiger.info" class="external-link">Carl Boettiger</a>, <a href="https://betolink.dev" class="external-link">Luis López</a>, <a href="http://yuvi.in" class="external-link">Yuvi Panda</a>, Bri Lind, <a href="https://openscapes.org" class="external-link"><img src="https://nasa-openscapes.github.io/images/nasa-openscapes.png" alt="Openscapes" height="32" style="margin-bottom: 3px;"></a>.</p>
 </div>
 
 <div class="pkgdown-footer-right">

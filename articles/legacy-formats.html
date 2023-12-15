@@ -100,7 +100,7 @@ catalog on the Planetary Computer STAC</a>.</p>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/appelmar/gdalcubes" class="external-link">gdalcubes</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://jakubnowosad.com/spData/" class="external-link">spData</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span>
-<span><span class="fu">gdalcubes_options</span><span class="op">(</span>parallel <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> </span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/pkg/gdalcubes/man/gdalcubes_options.html" class="external-link">gdalcubes_options</a></span><span class="op">(</span>parallel <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> </span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>CA <span class="ot">&lt;-</span> spData<span class="sc">::</span>us_states <span class="sc">|&gt;</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(NAME<span class="sc">==</span><span class="st">"California"</span>)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>bbox <span class="ot">&lt;-</span> CA <span class="sc">|&gt;</span> <span class="fu">st_bbox</span>()</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>start <span class="ot">&lt;-</span> <span class="st">"2022-01-01"</span></span>
@@ -113,8 +113,8 @@ catalog on the Planetary Computer STAC</a>.</p>
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">post_request</span>() <span class="sc">|&gt;</span></span>
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">items_fetch</span>()</span>
 <span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="sc">|</span>                                                                            </span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="er">|======================================================================|</span> <span class="dv">100</span>%</span></code></pre></div>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="sc">|</span>                                                                                                                                                                                                                                                                </span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="er">|==========================================================================================================================================================================================================================================================|</span> <span class="dv">100</span>%</span></code></pre></div>
 <p>HDF4 doesn’t support cloud (range-request-based) access / VSI.
 Instead, we download all matching assets with
 <code>earthdatalogin</code> authentication:</p>
@@ -126,28 +126,29 @@ Instead, we download all matching assets with
 <p>Rather than create an image collection using STAC metadata, we can
 use the recognized format and the local paths:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">col</span> <span class="op">&lt;-</span> <span class="fu">gdalcubes</span><span class="fu">::</span><span class="fu">create_image_collection</span><span class="op">(</span><span class="va">paths</span>, format <span class="op">=</span> <span class="st">"MxD13Q1"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">paths</span> <span class="op">&lt;-</span> <span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/dir_ls.html" class="external-link">dir_ls</a></span><span class="op">(</span><span class="st">"."</span>, glob<span class="op">=</span><span class="st">"*.hdf"</span><span class="op">)</span></span>
+<span><span class="va">col</span> <span class="op">&lt;-</span> <span class="fu">gdalcubes</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/gdalcubes/man/create_image_collection.html" class="external-link">create_image_collection</a></span><span class="op">(</span><span class="va">paths</span>, format <span class="op">=</span> <span class="st">"MxD13Q1"</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Define whatever view you like!</span></span>
-<span><span class="va">v</span> <span class="op">=</span> <span class="fu">cube_view</span><span class="op">(</span>srs <span class="op">=</span> <span class="st">"EPSG:4326"</span>,</span>
+<span><span class="va">v</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/gdalcubes/man/cube_view.html" class="external-link">cube_view</a></span><span class="op">(</span>srs <span class="op">=</span> <span class="st">"EPSG:4326"</span>,</span>
 <span>              extent <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>t0 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">start</span><span class="op">)</span>, </span>
 <span>                            t1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">end</span><span class="op">)</span>,</span>
 <span>                            left <span class="op">=</span> <span class="va">bbox</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, right <span class="op">=</span> <span class="va">bbox</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span>,</span>
 <span>                            top <span class="op">=</span> <span class="va">bbox</span><span class="op">[</span><span class="fl">4</span><span class="op">]</span>, bottom <span class="op">=</span> <span class="va">bbox</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span>,</span>
 <span>              nx <span class="op">=</span> <span class="fl">512</span>, ny <span class="op">=</span> <span class="fl">512</span>, dt <span class="op">=</span> <span class="st">"P1M"</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">raster_cube</span><span class="op">(</span><span class="va">col</span>, <span class="va">v</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">select_bands</span><span class="op">(</span><span class="st">"NDVI"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/terra/man/animate.html" class="external-link">animate</a></span><span class="op">(</span>col <span class="op">=</span> <span class="fu">viridisLite</span><span class="fu">::</span><span class="va">mako</span>, fps<span class="op">=</span><span class="fl">2</span>, </span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/gdalcubes/man/raster_cube.html" class="external-link">raster_cube</a></span><span class="op">(</span><span class="va">col</span>, <span class="va">v</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/gdalcubes/man/select_bands.html" class="external-link">select_bands</a></span><span class="op">(</span><span class="st">"NDVI"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/gdalcubes/man/animate.html" class="external-link">animate</a></span><span class="op">(</span>col <span class="op">=</span> <span class="fu">viridisLite</span><span class="fu">::</span><span class="va">mako</span>, fps<span class="op">=</span><span class="fl">2</span>, </span>
 <span>          save_as<span class="op">=</span><span class="st">"img/ndvi.gif"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "/home/cboettig/boettiger-lab/earthdatalogin/inst/vignette-sources/img/ndvi.gif"</span></span></code></pre></div>
 <p><img src="img/ndvi.gif"></p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-tmap.github.io/tmap/" class="external-link">tmap</a></span><span class="op">)</span></span>
 <span><span class="va">r</span> <span class="op">&lt;-</span> </span>
-<span>  <span class="fu">raster_cube</span><span class="op">(</span><span class="va">col</span>, <span class="va">v</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">select_bands</span><span class="op">(</span><span class="st">"NDVI"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">st_as_stars.cube</span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/gdalcubes/man/raster_cube.html" class="external-link">raster_cube</a></span><span class="op">(</span><span class="va">col</span>, <span class="va">v</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/gdalcubes/man/select_bands.html" class="external-link">select_bands</a></span><span class="op">(</span><span class="st">"NDVI"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/gdalcubes/man/st_as_stars.cube.html" class="external-link">st_as_stars.cube</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">tm_shape</span><span class="op">(</span><span class="va">r</span><span class="op">)</span> <span class="op">+</span> <span class="fu">tm_raster</span><span class="op">(</span><span class="st">"NDVI"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">tm_shape</span><span class="op">(</span><span class="va">CA</span><span class="op">)</span> <span class="op">+</span> <span class="fu">tm_borders</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -161,7 +162,7 @@ use the recognized format and the local paths:</p>
 
     <footer><div class="pkgdown-footer-left">
   <p></p>
-<p>Developed by <a href="https://carlboettiger.info" class="external-link">Carl Boettiger</a>, <a href="https://betolink.dev/" class="external-link">Luis López</a>, Bri Lind, <a href="https://openscapes.org" class="external-link"><img src="https://nasa-openscapes.github.io/images/nasa-openscapes.png" alt="Openscapes" height="32" style="margin-bottom: 3px;"></a>.</p>
+<p>Developed by <a href="https://carlboettiger.info" class="external-link">Carl Boettiger</a>, <a href="https://betolink.dev" class="external-link">Luis López</a>, <a href="http://yuvi.in" class="external-link">Yuvi Panda</a>, Bri Lind, <a href="https://openscapes.org" class="external-link"><img src="https://nasa-openscapes.github.io/images/nasa-openscapes.png" alt="Openscapes" height="32" style="margin-bottom: 3px;"></a>.</p>
 </div>
 
 <div class="pkgdown-footer-right">

@@ -89,12 +89,12 @@ limited field of view or spatial extent. In order to see a larger area
 in space, and/or observe changes across space and time, we need to
 assemble these many snapshots into a mosaic or “data cube” that we can
 analyze as a cohesive whole.</p>
-<p><a href="https://radiantearth.github.io/stac-browser/#/external/cmr.earthdata.nasa.gov/stac/LPCLOUD?.language=en" class="external-link">EARTHDATA
+<p><a href="https://radiantearth.github.io/stac-browser/#/external/cmr.earthdata.nasa.gov/stac/" class="external-link">EARTHDATA
 STAC CATALOGS</a></p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://brazil-data-cube.github.io/rstac/" class="external-link">rstac</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/appelmar/gdalcubes" class="external-link">gdalcubes</a></span><span class="op">)</span></span>
-<span><span class="fu">gdalcubes_options</span><span class="op">(</span>parallel <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> </span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/pkg/gdalcubes/man/gdalcubes_options.html" class="external-link">gdalcubes_options</a></span><span class="op">(</span>parallel <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> </span></code></pre></div>
 <div class="section level3">
 <h3 id="earth-data-authentication">Earth Data Authentication<a class="anchor" aria-label="anchor" href="#earth-data-authentication"></a>
 </h3>
@@ -102,23 +102,14 @@ STAC CATALOGS</a></p>
 from almost any other STAC catalog (NOAA, USGS, Planetary Computer,
 etc), authentication is either unnecessary or already provided by the
 STAC API, but NASA EDL is special.</p>
+<p>As usual, we can handle this with <code><a href="../reference/edl_netrc.html">edl_netrc()</a></code>. Because
+the <code>gdalcubes</code> package doesn’t respect global environmental
+variables, we use a helper utility to export those into it’s
+configuration as well.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://boettiger-lab.github.io/earthdatalogin/">earthdatalogin</a></span><span class="op">)</span></span></code></pre></div>
-<p>When using the <code>gdalcubes</code> package, we have support for a
-somewhat nicer, more localized authentication that uses the
-configuration options instead. We tell <code>edl_set_token</code> not to
-set the environmental variable globally, but to return in the header
-format which we can pass to
-<code>gdalcubes_set_gdal_config()</code>:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">filepath</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/edl_set_token.html">edl_set_token</a></span><span class="op">(</span>set_env_var <span class="op">=</span> <span class="cn">FALSE</span>, format<span class="op">=</span><span class="st">"file"</span><span class="op">)</span></span>
-<span><span class="fu">gdalcubes_set_gdal_config</span><span class="op">(</span><span class="st">"GDAL_HTTP_HEADER_FILE"</span>, <span class="va">filepath</span><span class="op">)</span></span></code></pre></div>
-<p><code>earthdatalogin</code> also includes optional configuration
-settings for GDAL which can improve performance of cloud-based data
-access. Set the GDAL environmental variables using
-<code><a href="../reference/gdal_cloud_config.html">gdal_cloud_config()</a></code></p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/gdal_cloud_config.html">gdal_cloud_config</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://boettiger-lab.github.io/earthdatalogin/">earthdatalogin</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/edl_netrc.html">edl_netrc</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/with_gdalcubes.html">with_gdalcubes</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="search-via-stac">Search via STAC<a class="anchor" aria-label="anchor" href="#search-via-stac"></a>
@@ -126,21 +117,21 @@ access. Set the GDAL environmental variables using
 <p>We will now use the <code>rstac</code> package to search one or more
 NASA collections for data that falls into our desired bounding box of
 space and time:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>bbox <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">xmin=</span><span class="sc">-</span><span class="dv">123</span>, <span class="at">ymin=</span><span class="fl">37.25</span>, <span class="at">xmax=</span><span class="sc">-</span><span class="fl">122.0</span>, <span class="at">ymax=</span><span class="fl">38.25</span>) </span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>start <span class="ot">&lt;-</span> <span class="st">"2021-12-01"</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>end <span class="ot">&lt;-</span> <span class="st">"2022-05-30"</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Find all assets from the desired catalog:</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>items <span class="ot">&lt;-</span> <span class="fu">stac</span>(<span class="st">"https://cmr.earthdata.nasa.gov/stac/LPCLOUD"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stac_search</span>(<span class="at">collections =</span> <span class="st">"HLSL30.v2.0"</span>,</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>              <span class="at">bbox =</span> bbox,</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>              <span class="at">datetime =</span> <span class="fu">paste</span>(start,end, <span class="at">sep =</span> <span class="st">"/"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">post_request</span>() <span class="sc">|&gt;</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">items_fetch</span>() <span class="sc">|&gt;</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">items_filter</span>(<span class="at">filter_fn =</span> \(x) {x[[<span class="st">"eo:cloud_cover"</span>]] <span class="sc">&lt;</span> <span class="dv">20</span>})</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  <span class="sc">|</span>                                                                             </span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  <span class="er">|=======================================================================|</span> <span class="dv">100</span>%</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>bbox <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">xmin=</span><span class="sc">-</span><span class="dv">123</span>, <span class="at">ymin=</span><span class="fl">37.25</span>, <span class="at">xmax=</span><span class="sc">-</span><span class="fl">122.0</span>, <span class="at">ymax=</span><span class="fl">38.25</span>) </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>start <span class="ot">&lt;-</span> <span class="st">"2021-12-01"</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>end <span class="ot">&lt;-</span> <span class="st">"2022-05-31"</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Find all assets from the desired catalog:</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>items <span class="ot">&lt;-</span> <span class="fu">stac</span>(<span class="st">"https://cmr.earthdata.nasa.gov/stac/LPCLOUD"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stac_search</span>(<span class="at">collections =</span> <span class="st">"HLSL30.v2.0"</span>,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>              <span class="at">bbox =</span> bbox,</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>              <span class="at">datetime =</span> <span class="fu">paste</span>(start,end, <span class="at">sep =</span> <span class="st">"/"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">post_request</span>() <span class="sc">|&gt;</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">items_fetch</span>() <span class="sc">|&gt;</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">items_filter</span>(<span class="at">filter_fn =</span> \(x) {x[[<span class="st">"eo:cloud_cover"</span>]] <span class="sc">&lt;</span> <span class="dv">20</span>})</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="sc">|</span>                                                                                                                                                                                                                                                                </span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  <span class="er">|==========================================================================================================================================================================================================================================================|</span> <span class="dv">100</span>%</span></code></pre></div>
 <p>Note that 98 features have matched our search criteria! Each feature
 represents a ‘snapshot’ image taken by the satellite as it passes by
 (this is a harmonized product so actually there’s quite a lot of
@@ -155,28 +146,28 @@ EarthData’s STAC metadata tends to be quite sparse.</p>
 <div class="section level2">
 <h2 id="building-a-data-cube">Building a Data Cube<a class="anchor" aria-label="anchor" href="#building-a-data-cube"></a>
 </h2>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Desired data cube shape &amp; resolution</span></span>
-<span><span class="va">v</span> <span class="op">=</span> <span class="fu">cube_view</span><span class="op">(</span>srs <span class="op">=</span> <span class="st">"EPSG:4326"</span>,</span>
+<span><span class="va">v</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/gdalcubes/man/cube_view.html" class="external-link">cube_view</a></span><span class="op">(</span>srs <span class="op">=</span> <span class="st">"EPSG:4326"</span>,</span>
 <span>              extent <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>t0 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">start</span><span class="op">)</span>, </span>
 <span>                            t1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">end</span><span class="op">)</span>,</span>
 <span>                            left <span class="op">=</span> <span class="va">bbox</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, right <span class="op">=</span> <span class="va">bbox</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span>,</span>
 <span>                            top <span class="op">=</span> <span class="va">bbox</span><span class="op">[</span><span class="fl">4</span><span class="op">]</span>, bottom <span class="op">=</span> <span class="va">bbox</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span>,</span>
 <span>              nx <span class="op">=</span> <span class="fl">512</span>, ny <span class="op">=</span> <span class="fl">512</span>, dt <span class="op">=</span> <span class="st">"P1M"</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># RGB bands + cloud cover mask</span></span>
-<span><span class="va">col</span> <span class="op">&lt;-</span> <span class="fu">stac_image_collection</span><span class="op">(</span><span class="va">items</span><span class="op">$</span><span class="va">features</span>, </span>
+<span><span class="va">col</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/gdalcubes/man/stac_image_collection.html" class="external-link">stac_image_collection</a></span><span class="op">(</span><span class="va">items</span><span class="op">$</span><span class="va">features</span>, </span>
 <span>                             asset_names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"B02"</span>, <span class="st">"B03"</span>, <span class="st">"B04"</span>, <span class="st">"Fmask"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># use a cloud mask -- see</span></span>
 <span><span class="co"># https://lpdaac.usgs.gov/documents/1326/HLS_User_Guide_V2.pdf</span></span>
 <span></span>
-<span><span class="va">cloud_mask</span> <span class="op">&lt;-</span> <span class="fu">image_mask</span><span class="op">(</span><span class="st">"Fmask"</span>, values<span class="op">=</span><span class="fl">1</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<span><span class="va">cloud_mask</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/gdalcubes/man/image_mask.html" class="external-link">image_mask</a></span><span class="op">(</span><span class="st">"Fmask"</span>, values<span class="op">=</span><span class="fl">1</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># Here we go! note eval is lazy</span></span>
-<span><span class="fu">raster_cube</span><span class="op">(</span><span class="va">col</span>, <span class="va">v</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">select_bands</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"B02"</span>,<span class="st">"B03"</span>, <span class="st">"B04"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/gdalcubes/man/raster_cube.html" class="external-link">raster_cube</a></span><span class="op">(</span><span class="va">col</span>, <span class="va">v</span>, mask<span class="op">=</span><span class="va">cloud_mask</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/gdalcubes/man/select_bands.html" class="external-link">select_bands</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"B02"</span>,<span class="st">"B03"</span>, <span class="st">"B04"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span>rgb<span class="op">=</span><span class="fl">3</span><span class="op">:</span><span class="fl">1</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
 <img src="img/sf_bay-1.png" alt=""><p class="caption">plot of chunk sf_bay</p>
@@ -190,7 +181,7 @@ EarthData’s STAC metadata tends to be quite sparse.</p>
 
     <footer><div class="pkgdown-footer-left">
   <p></p>
-<p>Developed by <a href="https://carlboettiger.info" class="external-link">Carl Boettiger</a>, <a href="https://betolink.dev/" class="external-link">Luis López</a>, Bri Lind, <a href="https://openscapes.org" class="external-link"><img src="https://nasa-openscapes.github.io/images/nasa-openscapes.png" alt="Openscapes" height="32" style="margin-bottom: 3px;"></a>.</p>
+<p>Developed by <a href="https://carlboettiger.info" class="external-link">Carl Boettiger</a>, <a href="https://betolink.dev" class="external-link">Luis López</a>, <a href="http://yuvi.in" class="external-link">Yuvi Panda</a>, Bri Lind, <a href="https://openscapes.org" class="external-link"><img src="https://nasa-openscapes.github.io/images/nasa-openscapes.png" alt="Openscapes" height="32" style="margin-bottom: 3px;"></a>.</p>
 </div>
 
 <div class="pkgdown-footer-right">

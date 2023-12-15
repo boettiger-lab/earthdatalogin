@@ -122,7 +122,7 @@ restrictions are rarely put in place.)</p>
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://boettiger-lab.github.io/earthdatalogin/">earthdatalogin</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://brazil-data-cube.github.io/rstac/" class="external-link">rstac</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/appelmar/gdalcubes" class="external-link">gdalcubes</a></span><span class="op">)</span></span>
-<span><span class="fu">gdalcubes_options</span><span class="op">(</span>parallel <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> </span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/gdalcubes/man/gdalcubes_options.html" class="external-link">gdalcubes_options</a></span><span class="op">(</span>parallel <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> </span>
 <span><span class="fu"><a href="../reference/gdal_cloud_config.html">gdal_cloud_config</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="earth-data-authentication">Earth Data Authentication<a class="anchor" aria-label="anchor" href="#earth-data-authentication"></a>
@@ -152,31 +152,31 @@ require any authentication.</p>
 <p>The STAC search returns item metadata including links to the data
 object as https URLs. While these are ideal for the bearer token access,
 we want to convert these to S3-style addresses. The function
-<code>gdalcubes::stac_image_collection()</code> actually takes an
+<code><a href="https://rdrr.io/pkg/gdalcubes/man/stac_image_collection.html" class="external-link">gdalcubes::stac_image_collection()</a></code> actually takes an
 optional argument for how URLs should be handled. The helper function
 <code><a href="../reference/edl_as_s3.html">edl_as_s3()</a></code> provides a convenient way to do this (a trivial
 step, we just remove the domain name and replace it with GDAL’s S3
 prefix, <code>/vsis3</code>):</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">col</span> <span class="op">&lt;-</span> </span>
-<span>  <span class="fu">stac_image_collection</span><span class="op">(</span><span class="va">items</span><span class="op">$</span><span class="va">features</span>, </span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/gdalcubes/man/stac_image_collection.html" class="external-link">stac_image_collection</a></span><span class="op">(</span><span class="va">items</span><span class="op">$</span><span class="va">features</span>, </span>
 <span>                        asset_names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"B02"</span>, <span class="st">"B03"</span>, <span class="st">"B04"</span>, <span class="st">"Fmask"</span><span class="op">)</span>,</span>
 <span>                        url_fun <span class="op">=</span> \<span class="op">(</span><span class="va">url</span><span class="op">)</span> <span class="fu"><a href="../reference/edl_as_s3.html">edl_as_s3</a></span><span class="op">(</span><span class="va">url</span>, prefix <span class="op">=</span> <span class="st">"/vsis3/"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Desired data cube shape &amp; resolution</span></span>
-<span><span class="va">v</span> <span class="op">=</span> <span class="fu">cube_view</span><span class="op">(</span>srs <span class="op">=</span> <span class="st">"EPSG:4326"</span>,</span>
+<span><span class="va">v</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/gdalcubes/man/cube_view.html" class="external-link">cube_view</a></span><span class="op">(</span>srs <span class="op">=</span> <span class="st">"EPSG:4326"</span>,</span>
 <span>              extent <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>t0 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">start</span><span class="op">)</span>, </span>
 <span>                            t1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">end</span><span class="op">)</span>,</span>
 <span>                            left <span class="op">=</span> <span class="va">bbox</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, right <span class="op">=</span> <span class="va">bbox</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span>,</span>
 <span>                            top <span class="op">=</span> <span class="va">bbox</span><span class="op">[</span><span class="fl">4</span><span class="op">]</span>, bottom <span class="op">=</span> <span class="va">bbox</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span>,</span>
 <span>                nx <span class="op">=</span> <span class="fl">2048</span>, ny <span class="op">=</span> <span class="fl">2048</span>, dt <span class="op">=</span> <span class="st">"P1M"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">cloud_mask</span> <span class="op">&lt;-</span> <span class="fu">image_mask</span><span class="op">(</span><span class="st">"Fmask"</span>, values<span class="op">=</span><span class="fl">1</span><span class="op">)</span> <span class="co"># mask clouds and cloud shadows</span></span>
+<span><span class="va">cloud_mask</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/gdalcubes/man/image_mask.html" class="external-link">image_mask</a></span><span class="op">(</span><span class="st">"Fmask"</span>, values<span class="op">=</span><span class="fl">1</span><span class="op">)</span> <span class="co"># mask clouds and cloud shadows</span></span>
 <span><span class="va">rgb_bands</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"B04"</span>,<span class="st">"B03"</span>, <span class="st">"B02"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Here we go! note eval is lazy</span></span>
-<span><span class="fu">raster_cube</span><span class="op">(</span><span class="va">col</span>, <span class="va">v</span>, mask<span class="op">=</span><span class="va">cloud_mask</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">select_bands</span><span class="op">(</span><span class="va">rgb_bands</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/gdalcubes/man/raster_cube.html" class="external-link">raster_cube</a></span><span class="op">(</span><span class="va">col</span>, <span class="va">v</span>, mask<span class="op">=</span><span class="va">cloud_mask</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/gdalcubes/man/select_bands.html" class="external-link">select_bands</a></span><span class="op">(</span><span class="va">rgb_bands</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span>rgb<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span></span></code></pre></div>
 </div>
   </main>
@@ -186,7 +186,7 @@ prefix, <code>/vsis3</code>):</p>
 
     <footer><div class="pkgdown-footer-left">
   <p></p>
-<p>Developed by <a href="https://carlboettiger.info" class="external-link">Carl Boettiger</a>, <a href="https://betolink.dev/" class="external-link">Luis López</a>, Bri Lind, <a href="https://openscapes.org" class="external-link"><img src="https://nasa-openscapes.github.io/images/nasa-openscapes.png" alt="Openscapes" height="32" style="margin-bottom: 3px;"></a>.</p>
+<p>Developed by <a href="https://carlboettiger.info" class="external-link">Carl Boettiger</a>, <a href="https://betolink.dev" class="external-link">Luis López</a>, <a href="http://yuvi.in" class="external-link">Yuvi Panda</a>, Bri Lind, <a href="https://openscapes.org" class="external-link"><img src="https://nasa-openscapes.github.io/images/nasa-openscapes.png" alt="Openscapes" height="32" style="margin-bottom: 3px;"></a>.</p>
 </div>
 
 <div class="pkgdown-footer-right">

@@ -61,7 +61,7 @@ the asset is downloaded to a local POSIX filesystem first."><!-- mathjax --><scr
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>download assets from earthdata over https using bearer tokens</h1>
-      <small class="dont-index">Source: <a href="https://github.com/boettiger-lab/earthdatalogin/blob/HEAD/R/edl.R" class="external-link"><code>R/edl.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/boettiger-lab/earthdatalogin/blob/HEAD/R/edl_download.R" class="external-link"><code>R/edl_download.R</code></a></small>
       <div class="d-none name"><code>edl_download.Rd</code></div>
     </div>
 
@@ -79,8 +79,13 @@ the asset is downloaded to a local POSIX filesystem first.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">edl_download</span><span class="op">(</span></span>
 <span>  <span class="va">href</span>,</span>
 <span>  dest <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/basename.html" class="external-link">basename</a></span><span class="op">(</span><span class="va">href</span><span class="op">)</span>,</span>
-<span>  header <span class="op">=</span> <span class="fu"><a href="edl_set_token.html">edl_set_token</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  use_httr <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  auth <span class="op">=</span> <span class="st">"netrc"</span>,</span>
+<span>  method <span class="op">=</span> <span class="st">"curl"</span>,</span>
+<span>  username <span class="op">=</span> <span class="fu">default</span><span class="op">(</span><span class="st">"user"</span><span class="op">)</span>,</span>
+<span>  password <span class="op">=</span> <span class="fu">default</span><span class="op">(</span><span class="st">"password"</span><span class="op">)</span>,</span>
+<span>  netrc_path <span class="op">=</span> <span class="fu">edl_netrc_path</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  cookie_path <span class="op">=</span> <span class="fu">edl_cookie_path</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  quiet <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -95,18 +100,40 @@ the asset is downloaded to a local POSIX filesystem first.</p>
 <dd><p>local destination</p></dd>
 
 
-<dt>header</dt>
-<dd><p>the Authorization header (<code>Bearer &lt;token&gt;</code>).  Will be
-requested automatically if not provided.</p></dd>
+<dt>auth</dt>
+<dd><p>the authentication method ("token" for Bearer tokens
+or "netrc" for netrc.)</p></dd>
 
 
-<dt>use_httr</dt>
-<dd><p>logical, default TRUE. Should we use httr or base method?</p></dd>
+<dt>method</dt>
+<dd><p>The download method, either "httr" or "curl".</p></dd>
+
+
+<dt>username</dt>
+<dd><p>EarthData Login User</p></dd>
+
+
+<dt>password</dt>
+<dd><p>EarthData Login Password</p></dd>
+
+
+<dt>netrc_path</dt>
+<dd><p>Path to the .netrc file to be created. Defaults to the
+appropriate R package configuration location given by <code><a href="https://rdrr.io/r/tools/userdir.html" class="external-link">tools::R_user_dir()</a></code>.</p></dd>
+
+
+<dt>cookie_path</dt>
+<dd><p>Path to the file where cookies will be stored.  Defaults
+to the appropriate R package configuration location given by
+<code><a href="https://rdrr.io/r/tools/userdir.html" class="external-link">tools::R_user_dir()</a></code>.</p></dd>
+
+
+<dt>quiet</dt>
+<dd><p>logical default TRUE. Show progress in download?</p></dd>
 
 
 <dt>...</dt>
-<dd><p>additional arguments to the <code><a href="https://rdrr.io/r/utils/download.file.html" class="external-link">utils::download.file()</a></code> (ignored
-if <code>use_httr=TRUE</code>).</p></dd>
+<dd><p>additional arguments to <code><a href="https://rdrr.io/r/utils/download.file.html" class="external-link">download.file()</a></code>, e.g. quiet = TRUE.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -129,7 +156,7 @@ if <code>use_httr=TRUE</code>).</p></dd>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p></p><p>Developed by <a href="https://carlboettiger.info" class="external-link">Carl Boettiger</a>, <a href="https://betolink.dev/" class="external-link">Luis López</a>, Bri Lind, <a href="https://openscapes.org" class="external-link"><img src="https://nasa-openscapes.github.io/images/nasa-openscapes.png" alt="Openscapes" height="32" style="margin-bottom: 3px;"></a>.</p>
+  <p></p><p>Developed by <a href="https://carlboettiger.info" class="external-link">Carl Boettiger</a>, <a href="https://betolink.dev" class="external-link">Luis López</a>, <a href="http://yuvi.in" class="external-link">Yuvi Panda</a>, Bri Lind, <a href="https://openscapes.org" class="external-link"><img src="https://nasa-openscapes.github.io/images/nasa-openscapes.png" alt="Openscapes" height="32" style="margin-bottom: 3px;"></a>.</p>
 </div>
 
 <div class="pkgdown-footer-right">

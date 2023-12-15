@@ -43,6 +43,9 @@
     <loc>https://boettiger-lab.github.io/earthdatalogin/reference/edl_download.html</loc>
   </url>
   <url>
+    <loc>https://boettiger-lab.github.io/earthdatalogin/reference/edl_netrc.html</loc>
+  </url>
+  <url>
     <loc>https://boettiger-lab.github.io/earthdatalogin/reference/edl_revoke_token.html</loc>
   </url>
   <url>
@@ -55,15 +58,27 @@
     <loc>https://boettiger-lab.github.io/earthdatalogin/reference/edl_stac_urls.html</loc>
   </url>
   <url>
+    <loc>https://boettiger-lab.github.io/earthdatalogin/reference/edl_unset_netrc.html</loc>
+  </url>
+  <url>
+    <loc>https://boettiger-lab.github.io/earthdatalogin/reference/edl_unset_s3.html</loc>
+  </url>
+  <url>
     <loc>https://boettiger-lab.github.io/earthdatalogin/reference/edl_unset_token.html</loc>
   </url>
   <url>
     <loc>https://boettiger-lab.github.io/earthdatalogin/reference/gdal_cloud_config.html</loc>
   </url>
   <url>
+    <loc>https://boettiger-lab.github.io/earthdatalogin/reference/gdal_cloud_unconfig.html</loc>
+  </url>
+  <url>
     <loc>https://boettiger-lab.github.io/earthdatalogin/reference/index.html</loc>
   </url>
   <url>
     <loc>https://boettiger-lab.github.io/earthdatalogin/reference/lpdacc_example_url.html</loc>
+  </url>
+  <url>
+    <loc>https://boettiger-lab.github.io/earthdatalogin/reference/with_gdalcubes.html</loc>
   </url>
 </urlset>
