@@ -41,7 +41,8 @@ edl_search <- function(short_name = NULL,
                        page_size = 2000,
                        ...) {
 
-  token <- earthdatalogin::edl_set_token(set_env_var = FALSE)
+  token <- earthdatalogin::edl_set_token(set_env_var = FALSE,
+                                         prompt_for_netrc = FALSE)
 
   query <- list(short_name = short_name,
                 temporal = paste(temporal, collapse=","),
