@@ -1,3 +1,4 @@
+ATL
 Auth
 CMD
 COGs
@@ -7,6 +8,7 @@ CloudFlare
 Codespaces
 DAAC
 DAACs
+DOI
 EARTHDATA
 EDL
 EarthData
@@ -20,11 +22,15 @@ Geotiff
 HDF
 HTTPS
 JupyterHub
+LPDAAC
 MODIS
 NETRC
 NOAA
+NSIDC
 OAuth
 PCI
+POCLOUD
+PODAAC
 QGIS
 STAC
 Terrabyte
@@ -55,6 +61,7 @@ httr
 hyperscale
 india
 kb
+lon
 modis
 native’
 ndvi
@@ -67,4 +74,5 @@ terra
 terrabytes
 tl
 unsets
+yyyy
 zarr

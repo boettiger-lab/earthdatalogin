@@ -13,6 +13,12 @@ edl_search(
   temporal = NULL,
   bounding_box = NULL,
   page_size = 2000,
+  recurse = TRUE,
+  parse_results = TRUE,
+  username = default("user"),
+  password = default("password"),
+  netrc_path = edl_netrc_path(),
+  cookie_path = edl_cookie_path(),
   ...
 )
 }
@@ -31,12 +37,33 @@ edl_search(
 
 \item{bounding_box}{c(lower_left_lon, lower_left_lat, upper_right_lon, upper_right_lat)}
 
-\item{page_size}{maximum number of results to return}
+\item{page_size}{maximum number of results to return per query.}
+
+\item{recurse}{If a query returns more than page_size results, should
+we make recursive calls to return all results?}
+
+\item{parse_results}{logical, default TRUE. Calls \code{\link[=edl_extract_urls]{edl_extract_urls()}}
+to determine url links to data objects.  Set to FALSE to return
+the full API response object, but be wary of large object sizes
+when search returns many results.}
+
+\item{username}{EarthData Login User}
+
+\item{password}{EarthData Login Password}
+
+\item{netrc_path}{Path to the .netrc file to be created. Defaults to the
+appropriate R package configuration location given by \code{\link[tools:userdir]{tools::R_user_dir()}}.}
+
+\item{cookie_path}{Path to the file where cookies will be stored.  Defaults
+to the appropriate R package configuration location given by
+\code{\link[tools:userdir]{tools::R_user_dir()}}.}
 
 \item{...}{additional query parameters}
 }
 \value{
-A response object of the returned search information
+A character vector of data URLs matching the search criteria,
+if \code{parse_results = TRUE} (default).  Otherwise, returns a response object
+of the returned search information if \code{parse_results = FALSE}.
 }
 \description{
 \strong{NOTE}: Use as a fallback method only! Users are strongly encouraged
@@ -48,9 +75,11 @@ NASA and many other providers, and can be searched using the feature-rich
 \examples{
 \dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 
-resp <- edl_search(short_name = "MUR-JPL-L4-GLOB-v4.1",
-                   temporal = c("2002-01-01", "2021-12-31"))
+items <- edl_search(short_name = "MUR-JPL-L4-GLOB-v4.1",
+                   temporal = c("2002-01-01", "2021-12-31"),
+                   recurse = TRUE,
+                   parse_urls = TRUE)
 
-urls <- edl_extract_urls(resp)
+urls <- edl_extract_urls(items)
 \dontshow{\}) # examplesIf}
 }

@@ -20,15 +20,25 @@
 #' @param provider particular to each DAAC, e.g. POCLOUD, LPDAAC etc.
 #' @param temporal c("yyyy-mm-dd", "yyyy-mm-dd")
 #' @param bounding_box c(lower_left_lon, lower_left_lat, upper_right_lon, upper_right_lat)
-#' @param page_size maximum number of results to return
+#' @param page_size maximum number of results to return per query.
 #' @param ... additional query parameters
+#' @param recurse If a query returns more than page_size results, should
+#'   we make recursive calls to return all results?
+#' @param parse_results logical, default TRUE. Calls [edl_extract_urls()]
+#'  to determine url links to data objects.  Set to FALSE to return
+#'  the full API response object, but be wary of large object sizes
+#'  when search returns many results.
 #' @inheritParams edl_netrc
 #' @export
-#' @return A response object of the returned search information
+#' @return A character vector of data URLs matching the search criteria,
+#' if `parse_results = TRUE` (default).  Otherwise, returns a response object
+#'  of the returned search information if `parse_results = FALSE`.
 #' @examplesIf interactive()
 #'
 #' items <- edl_search(short_name = "MUR-JPL-L4-GLOB-v4.1",
-#'                    temporal = c("2002-01-01", "2021-12-31"))
+#'                    temporal = c("2002-01-01", "2021-12-31"),
+#'                    recurse = TRUE,
+#'                    parse_urls = TRUE)
 #'
 #' urls <- edl_extract_urls(items)
 #'
@@ -40,7 +50,8 @@ edl_search <- function(short_name = NULL,
                        temporal = NULL,
                        bounding_box = NULL,
                        page_size = 2000,
-                       recurse = FALSE,
+                       recurse = TRUE,
+                       parse_results = TRUE,
                        username = default("user"),
                        password = default("password"),
                        netrc_path = edl_netrc_path(),
@@ -84,35 +95,27 @@ edl_search <- function(short_name = NULL,
 
 
   if(recurse){
-  while(!is.null(continue)) {
-    #dir <- tempfile("earthdata_cache")
-    #dir.create(dir)
-    #jsonlite::write_json(entry, file.path(dir, paste0("entry_",i, ".json")))
+    while(!is.null(continue)) {
 
-    resp <- httr::GET(url,
-              query = query,
-              netrc_config,
-              httr::add_headers("CMR-Search-After" = continue))
+      resp <- httr::GET(url,
+                query = query,
+                netrc_config,
+                httr::add_headers("CMR-Search-After" = continue))
 
-    more_entries <- httr::content(resp, "parsed")$feed$entry
-    entry <- c(entry, more_entries)
-    #entry <- more_entries
+      more_entries <- httr::content(resp, "parsed")$feed$entry
+      entry <- c(entry, more_entries)
 
-    resp_header <- httr::headers(resp)
-    continue <- resp_header[["cmr-search-after"]]
+      resp_header <- httr::headers(resp)
+      continue <- resp_header[["cmr-search-after"]]
 
-   # i <- i + 1
-  }
+    }
   }
 
-  #if(i >1) {
-  #  files <- list.files(dir, full.names = TRUE)
-  #  entry <- lapply(files,  jsonlite::read_json)
-  #  entry <- do.call(c, entry)
+  if (!parse_results) {
+    return(  structure(entry, class = "cmr_items") )
+  }
 
-  #  unlink(dir)
-  #}
-  structure(entry, class = "cmr_items")
+  edl_extract_urls(entry)
 }
 
 #' @export
@@ -132,7 +135,8 @@ print.cmr_items <- function(x, ...) {
 #' @examplesIf interactive()
 #'
 #' items <- edl_search(short_name = "MUR-JPL-L4-GLOB-v4.1",
-#'                    temporal = c("2020-01-01", "2021-12-31"))
+#'                    temporal = c("2020-01-01", "2021-12-31"),
+#'                    parse_urls = FALSE)
 #'
 #' urls <- edl_extract_urls(items)
 #'
