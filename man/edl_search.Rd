@@ -49,7 +49,7 @@ NASA and many other providers, and can be searched using the feature-rich
 \dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 
 resp <- edl_search(short_name = "MUR-JPL-L4-GLOB-v4.1",
-                   temporal = c("2020-01-01", "2021-12-31"))
+                   temporal = c("2002-01-01", "2021-12-31"))
 
 urls <- edl_extract_urls(resp)
 \dontshow{\}) # examplesIf}

@@ -27,7 +27,7 @@
 #' @examplesIf interactive()
 #'
 #' resp <- edl_search(short_name = "MUR-JPL-L4-GLOB-v4.1",
-#'                    temporal = c("2020-01-01", "2021-12-31"))
+#'                    temporal = c("2002-01-01", "2021-12-31"))
 #'
 #' urls <- edl_extract_urls(resp)
 #'
@@ -60,7 +60,17 @@ edl_search <- function(short_name = NULL,
                     query = query,
                     httr::add_headers("Authorization"=paste("Bearer", token)))
   httr::stop_for_status(resp)
-  resp
+
+  content <- httr::content(resp, "parsed")
+
+  if(length(content$feed$entry) == page_size){
+    warning(paste("returning maximum", page_size, "results.\\n",
+                  "You must use multiple narrower queries to retrieve
+                  more than 2000 results."), call. = FALSE)
+
+  }
+
+  content
 }
 
 #' Extract data URLs from edl_search
@@ -69,7 +79,7 @@ edl_search <- function(short_name = NULL,
 #' from edl_search(). Users are strongly encouraged to rely on
 #' STAC searches instead.
 #'
-#' @param resp a response object from edl_search
+#' @param p a content object from edl_search
 #' @return a character vector of URLs
 #' @export
 #' @examplesIf interactive()
@@ -79,8 +89,7 @@ edl_search <- function(short_name = NULL,
 #'
 #' urls <- edl_extract_urls(resp)
 #'
-edl_extract_urls <- function(resp) {
-  p <- httr::content(resp, "parsed")
+edl_extract_urls <- function(p) {
   all_links <- purrr::map(p$feed$entry, "links")
   urls <- purrr::map_chr(all_links, function(links) {
     is_data <-
