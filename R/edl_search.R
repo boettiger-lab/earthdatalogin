@@ -22,6 +22,7 @@
 #' @param bounding_box c(lower_left_lon, lower_left_lat, upper_right_lon, upper_right_lat)
 #' @param page_size maximum number of results to return
 #' @param ... additional query parameters
+#' @inheritParams edl_netrc
 #' @export
 #' @return A response object of the returned search information
 #' @examplesIf interactive()
@@ -39,10 +40,27 @@ edl_search <- function(short_name = NULL,
                        temporal = NULL,
                        bounding_box = NULL,
                        page_size = 2000,
+                       recurse = FALSE,
+                       username = default("user"),
+                       password = default("password"),
+                       netrc_path = edl_netrc_path(),
+                       cookie_path = edl_cookie_path(),
                        ...) {
 
-  token <- earthdatalogin::edl_set_token(set_env_var = FALSE,
-                                         prompt_for_netrc = FALSE)
+  #token <- earthdatalogin::edl_set_token(set_env_var = FALSE,
+  #                                       prompt_for_netrc = FALSE)
+
+
+  edl_netrc(username = username,
+            password = password,
+            netrc_path = netrc_path,
+            cookie_path = cookie_path,
+            cloud_config = FALSE)
+  netrc_config <-
+    httr::config(netrc = TRUE,
+                 netrc_file = netrc_path,
+                 cookiefile = cookie_path,
+                 cookiejar = cookie_path)
 
   query <- list(short_name = short_name,
                 temporal = paste(temporal, collapse=","),
@@ -56,9 +74,7 @@ edl_search <- function(short_name = NULL,
   query <- purrr::compact(query)
 
   url <- "https://cmr.earthdata.nasa.gov/search/granules"
-  resp <- httr::GET(url,
-                    query = query,
-                    httr::add_headers("Authorization"=paste("Bearer", token)))
+  resp <- httr::GET(url,  query = query, netrc_config)
   httr::stop_for_status(resp)
 
   entry <- httr::content(resp, "parsed")$feed$entry
@@ -66,6 +82,8 @@ edl_search <- function(short_name = NULL,
   continue <- resp_header[["cmr-search-after"]]
   #i <- 1
 
+
+  if(recurse){
   while(!is.null(continue)) {
     #dir <- tempfile("earthdata_cache")
     #dir.create(dir)
@@ -73,10 +91,8 @@ edl_search <- function(short_name = NULL,
 
     resp <- httr::GET(url,
               query = query,
-              httr::add_headers("Authorization"=paste("Bearer", token),
-                                "CMR-Search-After" = continue))
-
-    httr::stop_for_status(resp)
+              netrc_config,
+              httr::add_headers("CMR-Search-After" = continue))
 
     more_entries <- httr::content(resp, "parsed")$feed$entry
     entry <- c(entry, more_entries)
@@ -86,6 +102,7 @@ edl_search <- function(short_name = NULL,
     continue <- resp_header[["cmr-search-after"]]
 
    # i <- i + 1
+  }
   }
 
   #if(i >1) {
