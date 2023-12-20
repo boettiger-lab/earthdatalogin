@@ -34,7 +34,8 @@ Imports:
     httr,
     openssl,
     purrr,
-    utils
+    utils,
+    jsonlite
 Suggests: 
     knitr,
     rmarkdown,

@@ -4,10 +4,10 @@
 \alias{edl_extract_urls}
 \title{Extract data URLs from edl_search}
 \usage{
-edl_extract_urls(p)
+edl_extract_urls(items)
 }
 \arguments{
-\item{p}{a content object from edl_search}
+\item{items}{the content object from edl_search}
 }
 \value{
 a character vector of URLs

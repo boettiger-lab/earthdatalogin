@@ -26,10 +26,10 @@
 #' @return A response object of the returned search information
 #' @examplesIf interactive()
 #'
-#' resp <- edl_search(short_name = "MUR-JPL-L4-GLOB-v4.1",
+#' items <- edl_search(short_name = "MUR-JPL-L4-GLOB-v4.1",
 #'                    temporal = c("2002-01-01", "2021-12-31"))
 #'
-#' urls <- edl_extract_urls(resp)
+#' urls <- edl_extract_urls(items)
 #'
 edl_search <- function(short_name = NULL,
                        version = NULL,
@@ -61,16 +61,46 @@ edl_search <- function(short_name = NULL,
                     httr::add_headers("Authorization"=paste("Bearer", token)))
   httr::stop_for_status(resp)
 
-  content <- httr::content(resp, "parsed")
+  entry <- httr::content(resp, "parsed")$feed$entry
+  resp_header <- httr::headers(resp)
+  continue <- resp_header[["cmr-search-after"]]
+  #i <- 1
 
-  if(length(content$feed$entry) == page_size){
-    warning(paste("returning maximum", page_size, "results.\\n",
-                  "You must use multiple narrower queries to retrieve
-                  more than 2000 results."), call. = FALSE)
+  while(!is.null(continue)) {
+    #dir <- tempfile("earthdata_cache")
+    #dir.create(dir)
+    #jsonlite::write_json(entry, file.path(dir, paste0("entry_",i, ".json")))
 
+    resp <- httr::GET(url,
+              query = query,
+              httr::add_headers("Authorization"=paste("Bearer", token),
+                                "CMR-Search-After" = continue))
+
+    httr::stop_for_status(resp)
+
+    more_entries <- httr::content(resp, "parsed")$feed$entry
+    entry <- c(entry, more_entries)
+    #entry <- more_entries
+
+    resp_header <- httr::headers(resp)
+    continue <- resp_header[["cmr-search-after"]]
+
+   # i <- i + 1
   }
 
-  content
+  #if(i >1) {
+  #  files <- list.files(dir, full.names = TRUE)
+  #  entry <- lapply(files,  jsonlite::read_json)
+  #  entry <- do.call(c, entry)
+
+  #  unlink(dir)
+  #}
+  structure(entry, class = "cmr_items")
+}
+
+#' @export
+print.cmr_items <- function(x, ...) {
+  print(paste("A CMR search results object with", length(x), "items"))
 }
 
 #' Extract data URLs from edl_search
@@ -79,22 +109,22 @@ edl_search <- function(short_name = NULL,
 #' from edl_search(). Users are strongly encouraged to rely on
 #' STAC searches instead.
 #'
-#' @param p a content object from edl_search
+#' @param items the content object from edl_search
 #' @return a character vector of URLs
 #' @export
 #' @examplesIf interactive()
 #'
-#' resp <- edl_search(short_name = "MUR-JPL-L4-GLOB-v4.1",
+#' items <- edl_search(short_name = "MUR-JPL-L4-GLOB-v4.1",
 #'                    temporal = c("2020-01-01", "2021-12-31"))
 #'
-#' urls <- edl_extract_urls(resp)
+#' urls <- edl_extract_urls(items)
 #'
-edl_extract_urls <- function(p) {
-  all_links <- purrr::map(p$feed$entry, "links")
+edl_extract_urls <- function(items) {
+  all_links <- purrr::map(items, "links")
   urls <- purrr::map_chr(all_links, function(links) {
     is_data <-
-      grepl("Download", purrr::map_chr(links, "title", .default=FALSE)) &
-      grepl("\\/data#", purrr::map_chr(links, "rel", .default=FALSE))
+      grepl("Download", purrr::map_chr(links, "title", .default="")) &
+      grepl("\\/data#", purrr::map_chr(links, "rel", .default=""))
 
     purrr::map_chr(links[is_data], "href")
   })
