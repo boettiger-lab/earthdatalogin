@@ -74,7 +74,7 @@ edl_search <- function(short_name = NULL,
                  cookiejar = cookie_path)
 
   query <- list(short_name = short_name,
-                temporal = paste(temporal, collapse=","),
+                temporal = paste(as.character(temporal), collapse=","),
                 version = version,
                 doi = doi,
                 daac = daac,
