@@ -43,6 +43,9 @@
     <loc>https://boettiger-lab.github.io/earthdatalogin/reference/edl_download.html</loc>
   </url>
   <url>
+    <loc>https://boettiger-lab.github.io/earthdatalogin/reference/edl_extract_urls.html</loc>
+  </url>
+  <url>
     <loc>https://boettiger-lab.github.io/earthdatalogin/reference/edl_netrc.html</loc>
   </url>
   <url>
@@ -50,6 +53,9 @@
   </url>
   <url>
     <loc>https://boettiger-lab.github.io/earthdatalogin/reference/edl_s3_token.html</loc>
+  </url>
+  <url>
+    <loc>https://boettiger-lab.github.io/earthdatalogin/reference/edl_search.html</loc>
   </url>
   <url>
     <loc>https://boettiger-lab.github.io/earthdatalogin/reference/edl_set_token.html</loc>
