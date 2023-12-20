@@ -82,6 +82,12 @@ NASA and many other providers, and can be searched using the feature-rich
 <span>  temporal <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  bounding_box <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  page_size <span class="op">=</span> <span class="fl">2000</span>,</span>
+<span>  recurse <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  parse_results <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  username <span class="op">=</span> <span class="fu">default</span><span class="op">(</span><span class="st">"user"</span><span class="op">)</span>,</span>
+<span>  password <span class="op">=</span> <span class="fu">default</span><span class="op">(</span><span class="st">"password"</span><span class="op">)</span>,</span>
+<span>  netrc_path <span class="op">=</span> <span class="fu">edl_netrc_path</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  cookie_path <span class="op">=</span> <span class="fu">edl_cookie_path</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -117,7 +123,38 @@ NASA and many other providers, and can be searched using the feature-rich
 
 
 <dt>page_size</dt>
-<dd><p>maximum number of results to return</p></dd>
+<dd><p>maximum number of results to return per query.</p></dd>
+
+
+<dt>recurse</dt>
+<dd><p>If a query returns more than page_size results, should
+we make recursive calls to return all results?</p></dd>
+
+
+<dt>parse_results</dt>
+<dd><p>logical, default TRUE. Calls <code><a href="edl_extract_urls.html">edl_extract_urls()</a></code>
+to determine url links to data objects.  Set to FALSE to return
+the full API response object, but be wary of large object sizes
+when search returns many results.</p></dd>
+
+
+<dt>username</dt>
+<dd><p>EarthData Login User</p></dd>
+
+
+<dt>password</dt>
+<dd><p>EarthData Login Password</p></dd>
+
+
+<dt>netrc_path</dt>
+<dd><p>Path to the .netrc file to be created. Defaults to the
+appropriate R package configuration location given by <code><a href="https://rdrr.io/r/tools/userdir.html" class="external-link">tools::R_user_dir()</a></code>.</p></dd>
+
+
+<dt>cookie_path</dt>
+<dd><p>Path to the file where cookies will be stored.  Defaults
+to the appropriate R package configuration location given by
+<code><a href="https://rdrr.io/r/tools/userdir.html" class="external-link">tools::R_user_dir()</a></code>.</p></dd>
 
 
 <dt>...</dt>
@@ -128,17 +165,21 @@ NASA and many other providers, and can be searched using the feature-rich
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>A response object of the returned search information</p>
+<p>A character vector of data URLs matching the search criteria,
+if <code>parse_results = TRUE</code> (default).  Otherwise, returns a response object
+of the returned search information if <code>parse_results = FALSE</code>.</p>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># interactive()</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">resp</span> <span class="op">&lt;-</span> <span class="fu">edl_search</span><span class="op">(</span>short_name <span class="op">=</span> <span class="st">"MUR-JPL-L4-GLOB-v4.1"</span>,</span></span>
-<span class="r-in"><span>                   temporal <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2002-01-01"</span>, <span class="st">"2021-12-31"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">items</span> <span class="op">&lt;-</span> <span class="fu">edl_search</span><span class="op">(</span>short_name <span class="op">=</span> <span class="st">"MUR-JPL-L4-GLOB-v4.1"</span>,</span></span>
+<span class="r-in"><span>                   temporal <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2002-01-01"</span>, <span class="st">"2021-12-31"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                   recurse <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>                   parse_urls <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">urls</span> <span class="op">&lt;-</span> <span class="fu"><a href="edl_extract_urls.html">edl_extract_urls</a></span><span class="op">(</span><span class="va">resp</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">urls</span> <span class="op">&lt;-</span> <span class="fu"><a href="edl_extract_urls.html">edl_extract_urls</a></span><span class="op">(</span><span class="va">items</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
