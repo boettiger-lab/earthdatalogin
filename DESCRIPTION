@@ -1,5 +1,5 @@
 Package: earthdatalogin
-Title: NASA 'EarthData' Login Utilities
+Title: NASA 'EarthData' Access Utilities
 Version: 0.0.2.99
 Authors@R: 
   c(person(given = "Carl", family = "Boettiger", , "cboettig@gmail.com", c("aut", "cre", "cph"),
