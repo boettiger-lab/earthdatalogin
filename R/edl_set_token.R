@@ -184,6 +184,8 @@ edl_revoke_token <- function(
 #' @param items an items list from rstac
 #' @param assets name(s) of assets to extract
 #' @return a vector of hrefs for all discovered assets.
+#' 
+#' @export
 #'
 edl_stac_urls <- function(items, assets = "data") {
   purrr::map(items$features, list("assets")) |>
