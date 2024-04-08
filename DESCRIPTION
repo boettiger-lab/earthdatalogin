@@ -29,7 +29,7 @@ Description: Providing easy, portable access to NASA 'EarthData' products
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 Imports: 
     httr,
     openssl,
@@ -46,7 +46,8 @@ Suggests:
     fs,
     readr,
     spelling,
-    gdalcubes
+    gdalcubes,
+    rstac
 URL: https://boettiger-lab.github.io/earthdatalogin/, https://github.com/boettiger-lab/earthdatalogin
 BugReports: https://github.com/boettiger-lab/earthdatalogin/issues
 VignetteBuilder: knitr
