@@ -9,6 +9,8 @@ Authors@R:
     person("Yuvi", "Panda", role = "aut"),
     person("Bri", "Lind", role = "aut",
          comment = c(ORCID = "0000-0002-5306-9963")),
+    person("Andy", "Teucher", role = "ctb",
+         comment = c(ORCID = "0000-0002-7840-692X")),
     person("Openscapes", role = "fnd")
          )
 Description: Providing easy, portable access to NASA 'EarthData' products
