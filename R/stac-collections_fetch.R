@@ -18,6 +18,7 @@
 #'    rstac::get_request() |> 
 #'    collections_fetch()
 #' 
+#' @export
 collections_fetch <- function(collections, ...) {
   
   if (!inherits(collections, "doc_collections")) {
