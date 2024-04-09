@@ -70,7 +70,7 @@ edl_set_token <- function (username = default("user"),
 
 
 edl_headerfile <- function(token) {
-  header = edl_header(token)
+  header <- edl_header(token)
   headerfile <- tempfile(pattern="GDAL_HTTP_HEADERS", fileext = "")
   writeLines(header, headerfile)
   invisible(headerfile)
