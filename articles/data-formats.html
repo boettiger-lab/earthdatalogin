@@ -100,7 +100,7 @@ but the workflow should be identical after calling
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">url</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"https://era5-pds.s3.amazonaws.com"</span>,</span>
 <span>              <span class="st">"/1979/01/data/air_pressure_at_mean_sea_level.nc"</span><span class="op">)</span></span>
-<span><span class="va">r</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">url</span>, vsi<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">r</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">url</span>, vsi<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">r</span></span>
 <span><span class="co">#&gt; class       : SpatRaster </span></span>
 <span><span class="co">#&gt; dimensions  : 721, 1440, 744  (nrow, ncol, nlyr)</span></span>
@@ -114,7 +114,7 @@ but the workflow should be identical after calling
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html" class="external-link">Sys.setenv</a></span><span class="op">(</span><span class="st">"AWS_NO_SIGN_REQUEST"</span><span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">s3uri</span> <span class="op">&lt;-</span> <span class="st">"s3://era5-pds/1979/01/data/air_pressure_at_mean_sea_level.nc"</span></span>
-<span><span class="va">r</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">s3uri</span><span class="op">)</span></span>
+<span><span class="va">r</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">s3uri</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html" class="external-link">Sys.unsetenv</a></span><span class="op">(</span><span class="st">"AWS_NO_SIGN_REQUEST"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -126,7 +126,7 @@ but the workflow should be identical after calling
 <span><span class="va">prefixes</span> <span class="op">&lt;-</span> <span class="st">'ZARR:\"/vsicurl/'</span></span>
 <span><span class="va">slice</span> <span class="op">&lt;-</span> <span class="st">'\":/analysed_sst:0"'</span></span>
 <span><span class="va">addr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">prefixes</span>, <span class="va">url</span>, <span class="va">slice</span><span class="op">)</span></span>
-<span><span class="va">y</span> <span class="op">=</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">addr</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">y</span> <span class="op">=</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">addr</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-tmap.github.io/tmap/" class="external-link">tmap</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">World</span><span class="op">)</span></span>
@@ -135,9 +135,9 @@ but the workflow should be identical after calling
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">st_as_stars</span><span class="op">(</span><span class="va">y</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">st_crop</span><span class="op">(</span><span class="va">india</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<div class="figure">
-<img src="img/zarr_sst-1.png" alt=""><p class="caption">plot of chunk zarr_sst</p>
+<span>  <span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div class="float">
+<img src="img/zarr_sst-1.png" alt="plot of chunk zarr_sst"><div class="figcaption">plot of chunk zarr_sst</div>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

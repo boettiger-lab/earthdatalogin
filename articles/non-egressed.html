@@ -142,13 +142,13 @@ require any authentication.</p>
 <span><span class="va">end</span> <span class="op">&lt;-</span> <span class="st">"2022-06-30"</span></span>
 <span></span>
 <span><span class="co"># Find all assets from the desired catalog:</span></span>
-<span><span class="va">items</span> <span class="op">&lt;-</span> <span class="fu">stac</span><span class="op">(</span><span class="st">"https://cmr.earthdata.nasa.gov/stac/LPCLOUD"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu">stac_search</span><span class="op">(</span>collections <span class="op">=</span> <span class="st">"HLSL30.v2.0"</span>,</span>
+<span><span class="va">items</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://brazil-data-cube.github.io/rstac/reference/stac.html" class="external-link">stac</a></span><span class="op">(</span><span class="st">"https://cmr.earthdata.nasa.gov/stac/LPCLOUD"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://brazil-data-cube.github.io/rstac/reference/stac_search.html" class="external-link">stac_search</a></span><span class="op">(</span>collections <span class="op">=</span> <span class="st">"HLSL30.v2.0"</span>,</span>
 <span>              bbox <span class="op">=</span> <span class="va">bbox</span>,</span>
 <span>              datetime <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">start</span>,<span class="va">end</span>, sep <span class="op">=</span> <span class="st">"/"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">post_request</span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">items_fetch</span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">items_filter</span><span class="op">(</span>filter_fn <span class="op">=</span> \<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span><span class="va">x</span><span class="op">[[</span><span class="st">"eo:cloud_cover"</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;</span> <span class="fl">20</span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://brazil-data-cube.github.io/rstac/reference/request.html" class="external-link">post_request</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://brazil-data-cube.github.io/rstac/reference/items_functions.html" class="external-link">items_fetch</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://brazil-data-cube.github.io/rstac/reference/items_functions.html" class="external-link">items_filter</a></span><span class="op">(</span>filter_fn <span class="op">=</span> \<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span><span class="va">x</span><span class="op">[[</span><span class="st">"eo:cloud_cover"</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;</span> <span class="fl">20</span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
 <p>The STAC search returns item metadata including links to the data
 object as https URLs. While these are ideal for the bearer token access,
 we want to convert these to S3-style addresses. The function
@@ -177,7 +177,7 @@ prefix, <code>/vsis3</code>):</p>
 <span><span class="co"># Here we go! note eval is lazy</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/gdalcubes/man/raster_cube.html" class="external-link">raster_cube</a></span><span class="op">(</span><span class="va">col</span>, <span class="va">v</span>, mask<span class="op">=</span><span class="va">cloud_mask</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/gdalcubes/man/select_bands.html" class="external-link">select_bands</a></span><span class="op">(</span><span class="va">rgb_bands</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span>rgb<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span>rgb<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span></span></code></pre></div>
 </div>
   </main>
 </div>

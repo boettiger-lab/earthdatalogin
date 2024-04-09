@@ -55,6 +55,11 @@
     </div>
 
     <div class="section level2">
+<h2 class="pkg-version" data-toc-text="development version" id="earthdatalogin-development-version">earthdatalogin (development version)<a class="anchor" aria-label="anchor" href="#earthdatalogin-development-version"></a></h2>
+<ul><li>Adds <code><a href="../reference/collections_fetch.html">collections_fetch()</a></code> for working with the results of a <code><a href="https://brazil-data-cube.github.io/rstac/reference/collections.html" class="external-link">collections()</a></code> query using the <a href="https://brazil-data-cube.github.io/rstac/" class="external-link">rstac</a> package. The NASA STAC API by default only return 10 collections for a given catalogue; this function allows you to retrieve them all (<a href="https://github.com/boettiger-lab/earthdatalogin/issues/11" class="external-link">#11</a>).</li>
+<li>Adds <code><a href="../reference/edl_stac_urls.html">edl_stac_urls()</a></code> for retrieving urls from an <code>rstac</code> items list.</li>
+</ul></div>
+    <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.0.2" id="earthdatalogin-002">earthdatalogin 0.0.2<a class="anchor" aria-label="anchor" href="#earthdatalogin-002"></a></h2><p class="text-muted">CRAN release: 2023-12-15</p>
 <ul><li>
 <p>Adds support for netrc-based authentication. <code><a href="../reference/edl_set_token.html">edl_set_token()</a></code> works only outside of <code>us-west-2</code>, <code><a href="../reference/edl_s3_token.html">edl_s3_token()</a></code> works only inside <code>us-west-2</code>, netrc works anywhere. Additionally, netrc-based auth does not to be deactivated when accessing non-earthdatalogin URLs.</p>
