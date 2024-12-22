@@ -52,12 +52,13 @@ We will now use the `rstac` package to search one or more NASA collections for d
 
 ```{r}
 bbox <- c(xmin=-123, ymin=37.25, xmax=-122.0, ymax=38.25) 
-start <- "2021-12-01"
-end <- "2022-05-31"
+start <- "2022-01-01T00:00:00Z" # NASA requires this format
+end <- "2022-05-31T00:00:00Z"
 
+# HLSL30 is landstat-conventions harmonized, HSLS30 is sentinel-conventions in harmonized
 # Find all assets from the desired catalog:
 items <- stac("https://cmr.earthdata.nasa.gov/stac/LPCLOUD") |> 
-  stac_search(collections = "HLSL30.v2.0",
+  stac_search(collections = "HLSL30_2.0",
               bbox = bbox,
               datetime = paste(start,end, sep = "/")) |>
   post_request() |>
