@@ -1,93 +1,33 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://boettiger-lab.github.io/earthdatalogin/404.html</loc>
-  </url>
-  <url>
-    <loc>https://boettiger-lab.github.io/earthdatalogin/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>https://boettiger-lab.github.io/earthdatalogin/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>https://boettiger-lab.github.io/earthdatalogin/articles/data-formats.html</loc>
-  </url>
-  <url>
-    <loc>https://boettiger-lab.github.io/earthdatalogin/articles/gdalcubes-stac-cog.html</loc>
-  </url>
-  <url>
-    <loc>https://boettiger-lab.github.io/earthdatalogin/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>https://boettiger-lab.github.io/earthdatalogin/articles/legacy-formats.html</loc>
-  </url>
-  <url>
-    <loc>https://boettiger-lab.github.io/earthdatalogin/articles/motivations.html</loc>
-  </url>
-  <url>
-    <loc>https://boettiger-lab.github.io/earthdatalogin/articles/non-egressed.html</loc>
-  </url>
-  <url>
-    <loc>https://boettiger-lab.github.io/earthdatalogin/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://boettiger-lab.github.io/earthdatalogin/index.html</loc>
-  </url>
-  <url>
-    <loc>https://boettiger-lab.github.io/earthdatalogin/news/index.html</loc>
-  </url>
-  <url>
-    <loc>https://boettiger-lab.github.io/earthdatalogin/reference/collections_fetch.html</loc>
-  </url>
-  <url>
-    <loc>https://boettiger-lab.github.io/earthdatalogin/reference/edl_as_s3.html</loc>
-  </url>
-  <url>
-    <loc>https://boettiger-lab.github.io/earthdatalogin/reference/edl_download.html</loc>
-  </url>
-  <url>
-    <loc>https://boettiger-lab.github.io/earthdatalogin/reference/edl_extract_urls.html</loc>
-  </url>
-  <url>
-    <loc>https://boettiger-lab.github.io/earthdatalogin/reference/edl_netrc.html</loc>
-  </url>
-  <url>
-    <loc>https://boettiger-lab.github.io/earthdatalogin/reference/edl_revoke_token.html</loc>
-  </url>
-  <url>
-    <loc>https://boettiger-lab.github.io/earthdatalogin/reference/edl_s3_token.html</loc>
-  </url>
-  <url>
-    <loc>https://boettiger-lab.github.io/earthdatalogin/reference/edl_search.html</loc>
-  </url>
-  <url>
-    <loc>https://boettiger-lab.github.io/earthdatalogin/reference/edl_set_token.html</loc>
-  </url>
-  <url>
-    <loc>https://boettiger-lab.github.io/earthdatalogin/reference/edl_stac_urls.html</loc>
-  </url>
-  <url>
-    <loc>https://boettiger-lab.github.io/earthdatalogin/reference/edl_unset_netrc.html</loc>
-  </url>
-  <url>
-    <loc>https://boettiger-lab.github.io/earthdatalogin/reference/edl_unset_s3.html</loc>
-  </url>
-  <url>
-    <loc>https://boettiger-lab.github.io/earthdatalogin/reference/edl_unset_token.html</loc>
-  </url>
-  <url>
-    <loc>https://boettiger-lab.github.io/earthdatalogin/reference/gdal_cloud_config.html</loc>
-  </url>
-  <url>
-    <loc>https://boettiger-lab.github.io/earthdatalogin/reference/gdal_cloud_unconfig.html</loc>
-  </url>
-  <url>
-    <loc>https://boettiger-lab.github.io/earthdatalogin/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://boettiger-lab.github.io/earthdatalogin/reference/lpdacc_example_url.html</loc>
-  </url>
-  <url>
-    <loc>https://boettiger-lab.github.io/earthdatalogin/reference/with_gdalcubes.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://boettiger-lab.github.io/earthdatalogin/404.html</loc></url>
+<url><loc>https://boettiger-lab.github.io/earthdatalogin/LICENSE-text.html</loc></url>
+<url><loc>https://boettiger-lab.github.io/earthdatalogin/LICENSE.html</loc></url>
+<url><loc>https://boettiger-lab.github.io/earthdatalogin/articles/data-formats.html</loc></url>
+<url><loc>https://boettiger-lab.github.io/earthdatalogin/articles/gdalcubes-stac-cog.html</loc></url>
+<url><loc>https://boettiger-lab.github.io/earthdatalogin/articles/index.html</loc></url>
+<url><loc>https://boettiger-lab.github.io/earthdatalogin/articles/legacy-formats.html</loc></url>
+<url><loc>https://boettiger-lab.github.io/earthdatalogin/articles/motivations.html</loc></url>
+<url><loc>https://boettiger-lab.github.io/earthdatalogin/articles/non-egressed.html</loc></url>
+<url><loc>https://boettiger-lab.github.io/earthdatalogin/authors.html</loc></url>
+<url><loc>https://boettiger-lab.github.io/earthdatalogin/index.html</loc></url>
+<url><loc>https://boettiger-lab.github.io/earthdatalogin/news/index.html</loc></url>
+<url><loc>https://boettiger-lab.github.io/earthdatalogin/reference/collections_fetch.html</loc></url>
+<url><loc>https://boettiger-lab.github.io/earthdatalogin/reference/edl_as_s3.html</loc></url>
+<url><loc>https://boettiger-lab.github.io/earthdatalogin/reference/edl_download.html</loc></url>
+<url><loc>https://boettiger-lab.github.io/earthdatalogin/reference/edl_extract_urls.html</loc></url>
+<url><loc>https://boettiger-lab.github.io/earthdatalogin/reference/edl_netrc.html</loc></url>
+<url><loc>https://boettiger-lab.github.io/earthdatalogin/reference/edl_revoke_token.html</loc></url>
+<url><loc>https://boettiger-lab.github.io/earthdatalogin/reference/edl_s3_token.html</loc></url>
+<url><loc>https://boettiger-lab.github.io/earthdatalogin/reference/edl_search.html</loc></url>
+<url><loc>https://boettiger-lab.github.io/earthdatalogin/reference/edl_set_token.html</loc></url>
+<url><loc>https://boettiger-lab.github.io/earthdatalogin/reference/edl_stac_urls.html</loc></url>
+<url><loc>https://boettiger-lab.github.io/earthdatalogin/reference/edl_unset_netrc.html</loc></url>
+<url><loc>https://boettiger-lab.github.io/earthdatalogin/reference/edl_unset_s3.html</loc></url>
+<url><loc>https://boettiger-lab.github.io/earthdatalogin/reference/edl_unset_token.html</loc></url>
+<url><loc>https://boettiger-lab.github.io/earthdatalogin/reference/gdal_cloud_config.html</loc></url>
+<url><loc>https://boettiger-lab.github.io/earthdatalogin/reference/gdal_cloud_unconfig.html</loc></url>
+<url><loc>https://boettiger-lab.github.io/earthdatalogin/reference/index.html</loc></url>
+<url><loc>https://boettiger-lab.github.io/earthdatalogin/reference/lpdacc_example_url.html</loc></url>
+<url><loc>https://boettiger-lab.github.io/earthdatalogin/reference/with_gdalcubes.html</loc></url>
 </urlset>
+
