@@ -1,9 +1,13 @@
 # earthdatalogin (development version)
 
+* adds experimental support for CMR search with `edl_search()`. Does not support 
+  all use cases, STAC-based search is still recommended.
+
 * Adds `collections_fetch()` for working with the results of a `collections()`
   query using the [rstac](https://brazil-data-cube.github.io/rstac/) package. The 
   NASA STAC API by default only return 10 collections for a given catalogue; 
   this function allows you to retrieve them all (#11).
+  
 * Adds `edl_stac_urls()` for retrieving urls from an `rstac` items list.
 
 # earthdatalogin 0.0.2
