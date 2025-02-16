@@ -43,7 +43,11 @@ bbox <- CA |> st_bbox()
 start <- "2022-01-01"
 end <- "2022-12-31"
 
-items <- stac("https://cmr.earthdata.nasa.gov/stac/LPCLOUD") |> 
+# N.B. "cloudstack" uses old conventions, "stac" uses newer ones.
+# old version was .v#, now it _#
+# old version understands dates, new one needs datetimes
+
+items <- stac("https://cmr.earthdata.nasa.gov/cloudstac/LPCLOUD") |> 
   stac_search(collections = "MOD13Q1.v061",
               bbox = c(bbox),
               datetime = paste(start,end, sep = "/")) |>
