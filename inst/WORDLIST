@@ -1,6 +1,7 @@
 ATL
 Auth
 CMD
+CMR
 COGs
 COOKIEFILE
 COOKIEJAR
@@ -8,7 +9,6 @@ CloudFlare
 Codespaces
 DAAC
 DAACs
-DOI
 EARTHDATA
 EDL
 EarthData
@@ -34,8 +34,6 @@ PODAAC
 QGIS
 STAC
 Terrabyte
-URI
-URIs
 USGS
 Unsets
 VM
@@ -44,8 +42,8 @@ Zarr
 asia
 auth
 catalogue
-config
 cpu
+downscaled
 dr
 earthdata
 edl
@@ -62,13 +60,15 @@ httr
 hyperscale
 india
 kb
+landsat
 lon
 modis
 native’
 ndvi
 netcdf
 netrc
-programmatically
+redirections
+reprojected
 rstac
 sst
 terra

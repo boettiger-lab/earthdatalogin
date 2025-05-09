@@ -1,5 +1,8 @@
 # earthdatalogin (development version)
 
+* Adds support for listing NASA STAC catalogs with `list_nasa_stacs()` and
+  retrieving specific catalog URLs with `get_nasa_stac_url()` (#19).
+
 * adds experimental support for CMR search with `edl_search()`. Does not support 
   all use cases, STAC-based search is still recommended.
 
@@ -38,4 +41,3 @@
 # earthdatalogin 0.0.1
 
 * Initial CRAN submission.
-
