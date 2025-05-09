@@ -26,7 +26,9 @@
 <url><loc>https://boettiger-lab.github.io/earthdatalogin/reference/edl_unset_token.html</loc></url>
 <url><loc>https://boettiger-lab.github.io/earthdatalogin/reference/gdal_cloud_config.html</loc></url>
 <url><loc>https://boettiger-lab.github.io/earthdatalogin/reference/gdal_cloud_unconfig.html</loc></url>
+<url><loc>https://boettiger-lab.github.io/earthdatalogin/reference/get_nasa_stac_url.html</loc></url>
 <url><loc>https://boettiger-lab.github.io/earthdatalogin/reference/index.html</loc></url>
+<url><loc>https://boettiger-lab.github.io/earthdatalogin/reference/list_nasa_stacs.html</loc></url>
 <url><loc>https://boettiger-lab.github.io/earthdatalogin/reference/lpdacc_example_url.html</loc></url>
 <url><loc>https://boettiger-lab.github.io/earthdatalogin/reference/with_gdalcubes.html</loc></url>
 </urlset>
