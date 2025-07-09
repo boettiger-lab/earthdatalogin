@@ -101,8 +101,8 @@ edl_api <- function(endpoint,
                     ...,
                     httr::add_headers(Authorization= paste("Basic", pw)))
   httr::stop_for_status(resp)
-  p <- httr::content(resp, "parsed", "application/json")
-  p
+
+  parse_as_json(resp)
 }
 
 
@@ -191,4 +191,24 @@ edl_stac_urls <- function(items, assets = "data") {
   purrr::map(items$features, list("assets")) |>
     purrr::map(list(assets)) |>
     purrr::map_chr("href")
+}
+
+parse_as_json <- function(resp, ...) {
+  resp_type <- httr::http_type(resp)
+
+  if (tolower(resp_type) != "application/json") {
+    stop(
+      paste0("The serever returned content of type '", resp_type, "'. Expected a json response"),
+      call. = FALSE
+    )
+  }
+
+  ret <- httr::content(
+    resp,
+    as = "text",
+    type = "application/json",
+    encoding = "UTF-8"
+  )
+
+  jsonlite::fromJSON(ret, ...)
 }

@@ -88,7 +88,7 @@ edl_search <- function(short_name = NULL,
   resp <- httr::GET(url,  query = query, netrc_config)
   httr::stop_for_status(resp)
 
-  entry <- httr::content(resp, "parsed")$feed$entry
+  entry <- parse_as_json(resp)$feed$entry
   resp_header <- httr::headers(resp)
   continue <- resp_header[["cmr-search-after"]]
   #i <- 1
@@ -102,7 +102,7 @@ edl_search <- function(short_name = NULL,
                 netrc_config,
                 httr::add_headers("CMR-Search-After" = continue))
 
-      more_entries <- httr::content(resp, "parsed")$feed$entry
+      more_entries <- parse_as_json(resp)$feed$entry
       entry <- c(entry, more_entries)
 
       resp_header <- httr::headers(resp)
