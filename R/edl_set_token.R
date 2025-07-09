@@ -184,7 +184,7 @@ edl_revoke_token <- function(
 #' @param items an items list from rstac
 #' @param assets name(s) of assets to extract
 #' @return a vector of hrefs for all discovered assets.
-#' 
+#'
 #' @export
 #'
 edl_stac_urls <- function(items, assets = "data") {
@@ -193,7 +193,7 @@ edl_stac_urls <- function(items, assets = "data") {
     purrr::map_chr("href")
 }
 
-parse_as_json <- function(resp, ...) {
+parse_as_json <- function(resp, simplifyVector = FALSE, ...) {
   resp_type <- httr::http_type(resp)
 
   if (tolower(resp_type) != "application/json") {
@@ -210,5 +210,5 @@ parse_as_json <- function(resp, ...) {
     encoding = "UTF-8"
   )
 
-  jsonlite::fromJSON(ret, ...)
+  jsonlite::fromJSON(ret, simplifyVector = simplifyVector, ...)
 }
