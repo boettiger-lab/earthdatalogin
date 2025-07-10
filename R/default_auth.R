@@ -9,8 +9,9 @@ default <- function(what) {
     tryCatch(readRenviron(renviron),
              warning = function(e) NULL)
     unlink(renviron) # clean up
+  }
+
     switch(what,
            user = Sys.getenv("EARTHDATA_USER", "earthaccess"),
            password = Sys.getenv("EARTHDATA_PASSWORD", "EDL_test1"))
-    }
 }

@@ -90,8 +90,8 @@ edl_header <- function(token) {
 
 
 edl_api <- function(endpoint,
-                    username,
-                    password,
+                    username = default("user"),
+                    password = default("password"),
                     ...,
                     base = "https://urs.earthdata.nasa.gov",
                     method = httr::GET) {
@@ -184,7 +184,7 @@ edl_revoke_token <- function(
 #' @param items an items list from rstac
 #' @param assets name(s) of assets to extract
 #' @return a vector of hrefs for all discovered assets.
-#' 
+#'
 #' @export
 #'
 edl_stac_urls <- function(items, assets = "data") {
