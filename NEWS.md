@@ -1,4 +1,4 @@
-# earthdatalogin (development version)
+# earthdatalogin 0.0.3
 
 * Adds support for listing NASA STAC catalogs with `list_nasa_stacs()` and
   retrieving specific catalog URLs with `get_nasa_stac_url()` (#19).
@@ -12,6 +12,8 @@
   this function allows you to retrieve them all (#11).
   
 * Adds `edl_stac_urls()` for retrieving urls from an `rstac` items list.
+
+* bugfix for default_auth() behavior if credentials are not supplied.
 
 # earthdatalogin 0.0.2
 
