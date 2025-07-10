@@ -2,7 +2,7 @@
 % Please edit documentation in R/edl_s3_token.R
 \name{edl_s3_token}
 \alias{edl_s3_token}
-\title{Receive and set temporary AWS Tokens for S3 access}
+\title{NASA Earthdata S3 Credentials Authentication}
 \usage{
 edl_s3_token(
   daac = "https://data.lpdaac.earthdatacloud.nasa.gov",
@@ -12,23 +12,34 @@ edl_s3_token(
 )
 }
 \arguments{
-\item{daac}{the base URL for the DAAC}
+\item{daac}{Character string. The base URL for the DAAC (Data Archive Access Center).
+Defaults to "https://data.lpdaac.earthdatacloud.nasa.gov".}
 
-\item{username}{EarthDataLogin user}
+\item{username}{Character string. EarthDataLogin username. Defaults to the
+value returned by \code{default("user")}.}
 
-\item{password}{EarthDataLogin Password}
+\item{password}{Character string. EarthDataLogin password. Defaults to the
+value returned by \code{default("password")}.}
 
-\item{prompt_for_netrc}{Often netrc is preferable, so this function will by
-default prompt the user to switch.  Set to FALSE to silence this.}
+\item{prompt_for_netrc}{Logical. Often netrc is preferable, so this function will by
+default prompt the user to switch. Set to FALSE to silence this.
+Defaults to \code{interactive()}.}
 }
 \value{
-list of access key, secret key, session token and expiration,
-invisibly.  Also sets the corresponding AWS environmental variables.
+Invisibly returns a list containing the S3 credentials:
+\item{accessKeyId}{AWS access key ID}
+\item{secretAccessKey}{AWS secret access key}
+\item{sessionToken}{AWS session token}
+\item{expiration}{Token expiration time}
 }
 \description{
-Note that these S3 credentials will only work:
+Authenticates with NASA Earthdata to obtain temporary S3 credentials for
+accessing NASA Earth observation data stored in S3 buckets. The function
+performs an OAuth-like authentication flow and automatically sets the
+required AWS environment variables.
 }
 \details{
+Note that these S3 credentials will only work:
 \itemize{
 \item On AWS instance in the \code{us-west-2} region
 \item Only for one hour before they expire
@@ -36,6 +47,21 @@ Note that these S3 credentials will only work:
 }
 
 Please consider using \code{\link[=edl_netrc]{edl_netrc()}} to avoid these limitations
+
+This function performs a multi-step authentication process:
+\enumerate{
+\item Requests authorization URL from the credentials endpoint
+\item Posts credentials to get a redirect URL
+\item Follows redirect to set authentication cookies
+\item Makes final request with cookies to obtain S3 credentials
+}
+
+The function automatically sets the following environment variables:
+\itemize{
+\item \code{AWS_ACCESS_KEY_ID}
+\item \code{AWS_SECRET_ACCESS_KEY}
+\item \code{AWS_SESSION_TOKEN}
+}
 }
 \examples{
 \dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}

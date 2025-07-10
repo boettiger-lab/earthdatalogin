@@ -1,5 +1,7 @@
 # earthdatalogin 0.0.3
 
+* Bugfix for edl_s3_token() (#22), which now requires cookies
+
 * Adds support for listing NASA STAC catalogs with `list_nasa_stacs()` and
   retrieving specific catalog URLs with `get_nasa_stac_url()` (#19).
 

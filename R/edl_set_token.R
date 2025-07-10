@@ -98,8 +98,8 @@ edl_api <- function(endpoint,
 
   pw <- openssl::base64_encode(paste0(username, ":", password))
   resp <- method(paste0(base, endpoint),
-                    ...,
-                    httr::add_headers(Authorization= paste("Basic", pw)))
+  #                  ...,
+                    httr::add_headers(Authorization = paste("Basic", pw)))
   httr::stop_for_status(resp)
   p <- httr::content(resp, "parsed", "application/json")
   p
