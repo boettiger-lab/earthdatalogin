@@ -22,7 +22,7 @@ Description: Providing easy, portable access to NASA 'EarthData' products
   which allows NASA to avoid being charged data egress rates. This package
   provides public access to the data from any networked device by using the 
   'EarthData' login application programming interface (API),
-  <https://www.earthdata.nasa.gov/eosdis/science-system-description/eosdis-components/earthdata-login>,
+  <https://www.earthdata.nasa.gov/data/earthdata-login>,
   providing convenient authentication and access to cloud-hosted NASA 'EarthData'
   products. This makes access to a wide range of earth observation data from 
   any location straight forward and compatible with R packages that are 
