@@ -127,7 +127,7 @@ require any authentication.</p>
 <span><span class="va">end</span> <span class="op">&lt;-</span> <span class="st">"2022-06-30"</span></span>
 <span></span>
 <span><span class="co"># Find all assets from the desired catalog:</span></span>
-<span><span class="va">items</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://brazil-data-cube.github.io/rstac/reference/stac.html" class="external-link">stac</a></span><span class="op">(</span><span class="st">"https://cmr.earthdata.nasa.gov/stac/LPCLOUD"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span><span class="va">items</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://brazil-data-cube.github.io/rstac/reference/stac.html" class="external-link">stac</a></span><span class="op">(</span><span class="st">"https://cmr.earthdata.nasa.gov:443/search/stac/LPCLOUD"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://brazil-data-cube.github.io/rstac/reference/stac_search.html" class="external-link">stac_search</a></span><span class="op">(</span>collections <span class="op">=</span> <span class="st">"HLSL30.v2.0"</span>,</span>
 <span>              bbox <span class="op">=</span> <span class="va">bbox</span>,</span>
 <span>              datetime <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">start</span>,<span class="va">end</span>, sep <span class="op">=</span> <span class="st">"/"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
