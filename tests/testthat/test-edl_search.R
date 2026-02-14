@@ -20,3 +20,18 @@ test_that("edl_search", {
   expect_type(href, "character")
 
 })
+
+test_that("edl_search with bounding box", {
+
+  skip_if_offline()
+  skip_on_cran()
+
+  bbox_results <- edl_search(
+    short_name = "ATL08",
+    bounding_box = c(-92.86, 16.26, -91.58, 16.97),
+    parse_results = FALSE
+  )
+
+  expect_s3_class(bbox_results, "cmr_items")
+  expect_gt(length(bbox_results), 1)
+})

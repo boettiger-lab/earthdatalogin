@@ -79,7 +79,7 @@ edl_search <- function(short_name = NULL,
                 doi = doi,
                 daac = daac,
                 provider = provider,
-                bounding_box = bounding_box,
+                bounding_box = paste(as.character(bounding_box), collapse = ","),
                 page_size = page_size,
                 ...)
   query <- purrr::compact(query)
@@ -151,4 +151,3 @@ edl_extract_urls <- function(items) {
   })
   urls
 }
-
