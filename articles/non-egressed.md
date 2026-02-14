@@ -1,0 +1,112 @@
+# Access within AWS Compute
+
+If you have access to machine running inside Amazon `us-west-2` (e.g. a
+NASA [Openscapes](https://nasa-openscapes.github.io/) JupyterHub or the
+ability to create a VM in EC2 using this compute region), you will be
+able to access NOAA EarthData using the S3 interface. This may offer
+slightly better performance than using the universal https interface
+which routes data through a proxy, but is rarely necessary. This
+approach is documented only for the sake of completeness. Use the http
+interface whenever possible!
+
+(In future, this mechanism may also work with private S3 credentials in
+a ‘requester-pays’ model, charging for data egress rather than compute.
+For more context on access mechanisms for NASA EarthData see the
+[motivations](https://boettiger-lab.github.io/earthdatalogin/articles/motivations.html)
+vignette).
+
+Authentication via the S3 mechanism is an alternative to authentication
+via Bearer tokens over the http interface. Do *not* use
+[`edl_set_token()`](https://boettiger-lab.github.io/earthdatalogin/reference/edl_set_token.md),
+you may want to use
+[`edl_unset_token()`](https://boettiger-lab.github.io/earthdatalogin/reference/edl_unset_token.md)
+to ensure only one mechanism is in use.
+
+There are three important issues to keep in mind if you ever chose to
+use the S3 token mechanism to access EarthData. (Please note that again
+these issues are specific to EarthData due to concerns about billing,
+and do not represent general statements about working with spatial data
+on the S3 protocol more generally!) Unlike the https mechanism,
+EarthData S3 authentication tokens:
+
+- Can only be used from a machine inside `us-west-2` data center
+- Expire after 1 hr and must be renewed
+- Are specific to each DAAC
+
+(Please note that these restrictions are more-or-less specific to how
+NASA has configured access to their AWS buckets. S3 tokens are widely
+used to access all kinds of data in various workflows, but these
+restrictions are rarely put in place.)
+
+``` r
+library(earthdatalogin)
+library(rstac)
+library(gdalcubes)
+gdalcubes_options(parallel = TRUE) 
+gdal_cloud_config()
+```
+
+### Earth Data Authentication
+
+To create our S3 tokens, we use `edl_s3_token`. Note that we must
+specify the endpoint of the DAAC we are trying to access – e.g. the LP
+DAAC in this case. *Remember*, this token will only work from within the
+`us-west-2` hub, only for LP DAAC data, and will expire 1 hr after it is
+issued.
+
+``` r
+edl_s3_token(daac = "https://data.lpdaac.earthdatacloud.nasa.gov")
+```
+
+We can search the STAC API as in any other case. This step does not
+require any authentication.
+
+``` r
+bbox <- c(xmin=-122.5, ymin=37.5, xmax=-122.0, ymax=38) 
+start <- "2022-01-01"
+end <- "2022-06-30"
+
+# Find all assets from the desired catalog:
+items <- stac("https://cmr.earthdata.nasa.gov:443/search/stac/LPCLOUD") |> 
+  stac_search(collections = "HLSL30.v2.0",
+              bbox = bbox,
+              datetime = paste(start,end, sep = "/")) |>
+  post_request() |>
+  items_fetch() |>
+  items_filter(filter_fn = \(x) {x[["eo:cloud_cover"]] < 20})
+```
+
+The STAC search returns item metadata including links to the data object
+as https URLs. While these are ideal for the bearer token access, we
+want to convert these to S3-style addresses. The function
+[`gdalcubes::stac_image_collection()`](https://rdrr.io/pkg/gdalcubes/man/stac_image_collection.html)
+actually takes an optional argument for how URLs should be handled. The
+helper function
+[`edl_as_s3()`](https://boettiger-lab.github.io/earthdatalogin/reference/edl_as_s3.md)
+provides a convenient way to do this (a trivial step, we just remove the
+domain name and replace it with GDAL’s S3 prefix, `/vsis3`):
+
+``` r
+col <- 
+  stac_image_collection(items$features, 
+                        asset_names = c("B02", "B03", "B04", "Fmask"),
+                        url_fun = \(url) edl_as_s3(url, prefix = "/vsis3/"))
+```
+
+``` r
+# Desired data cube shape & resolution
+v = cube_view(srs = "EPSG:4326",
+              extent = list(t0 = as.character(start), 
+                            t1 = as.character(end),
+                            left = bbox[1], right = bbox[3],
+                            top = bbox[4], bottom = bbox[2]),
+                nx = 2048, ny = 2048, dt = "P1M")
+
+cloud_mask <- image_mask("Fmask", values=1) # mask clouds and cloud shadows
+rgb_bands <- c("B04","B03", "B02")
+
+# Here we go! note eval is lazy
+raster_cube(col, v, mask=cloud_mask) |>
+  select_bands(rgb_bands) |>
+  plot(rgb=1:3)
+```
