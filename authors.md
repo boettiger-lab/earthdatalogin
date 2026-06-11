@@ -24,13 +24,13 @@ Source:
 [`DESCRIPTION`](https://github.com/boettiger-lab/earthdatalogin/blob/main/DESCRIPTION)
 
 Boettiger C, López L, Panda Y, Lind B (2026). *earthdatalogin: NASA
-'EarthData' Access Utilities*. R package version 0.0.3,
+'EarthData' Access Utilities*. R package version 0.0.4,
 <https://boettiger-lab.github.io/earthdatalogin/>.
 
     @Manual{,
       title = {earthdatalogin: NASA 'EarthData' Access Utilities},
       author = {Carl Boettiger and Luis López and Yuvi Panda and Bri Lind},
       year = {2026},
-      note = {R package version 0.0.3},
+      note = {R package version 0.0.4},
       url = {https://boettiger-lab.github.io/earthdatalogin/},
     }

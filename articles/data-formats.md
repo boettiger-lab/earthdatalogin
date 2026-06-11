@@ -9,6 +9,7 @@ the workflow should be identical after calling
 [`edl_set_token()`](https://boettiger-lab.github.io/earthdatalogin/reference/edl_set_token.md))
 
 ``` r
+
 library(stars)
 library(terra)
 ```
@@ -18,6 +19,7 @@ library(terra)
 Cloud-read data from a public AWS S3 bucket, over https:
 
 ``` r
+
 url <- paste0("https://era5-pds.s3.amazonaws.com",
               "/1979/01/data/air_pressure_at_mean_sea_level.nc")
 r <- terra::rast(url, vsi=TRUE)
@@ -35,6 +37,7 @@ r
 Cloud read of the same data, over S3 protocol:
 
 ``` r
+
 Sys.setenv("AWS_NO_SIGN_REQUEST"=TRUE)
 s3uri <- "s3://era5-pds/1979/01/data/air_pressure_at_mean_sea_level.nc"
 r <- terra::rast(s3uri)
@@ -46,6 +49,7 @@ Sys.unsetenv("AWS_NO_SIGN_REQUEST")
 Cloud read of a 31 Terrabyte Zarr archive (S3, public https)
 
 ``` r
+
 url <- "https://mur-sst.s3.us-west-2.amazonaws.com/zarr-v1"
 prefixes <- 'ZARR:\"/vsicurl/'
 slice <- '\":/analysed_sst:0"'
@@ -54,6 +58,7 @@ y = terra::rast(addr)
 ```
 
 ``` r
+
 library(tmap)
 data(World)
 
@@ -61,6 +66,7 @@ india <-st_bbox( World$geometry[World$name == "India"] )
 ```
 
 ``` r
+
 st_as_stars(y) |>
   st_crop(india) |>
   plot()

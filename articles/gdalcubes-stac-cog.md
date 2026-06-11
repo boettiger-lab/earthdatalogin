@@ -10,6 +10,7 @@ analyze as a cohesive whole.
 CATALOGS](https://radiantearth.github.io/stac-browser/#/external/cmr.earthdata.nasa.gov/stac/)
 
 ``` r
+
 library(rstac)
 library(gdalcubes)
 gdalcubes_options(parallel = TRUE) 
@@ -29,6 +30,7 @@ variables, we use a helper utility to export those into it’s
 configuration as well.
 
 ``` r
+
 library(earthdatalogin)
 edl_netrc()
 with_gdalcubes()
@@ -68,6 +70,7 @@ We will read the metadata from the COG directly, though this only works
 if all images in our field are in the same projection.
 
 ``` r
+
 href <- items$features[[1]]$assets[["B04"]]$href
 
 library(terra)
@@ -89,6 +92,7 @@ EarthData’s STAC metadata tends to be quite sparse.
 ## Building a Data Cube
 
 ``` r
+
 # Desired data cube shape & resolution
 v <- cube_view(srs = "EPSG:4326",
                extent = list(t0 = as.character(start), 
@@ -99,6 +103,7 @@ v <- cube_view(srs = "EPSG:4326",
 ```
 
 ``` r
+
 # RGB bands + cloud cover mask
 col <- stac_image_collection(items$features, 
                              asset_names = c("B02", "B03", "B04", "Fmask"),
@@ -119,6 +124,7 @@ calculations:
 
 ``` r
 
+
 cache <- tempfile(fileext = ".nc")
 
 bench::bench_time({
@@ -133,6 +139,7 @@ raster_cube(col, v, mask=cloud_mask) |>
 Now we can always load from the local data:
 
 ``` r
+
 ncdf_cube(cache) |>  plot(rgb=3:1)
 ```
 

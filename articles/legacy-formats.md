@@ -13,10 +13,12 @@ Planetary Computer
 STAC](https://planetarycomputer.microsoft.com/dataset/group/modis).
 
 ``` r
+
 library(earthdatalogin)
 ```
 
 ``` r
+
 library(rstac)
 library(gdalcubes)
 library(spData)
@@ -45,6 +47,7 @@ HDF4 doesn’t support cloud (range-request-based) access / VSI. Instead,
 we download all matching assets with `earthdatalogin` authentication:
 
 ``` r
+
 paths <- items$features |>
   purrr::map(list("assets", "data", "href")) |> 
   unlist() |>
@@ -55,11 +58,13 @@ Rather than create an image collection using STAC metadata, we can use
 the recognized format and the local paths:
 
 ``` r
+
 paths <- fs::dir_ls(".", glob="*.hdf")
 col <- gdalcubes::create_image_collection(paths, format = "MxD13Q1")
 ```
 
 ``` r
+
 # Define whatever view you like!
 v = cube_view(srs = "EPSG:4326",
               extent = list(t0 = as.character(start), 
@@ -70,6 +75,7 @@ v = cube_view(srs = "EPSG:4326",
 ```
 
 ``` r
+
 raster_cube(col, v) |> 
   select_bands("NDVI") |> 
   animate(col = viridisLite::mako, fps=2, 
@@ -80,6 +86,7 @@ raster_cube(col, v) |>
 ![](img/ndvi.gif)
 
 ``` r
+
 library(tmap)
 r <- 
   raster_cube(col, v) |> 

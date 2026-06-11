@@ -16,6 +16,7 @@ merely makes that process easier.
 `earthdatalogin` is now on CRAN, and can simply be installed with
 
 ``` r
+
 install.packages("earthdatalogin")
 ```
 
@@ -23,6 +24,7 @@ Or you can install the development version of `earthdatalogin` from
 [GitHub](https://github.com/):
 
 ``` r
+
 # install.packages("devtools")
 devtools::install_github("boettiger-lab/earthdatalogin")
 ```
@@ -37,6 +39,7 @@ start. Users are still encouraged to
 credentials!
 
 ``` r
+
 library(earthdatalogin)
 ```
 
@@ -49,6 +52,7 @@ credentials, `earthdatalogin` will provide it’s own credentials, but you
 may experience rate limits more readily):
 
 ``` r
+
 edl_netrc()
 ```
 
@@ -58,6 +62,7 @@ has been called, then most existing spatial data packages in R can then
 seamlessly access NASA Earthdata over HTTP links.
 
 ``` r
+
 url <- "https://data.lpdaac.earthdatacloud.nasa.gov/lp-prod-protected/HLSL30.020/HLS.L30.T56JKT.2023246T235950.v2.0/HLS.L30.T56JKT.2023246T235950.v2.0.SAA.tif"
 
 terra::rast(url, vsi=TRUE)
@@ -83,25 +88,24 @@ of a script.)
 ## How does it work?
 
 Most R packages (`terra`, `sf`, `stars`, and others) access spatial data
-by using an underlying C++ library called GDAL.[¹](#fn1) GDAL is also
-used under the hood of many other spatial tools, from Python
-(`geopandas`, `rasterio`, others) to QGIS and Google Earth Engine.
-`earthdatalogin` sets a collection of config files and environmental
-variables used by GDAL to allow it to access authentication credentials.
-Crucially, the use of `netrc`-based authentication works just as well if
-you are running from a laptop or if you are running from inside AWS
-compute in `us-west-2` – such as using the popular Openscapes 2i2c hub.
-This portability does not hold for other mechanisms, such as S3-based
-login, which in the case of NASA EarthData only works from inside
-AWS-based compute, and not true of the bearer token mechanism, which
-only works from *outside* AWS-based compute. The `earthdatalogin`
-package does provide functions for using these other authentication
-mechanisms (see
+by using an underlying C++ library called GDAL.[^1] GDAL is also used
+under the hood of many other spatial tools, from Python (`geopandas`,
+`rasterio`, others) to QGIS and Google Earth Engine. `earthdatalogin`
+sets a collection of config files and environmental variables used by
+GDAL to allow it to access authentication credentials. Crucially, the
+use of `netrc`-based authentication works just as well if you are
+running from a laptop or if you are running from inside AWS compute in
+`us-west-2` – such as using the popular Openscapes 2i2c hub. This
+portability does not hold for other mechanisms, such as S3-based login,
+which in the case of NASA EarthData only works from inside AWS-based
+compute, and not true of the bearer token mechanism, which only works
+from *outside* AWS-based compute. The `earthdatalogin` package does
+provide functions for using these other authentication mechanisms (see
 [`edl_s3_token()`](https://boettiger-lab.github.io/earthdatalogin/reference/edl_s3_token.md)
 and
 [`edl_set_token()`](https://boettiger-lab.github.io/earthdatalogin/reference/edl_set_token.md)),
 but discourages their use as they are less portable while offering no
-performance advantage.[²](#fn2)
+performance advantage.[^2]
 
 This function takes care of managing tokens for you. If you don’t have
 any tokens, it will request one be minted. If your user name has tokens
@@ -182,15 +186,13 @@ network access. Many university networks, and any cloud-hosted platform,
 such as GitHub Codespaces, offer excellent network performance for this
 purpose.
 
-------------------------------------------------------------------------
-
-1.  Some R users have heard that the `rgdal` package is being
+[^1]: Some R users have heard that the `rgdal` package is being
     deprecated. Don’t confuse this with the GDAL C++ library being
     deprecated – `rgdal` was only one of many R packages that used the
     GDAL C++ libraries, and was deprecated in favor of the same bindings
     to GDAL being available in `sf`.
 
-2.  NASA’s own documentation often points users to the S3-based access
+[^2]: NASA’s own documentation often points users to the S3-based access
     protocol when working on AWS compute. Note that the S3 tokens NASA’s
     AWS setup provides expire every hour, and are specific to each DAAC,
     making it very difficult for users to work across data products from

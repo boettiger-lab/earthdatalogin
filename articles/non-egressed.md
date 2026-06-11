@@ -39,6 +39,7 @@ used to access all kinds of data in various workflows, but these
 restrictions are rarely put in place.)
 
 ``` r
+
 library(earthdatalogin)
 library(rstac)
 library(gdalcubes)
@@ -55,6 +56,7 @@ DAAC in this case. *Remember*, this token will only work from within the
 issued.
 
 ``` r
+
 edl_s3_token(daac = "https://data.lpdaac.earthdatacloud.nasa.gov")
 ```
 
@@ -62,6 +64,7 @@ We can search the STAC API as in any other case. This step does not
 require any authentication.
 
 ``` r
+
 bbox <- c(xmin=-122.5, ymin=37.5, xmax=-122.0, ymax=38) 
 start <- "2022-01-01"
 end <- "2022-06-30"
@@ -87,6 +90,7 @@ provides a convenient way to do this (a trivial step, we just remove the
 domain name and replace it with GDAL’s S3 prefix, `/vsis3`):
 
 ``` r
+
 col <- 
   stac_image_collection(items$features, 
                         asset_names = c("B02", "B03", "B04", "Fmask"),
@@ -94,6 +98,7 @@ col <-
 ```
 
 ``` r
+
 # Desired data cube shape & resolution
 v = cube_view(srs = "EPSG:4326",
               extent = list(t0 = as.character(start), 
