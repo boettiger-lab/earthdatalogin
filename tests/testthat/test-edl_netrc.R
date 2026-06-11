@@ -18,6 +18,9 @@ test_that("edl_netrc", {
 
 
 test_that("netcdf access", {
+  skip_on_cran()
+  skip_if_offline()
+
   # Since GDAL 2.4 libnetcdf >= 4.5, Mac and Windos lack netcdf vsi support
   # https://gdal.org/en/stable/drivers/raster/netcdf.html#vsi-virtual-file-system-api-support
   url <- "https://archive.podaac.earthdata.nasa.gov/podaac-ops-cumulus-protected/AVHRR_OI-NCEI-L4-GLOB-v2.1/20200115120000-NCEI-L4_GHRSST-SSTblend-AVHRR_OI-GLOB-v02.0-fv02.1.nc"
