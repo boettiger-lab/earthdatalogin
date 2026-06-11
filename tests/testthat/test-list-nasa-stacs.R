@@ -21,5 +21,15 @@ test_that("get_nasa_stac_url() works", {
 })
 
 test_that("get_nasa_stac_url() fails correctly", {
+  # Mock the network call so the error path is tested offline / on CRAN
+  local_mocked_bindings(
+    list_nasa_stacs = function(...) {
+      data.frame(
+        title = "LPCLOUD",
+        href = "https://cmr.earthdata.nasa.gov/cloudstac/LPCLOUD",
+        stringsAsFactors = FALSE
+      )
+    }
+  )
   expect_error(get_nasa_stac_url("notadaac"), "notadaac not found in stacs")
 })

@@ -1,3 +1,10 @@
+# earthdatalogin 0.0.4
+
+* Tests no longer attempt network access on CRAN. The `netcdf access` test now
+  skips on CRAN and when offline, and the `get_nasa_stac_url()` error-path test
+  is mocked so it runs without network access. This resolves the CRAN check
+  ERRORs introduced when the protected NetCDF download ran on CRAN machines.
+
 # earthdatalogin 0.0.3
 
 * Bugfix for edl_s3_token() (#21), which now requires cookies
