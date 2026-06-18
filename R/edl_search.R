@@ -148,12 +148,14 @@ print.cmr_items <- function(x, ...) {
 #'
 edl_extract_urls <- function(items) {
   all_links <- purrr::map(items, "links")
-  urls <- purrr::map_chr(all_links, function(links) {
+  # A granule may carry multiple data assets (e.g. one tif per band), so map
+  # over granules and flatten -- map_chr would error on the >1 case (#15).
+  urls <- purrr::map(all_links, function(links) {
     is_data <-
       grepl("Download", purrr::map_chr(links, "title", .default="")) &
       grepl("\\/data#", purrr::map_chr(links, "rel", .default=""))
 
     purrr::map_chr(links[is_data], "href")
   })
-  urls
+  unlist(urls, use.names = FALSE)
 }

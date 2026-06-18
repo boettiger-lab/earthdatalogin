@@ -21,6 +21,10 @@ By default, NASA STAC catalogue collections queries only return
 10 collections at a time. This function will page through
 the collections and return them all.
 }
+\details{
+\strong{Deprecated}: this functionality is now available upstream as
+\code{\link[rstac:collections_fetch]{rstac::collections_fetch()}}; please use that instead.
+}
 \examples{
 \dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 

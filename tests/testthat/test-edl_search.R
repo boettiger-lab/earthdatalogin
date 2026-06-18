@@ -35,3 +35,25 @@ test_that("edl_search with bounding box", {
   expect_s3_class(bbox_results, "cmr_items")
   expect_gt(length(bbox_results), 1)
 })
+
+test_that("edl_extract_urls flattens multi-asset granules (#15)", {
+  # No network: a granule with several data links (e.g. one tif per band)
+  # must not error and should return all data URLs.
+  data_link <- function(href) {
+    list(rel = "http://esipfed.org/ns/fedsearch/1.1/data#",
+         title = "Download file", href = href)
+  }
+  items <- list(
+    list(links = list(data_link("https://example.org/a_B01.tif"),
+                      data_link("https://example.org/a_B02.tif"),
+                      list(rel = "self", title = "metadata",
+                           href = "https://example.org/a.xml"))),
+    list(links = list(data_link("https://example.org/b_B01.tif")))
+  )
+
+  urls <- edl_extract_urls(items)
+  expect_type(urls, "character")
+  expect_equal(urls, c("https://example.org/a_B01.tif",
+                       "https://example.org/a_B02.tif",
+                       "https://example.org/b_B01.tif"))
+})

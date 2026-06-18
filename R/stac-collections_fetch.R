@@ -10,17 +10,25 @@
 #' 
 #' @return A `doc_collections` object with all of the collections from the catalogue
 #'   specified in the [rstac::collections()] query.
-#' 
+#'
+#' @details **Deprecated**: this functionality is now available upstream as
+#'   [rstac::collections_fetch()]; please use that instead.
+#'
 #' @examplesIf interactive()
-#' 
-#'  rstac::stac("https://cmr.earthdata.nasa.gov/stac/LPCLOUD") |> 
-#'    rstac::collections() |> 
-#'    rstac::get_request() |> 
+#'
+#'  rstac::stac("https://cmr.earthdata.nasa.gov/stac/LPCLOUD") |>
+#'    rstac::collections() |>
+#'    rstac::get_request() |>
 #'    collections_fetch()
-#' 
+#'
 #' @export
 collections_fetch <- function(collections, ...) {
-  
+
+  .Deprecated("rstac::collections_fetch",
+              msg = paste0("`earthdatalogin::collections_fetch()` is ",
+                           "deprecated; use `rstac::collections_fetch()` ",
+                           "instead."))
+
   if (!inherits(collections, "doc_collections")) {
     stop("'collections' must be a `doc_collections` object from the `rstac` package", 
     call. = FALSE)
