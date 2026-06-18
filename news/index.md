@@ -2,6 +2,20 @@
 
 ## earthdatalogin 0.0.4
 
+CRAN release: 2026-06-12
+
+- [`edl_download()`](https://boettiger-lab.github.io/earthdatalogin/reference/edl_download.md),
+  [`edl_search()`](https://boettiger-lab.github.io/earthdatalogin/reference/edl_search.md),
+  and
+  [`edl_netrc()`](https://boettiger-lab.github.io/earthdatalogin/reference/edl_netrc.md)
+  no longer overwrite stored credentials. Previously, calling these
+  without arguments rewrote the `.netrc` file with the bundled default
+  credentials, clobbering credentials a user had already set and causing
+  401 errors. Now the netrc is only (re)written when credentials are
+  supplied explicitly or when no earthdata netrc exists yet
+  ([\#27](https://github.com/boettiger-lab/earthdatalogin/issues/27),
+  [\#13](https://github.com/boettiger-lab/earthdatalogin/issues/13)).
+
 - Tests no longer attempt network access on CRAN. The `netcdf access`
   test now skips on CRAN and when offline, and the
   [`get_nasa_stac_url()`](https://boettiger-lab.github.io/earthdatalogin/reference/get_nasa_stac_url.md)
