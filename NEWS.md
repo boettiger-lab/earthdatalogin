@@ -7,6 +7,13 @@
   (re)written when credentials are supplied explicitly or when no earthdata
   netrc exists yet (#27, #13).
 
+* `edl_extract_urls()` (and `edl_search(parse_results = TRUE)`) now handle
+  granules with multiple data assets, e.g. one GeoTIFF per band. Previously
+  these errored with "Result must be length 1" (#15).
+
+* `collections_fetch()` is deprecated in favor of `rstac::collections_fetch()`,
+  which now provides this functionality upstream (#17).
+
 * Tests no longer attempt network access on CRAN. The `netcdf access` test now
   skips on CRAN and when offline, and the `get_nasa_stac_url()` error-path test
   is mocked so it runs without network access. This resolves the CRAN check
