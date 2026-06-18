@@ -40,17 +40,25 @@ edl_netrc <- function(username = default("user"),
   # Bearer auth can conflict
   edl_unset_token()
 
-  # Create a .netrc for earthdatalogin
-  contents <- paste("machine urs.earthdata.nasa.gov login",
-                    username, "password", password)
-  writeLines(contents, netrc_path)
+  # Don't clobber stored credentials.  If the caller did not explicitly
+  # supply a username/password and the netrc file already holds earthdata
+  # credentials, keep them rather than overwriting with the bundled
+  # defaults (#13, #27).
+  if (!missing(username) || !missing(password) ||
+      !has_edl_netrc(netrc_path)) {
+
+    # Create a .netrc for earthdatalogin
+    contents <- paste("machine urs.earthdata.nasa.gov login",
+                      username, "password", password)
+    writeLines(contents, netrc_path)
+
+    # GDAL < 3.7 cannot use an alternative location for .netrc
+    old_gdal_compatibility(netrc_path, contents)
+  }
 
   # set GDAL env vars to use this netrc
   Sys.setenv("GDAL_HTTP_NETRC" = "YES")
   Sys.setenv("GDAL_HTTP_NETRC_FILE" = netrc_path)  # GDAL >= 3.7.0
-
-  # GDAL < 3.7 cannot use an alternative location for .netrc
-  old_gdal_compatibility(netrc_path, contents)
 
   # Set cookie paths as GDAL env vars
   Sys.setenv("GDAL_HTTP_COOKIEFILE" = cookie_path)
@@ -60,6 +68,15 @@ edl_netrc <- function(username = default("user"),
     gdal_cloud_config()
   }
 
+  invisible(TRUE)
+}
+
+#' Does an earthdata .netrc file already exist at this path?
+#' @noRd
+has_edl_netrc <- function(netrc_path = edl_netrc_path()) {
+  file.exists(netrc_path) &&
+    any(grepl("machine urs.earthdata.nasa.gov",
+              readLines(netrc_path, warn = FALSE)))
 }
 
 #' edl_unset_netrc
