@@ -32,6 +32,12 @@ catalogue specified in the
 [`rstac::collections()`](https://brazil-data-cube.github.io/rstac/reference/collections.html)
 query.
 
+## Details
+
+**Deprecated**: this functionality is now available upstream as
+[`rstac::collections_fetch()`](https://brazil-data-cube.github.io/rstac/reference/collections_functions.html);
+please use that instead.
+
 ## Examples
 
 ``` r

@@ -16,6 +16,18 @@ CRAN release: 2026-06-12
   ([\#27](https://github.com/boettiger-lab/earthdatalogin/issues/27),
   [\#13](https://github.com/boettiger-lab/earthdatalogin/issues/13)).
 
+- [`edl_extract_urls()`](https://boettiger-lab.github.io/earthdatalogin/reference/edl_extract_urls.md)
+  (and `edl_search(parse_results = TRUE)`) now handle granules with
+  multiple data assets, e.g. one GeoTIFF per band. Previously these
+  errored with “Result must be length 1”
+  ([\#15](https://github.com/boettiger-lab/earthdatalogin/issues/15)).
+
+- [`collections_fetch()`](https://boettiger-lab.github.io/earthdatalogin/reference/collections_fetch.md)
+  is deprecated in favor of
+  [`rstac::collections_fetch()`](https://brazil-data-cube.github.io/rstac/reference/collections_functions.html),
+  which now provides this functionality upstream
+  ([\#17](https://github.com/boettiger-lab/earthdatalogin/issues/17)).
+
 - Tests no longer attempt network access on CRAN. The `netcdf access`
   test now skips on CRAN and when offline, and the
   [`get_nasa_stac_url()`](https://boettiger-lab.github.io/earthdatalogin/reference/get_nasa_stac_url.md)
