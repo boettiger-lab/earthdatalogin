@@ -1,5 +1,12 @@
 # earthdatalogin 0.0.4
 
+* `edl_download()` and `edl_netrc()` no longer overwrite stored credentials.
+  Previously, calling `edl_download()` (or a bare `edl_netrc()`) without
+  arguments rewrote the `.netrc` file with the bundled default credentials,
+  clobbering credentials a user had already set and causing 401 errors. Now
+  the netrc is only (re)written when credentials are supplied explicitly or
+  when no earthdata netrc exists yet (#27, #13).
+
 * Tests no longer attempt network access on CRAN. The `netcdf access` test now
   skips on CRAN and when offline, and the `get_nasa_stac_url()` error-path test
   is mocked so it runs without network access. This resolves the CRAN check

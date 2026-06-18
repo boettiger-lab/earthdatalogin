@@ -1,3 +1,37 @@
+test_that("edl_netrc and edl_download do not overwrite stored credentials", {
+  # No network needed: we only check what gets written to the netrc file.
+  netrc <- tempfile()
+  cookie <- tempfile()
+  on.exit(unlink(c(netrc, cookie)), add = TRUE)
+
+  # explicit credentials are written
+  edl_netrc(username = "alice", password = "secret",
+            netrc_path = netrc, cookie_path = cookie, cloud_config = FALSE)
+  expect_match(readLines(netrc), "login alice password secret")
+
+  # a bare call must NOT overwrite the stored credentials with the defaults
+  edl_netrc(netrc_path = netrc, cookie_path = cookie, cloud_config = FALSE)
+  expect_match(readLines(netrc), "login alice password secret")
+
+  # a download without credentials must also leave the netrc intact
+  tryCatch(
+    edl_download("https://urs.earthdata.nasa.gov/nonexistent",
+                 dest = tempfile(), netrc_path = netrc,
+                 cookie_path = cookie, quiet = TRUE),
+    error = function(e) NULL, warning = function(w) NULL
+  )
+  expect_match(readLines(netrc), "login alice password secret")
+
+  # but explicit credentials at download time are honored
+  tryCatch(
+    edl_download("https://urs.earthdata.nasa.gov/nonexistent",
+                 dest = tempfile(), username = "bob", password = "pw2",
+                 netrc_path = netrc, cookie_path = cookie, quiet = TRUE),
+    error = function(e) NULL, warning = function(w) NULL
+  )
+  expect_match(readLines(netrc), "login bob password pw2")
+})
+
 test_that("edl_netrc", {
   skip_on_cran()
   skip_if_offline()

@@ -36,11 +36,17 @@ edl_download <- function(href,
 
   } else {
 
-    edl_netrc(username = username,
-              password = password,
-              netrc_path = netrc_path,
-              cookie_path = cookie_path,
-              cloud_config = FALSE)
+    # Only (re)write the netrc when the caller explicitly supplies
+    # credentials, or when no earthdata netrc exists yet.  Downloading must
+    # never clobber credentials a user already stored with edl_netrc() (#27).
+    if (!missing(username) || !missing(password) ||
+        !has_edl_netrc(netrc_path)) {
+      edl_netrc(username = username,
+                password = password,
+                netrc_path = netrc_path,
+                cookie_path = cookie_path,
+                cloud_config = FALSE)
+    }
 
 
     if (method == "httr") {
