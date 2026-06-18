@@ -11,3 +11,4 @@
 ^CRAN-SUBMISSION$
 .Renviron
 [.]code-workspace$
+^\.claude$
