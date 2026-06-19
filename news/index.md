@@ -1,8 +1,6 @@
 # Changelog
 
-## earthdatalogin 0.0.4
-
-CRAN release: 2026-06-12
+## earthdatalogin 0.0.5
 
 - [`edl_download()`](https://boettiger-lab.github.io/earthdatalogin/reference/edl_download.md),
   [`edl_search()`](https://boettiger-lab.github.io/earthdatalogin/reference/edl_search.md),
@@ -27,6 +25,10 @@ CRAN release: 2026-06-12
   [`rstac::collections_fetch()`](https://brazil-data-cube.github.io/rstac/reference/collections_functions.html),
   which now provides this functionality upstream
   ([\#17](https://github.com/boettiger-lab/earthdatalogin/issues/17)).
+
+## earthdatalogin 0.0.4
+
+CRAN release: 2026-06-12
 
 - Tests no longer attempt network access on CRAN. The `netcdf access`
   test now skips on CRAN and when offline, and the

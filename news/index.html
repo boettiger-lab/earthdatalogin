@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">earthdatalogin</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -41,11 +41,14 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.0.4" id="earthdatalogin-004">earthdatalogin 0.0.4<a class="anchor" aria-label="anchor" href="#earthdatalogin-004"></a></h2><p class="text-muted">CRAN release: 2026-06-12</p>
+<h2 class="pkg-version" data-toc-text="0.0.5" id="earthdatalogin-005">earthdatalogin 0.0.5<a class="anchor" aria-label="anchor" href="#earthdatalogin-005"></a></h2>
 <ul><li><p><code><a href="../reference/edl_download.html">edl_download()</a></code>, <code><a href="../reference/edl_search.html">edl_search()</a></code>, and <code><a href="../reference/edl_netrc.html">edl_netrc()</a></code> no longer overwrite stored credentials. Previously, calling these without arguments rewrote the <code>.netrc</code> file with the bundled default credentials, clobbering credentials a user had already set and causing 401 errors. Now the netrc is only (re)written when credentials are supplied explicitly or when no earthdata netrc exists yet (<a href="https://github.com/boettiger-lab/earthdatalogin/issues/27" class="external-link">#27</a>, <a href="https://github.com/boettiger-lab/earthdatalogin/issues/13" class="external-link">#13</a>).</p></li>
 <li><p><code><a href="../reference/edl_extract_urls.html">edl_extract_urls()</a></code> (and <code>edl_search(parse_results = TRUE)</code>) now handle granules with multiple data assets, e.g. one GeoTIFF per band. Previously these errored with “Result must be length 1” (<a href="https://github.com/boettiger-lab/earthdatalogin/issues/15" class="external-link">#15</a>).</p></li>
 <li><p><code><a href="../reference/collections_fetch.html">collections_fetch()</a></code> is deprecated in favor of <code><a href="https://brazil-data-cube.github.io/rstac/reference/collections_functions.html" class="external-link">rstac::collections_fetch()</a></code>, which now provides this functionality upstream (<a href="https://github.com/boettiger-lab/earthdatalogin/issues/17" class="external-link">#17</a>).</p></li>
-<li><p>Tests no longer attempt network access on CRAN. The <code>netcdf access</code> test now skips on CRAN and when offline, and the <code><a href="../reference/get_nasa_stac_url.html">get_nasa_stac_url()</a></code> error-path test is mocked so it runs without network access. This resolves the CRAN check ERRORs introduced when the protected NetCDF download ran on CRAN machines.</p></li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.0.4" id="earthdatalogin-004">earthdatalogin 0.0.4<a class="anchor" aria-label="anchor" href="#earthdatalogin-004"></a></h2><p class="text-muted">CRAN release: 2026-06-12</p>
+<ul><li>Tests no longer attempt network access on CRAN. The <code>netcdf access</code> test now skips on CRAN and when offline, and the <code><a href="../reference/get_nasa_stac_url.html">get_nasa_stac_url()</a></code> error-path test is mocked so it runs without network access. This resolves the CRAN check ERRORs introduced when the protected NetCDF download ran on CRAN machines.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.0.3" id="earthdatalogin-003">earthdatalogin 0.0.3<a class="anchor" aria-label="anchor" href="#earthdatalogin-003"></a></h2><p class="text-muted">CRAN release: 2025-07-11</p>
