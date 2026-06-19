@@ -1,4 +1,4 @@
-# earthdatalogin 0.0.4
+# earthdatalogin 0.0.5
 
 * `edl_download()`, `edl_search()`, and `edl_netrc()` no longer overwrite
   stored credentials. Previously, calling these without arguments rewrote the
@@ -13,6 +13,8 @@
 
 * `collections_fetch()` is deprecated in favor of `rstac::collections_fetch()`,
   which now provides this functionality upstream (#17).
+
+# earthdatalogin 0.0.4
 
 * Tests no longer attempt network access on CRAN. The `netcdf access` test now
   skips on CRAN and when offline, and the `get_nasa_stac_url()` error-path test
