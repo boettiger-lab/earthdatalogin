@@ -1,5 +1,11 @@
 test_that("edl_netrc and edl_download do not overwrite stored credentials", {
-  # No network needed: we only check what gets written to the netrc file.
+  # No network needed: we only check what gets written to the netrc file,
+  # so the Earthdata Login credential check is mocked out.
+  local_mocked_bindings(
+    urs_auth_response = function(...) list(status = 200L, reason = "")
+  )
+  home <- withr::local_tempdir()
+  withr::local_envvar(HOME = home, R_USER = home)
   netrc <- tempfile()
   cookie <- tempfile()
   on.exit(unlink(c(netrc, cookie)), add = TRUE)

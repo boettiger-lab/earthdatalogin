@@ -9,7 +9,8 @@ edl_netrc(
   password = default("password"),
   netrc_path = edl_netrc_path(),
   cookie_path = edl_cookie_path(),
-  cloud_config = TRUE
+  cloud_config = TRUE,
+  check = TRUE
 )
 }
 \arguments{
@@ -18,17 +19,23 @@ edl_netrc(
 \item{password}{EarthData Login Password}
 
 \item{netrc_path}{Path to the .netrc file to be created. Defaults to the
-appropriate R package configuration location given by \code{\link[tools:userdir]{tools::R_user_dir()}}.}
+appropriate R package configuration location given by \code{\link[tools:R_user_dir]{tools::R_user_dir()}}.}
 
 \item{cookie_path}{Path to the file where cookies will be stored.  Defaults
 to the appropriate R package configuration location given by
-\code{\link[tools:userdir]{tools::R_user_dir()}}.}
+\code{\link[tools:R_user_dir]{tools::R_user_dir()}}.}
 
 \item{cloud_config}{set \code{\link[=gdal_cloud_config]{gdal_cloud_config()}} env vars as well? logical,
 default \code{TRUE}.}
+
+\item{check}{verify the stored credentials with Earthdata Login using
+\code{\link[=edl_netrc_check]{edl_netrc_check()}}? logical, default \code{TRUE}. Set to \code{FALSE} to skip
+the network request, e.g. when working offline.}
 }
 \value{
-TRUE invisibly if successful
+Invisibly, \code{TRUE} if the credentials were accepted by Earthdata
+Login, \code{FALSE} if they are missing or were rejected, or \code{NA} if they
+could not be verified (e.g. no network access, or \code{check = FALSE}).
 }
 \description{
 This function creates a .netrc file with Earthdata Login (EDL) credentials
@@ -44,9 +51,13 @@ set to allow the authentication to store and read access cookies.
 Additionally, it manages the creation of a symbolic
 link to the .netrc file if GDAL version is less than 3.7.0 (and thus
 does not support GDAL_HTTP_NETRC_FILE location).
+
+Unless \code{check = FALSE}, the credentials stored in the .netrc file are
+verified against Earthdata Login (see \code{\link[=edl_netrc_check]{edl_netrc_check()}}). A warning is
+issued if they are rejected or cannot be verified.
 }
 \examples{
-\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 
 edl_netrc()
 url <- lpdacc_example_url()

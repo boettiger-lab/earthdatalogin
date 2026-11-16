@@ -1,3 +1,12 @@
+# earthdatalogin (development version)
+
+* New `edl_netrc_check()` verifies the credentials stored in a netrc file
+  against Earthdata Login. `edl_netrc()` now runs this check and warns if
+  the credentials are missing, rejected, or cannot be verified. It returns
+  `TRUE` if they were accepted, `FALSE` if they are missing or rejected, and
+  `NA` if they could not be verified, all invisibly. Use `check = FALSE` to
+  skip the request (#30, #31, @rupesh2).
+
 # earthdatalogin 0.0.5
 
 * `edl_download()`, `edl_search()`, and `edl_netrc()` no longer overwrite

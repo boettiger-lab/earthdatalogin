@@ -13,6 +13,9 @@
 #'   [tools::R_user_dir()].
 #' @param cloud_config set [gdal_cloud_config()] env vars as well? logical,
 #' default `TRUE`.
+#' @param check verify the stored credentials with Earthdata Login using
+#'   [edl_netrc_check()]? logical, default `TRUE`. Set to `FALSE` to skip
+#'   the network request, e.g. when working offline.
 #'
 #' @details The function sets the environment variables \code{GDAL_HTTP_NETRC}
 #'   and \code{GDAL_HTTP_NETRC_FILE} to enable GDAL to use the .netrc file for
@@ -23,13 +26,13 @@
 #'   link to the .netrc file if GDAL version is less than 3.7.0 (and thus
 #'   does not support GDAL_HTTP_NETRC_FILE location).
 #'
-#'   The credentials stored in the .netrc file are verified against
-#'   Earthdata Login (see [edl_netrc_check()]). A warning is issued if they
-#'   are rejected or cannot be verified.
+#'   Unless `check = FALSE`, the credentials stored in the .netrc file are
+#'   verified against Earthdata Login (see [edl_netrc_check()]). A warning is
+#'   issued if they are rejected or cannot be verified.
 #'
-#' @returns Invisibly, `TRUE` if the credentials were accepted by Earthdata Login,
-#'   `FALSE` if Earthdata Login rejected the credentials, or `NA` if they
-#'   could not be verified (e.g. no network access).
+#' @returns Invisibly, `TRUE` if the credentials were accepted by Earthdata
+#'   Login, `FALSE` if they are missing or were rejected, or `NA` if they
+#'   could not be verified (e.g. no network access, or `check = FALSE`).
 #' @examplesIf interactive()
 #'
 #' edl_netrc()
@@ -41,7 +44,8 @@ edl_netrc <- function(username = default("user"),
                       password = default("password"),
                       netrc_path = edl_netrc_path(),
                       cookie_path = edl_cookie_path(),
-                      cloud_config = TRUE) {
+                      cloud_config = TRUE,
+                      check = TRUE) {
 
   # Bearer auth can conflict
   edl_unset_token()
@@ -74,21 +78,24 @@ edl_netrc <- function(username = default("user"),
     gdal_cloud_config()
   }
 
-  # verify the stored credentials actually authenticate
+  # verify the stored credentials actually authenticate (#30)
+  if (!check) {
+    return(invisible(NA))
+  }
   invisible(edl_netrc_check(netrc_path))
 }
 
 #' Check if netrc credentials are accepted by Earthdata Login (EDL)
 #'
-#' Reads netrc path (as created by [edl_netrc()]) and verifies them 
-#' against the Earthdata Login API. 
+#' Reads the Earthdata Login credentials from a netrc file (as created by
+#' [edl_netrc()]) and verifies them against the Earthdata Login API.
 #'
 #' @inheritParams edl_netrc
 #' @param timeout seconds to wait for a response from Earthdata Login.
 #'
 #' @returns Invisibly, `TRUE` if the credentials were accepted, `FALSE` if
-#'   they were rejected, and `NA` if the check could not be completed (e.g. 
-#'   no network access).
+#'   the netrc file is missing or the credentials were rejected, and `NA` if
+#'   the check could not be completed (e.g. no network access).
 #' @examplesIf interactive()
 #'
 #' edl_netrc_check()
@@ -97,7 +104,13 @@ edl_netrc <- function(username = default("user"),
 edl_netrc_check <- function(netrc_path = edl_netrc_path(),
                             timeout = 10) {
   say <- function(fn, ...) fn(..., call. = FALSE)
-  fix <- " Run edl_netrc(username, password) to set your credentials."
+
+  if (!has_edl_netrc(netrc_path)) {
+    say(warning, "No Earthdata Login credentials found in ", netrc_path, ". ",
+        "Run edl_netrc(username, password) to store your credentials. ",
+        "Register at https://urs.earthdata.nasa.gov if needed.")
+    return(invisible(FALSE))
+  }
 
   resp <- tryCatch(
     urs_auth_response(netrc_path, timeout),
@@ -118,8 +131,8 @@ edl_netrc_check <- function(netrc_path = edl_netrc_path(),
   }
 
   if (status %in% c(401, 403)) {
-    say(warning, "Earthdata Login authentication failed (HTTP ", status, reason, "). ",
-        "Check your username and password, then run ",
+    say(warning, "Earthdata Login authentication failed (HTTP ", status,
+        reason, "). Check your username and password, then run ",
         "edl_netrc(username, password) to update the stored credentials. ",
         "Register at https://urs.earthdata.nasa.gov if needed.")
     return(invisible(FALSE))
