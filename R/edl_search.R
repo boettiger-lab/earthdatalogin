@@ -65,19 +65,24 @@ edl_search <- function(short_name = NULL,
   # Only (re)write the netrc when the caller explicitly supplies
   # credentials, or when no earthdata netrc exists yet, so searching never
   # clobbers credentials a user already stored with edl_netrc() (#27).
+  # CMR search is public, so search anonymously if the user has no
+  # credentials at all.
   if (!missing(username) || !missing(password) ||
-      !has_edl_netrc(netrc_path)) {
+      (!has_edl_netrc(netrc_path) && !is.null(edl_default_credentials()))) {
     edl_netrc(username = username,
               password = password,
               netrc_path = netrc_path,
               cookie_path = cookie_path,
               cloud_config = FALSE)
   }
-  netrc_config <-
-    httr::config(netrc = TRUE,
-                 netrc_file = netrc_path,
-                 cookiefile = cookie_path,
-                 cookiejar = cookie_path)
+  netrc_config <- NULL
+  if (has_edl_netrc(netrc_path)) {
+    netrc_config <-
+      httr::config(netrc = TRUE,
+                   netrc_file = netrc_path,
+                   cookiefile = cookie_path,
+                   cookiejar = cookie_path)
+  }
 
   query <- list(short_name = short_name,
                 temporal = paste(as.character(temporal), collapse=","),

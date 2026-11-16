@@ -37,23 +37,28 @@ devtools::install_github("boettiger-lab/earthdatalogin")
 
 ## Getting started
 
-Access to EarthData is free, but users are required to
-[register](https://urs.earthdata.nasa.gov/home). Currently,
-`earthdatalogin` provides it’s own default credentials for a quick
-start. Users are still encouraged to
-**[register](https://urs.earthdata.nasa.gov/home)** their own
-credentials!
+Access to EarthData is free, but each user needs their own Earthdata
+Login account. **[Register](https://urs.earthdata.nasa.gov/home)** for
+an account before using `earthdatalogin`.
 
 ``` r
 library(earthdatalogin)
 ```
 
 The easiest and most portable method of access is using the netrc basic
-authentication protocol for HTTP. Call `edl_netrc()` to set this up
-given your username and password (passed as optional arguments or read
-from the environmental variables. If neither provides credentials,
-`earthdatalogin` will provide it’s own credentials, but you may
-experience rate limits more readily):
+authentication protocol for HTTP. Call `edl_netrc()` once with your
+username and password to store them and check them with Earthdata
+Login:
+
+``` r
+edl_netrc(username = "your_user_name", password = "your_password")
+```
+
+Later sessions can call `edl_netrc()` with no arguments to reuse the
+stored credentials. You can instead set the `EARTHDATA_USER` and
+`EARTHDATA_PASSWORD` environment variables (e.g. in `~/.Renviron`), or
+add an entry for `urs.earthdata.nasa.gov` to your `~/.netrc` file, and
+`edl_netrc()` will read them from there:
 
 ``` r
 edl_netrc()

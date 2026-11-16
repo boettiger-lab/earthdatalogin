@@ -18,8 +18,13 @@
 #' in a temporary file and provide this path as GDAL_HTTP_HEADER_FILE to
 #' improve compatibility with older versions.
 #'
-#' @param username EarthData Login User
-#' @param password EarthData Login Password
+#' @param username Earthdata Login user name. Defaults to the
+#'   `EARTHDATA_USER` environment variable, or else the login stored for
+#'   `urs.earthdata.nasa.gov` in `~/.netrc`. Register for a free account at
+#'   <https://urs.earthdata.nasa.gov>.
+#' @param password Earthdata Login password. Defaults to the
+#'   `EARTHDATA_PASSWORD` environment variable, or else the password stored
+#'   for `urs.earthdata.nasa.gov` in `~/.netrc`.
 #' @param token_number Which token (1 or 2)
 #' @param set_env_var Should we set the GDAL_HTTP_HEADER_FILE
 #' environmental variable?  logical, default TRUE.
@@ -159,11 +164,6 @@ edl_revoke_token <- function(
     password = default("password"),
     token_number = 1
 ){
-
-  if(username == "" || password == "") {
-    message("You must provide a username and password either in .Renviron\n",
-            "or using the optional arguments")
-  }
 
   p <- edl_api("/api/users/tokens", username, password)
   if(length(p) == 0) {

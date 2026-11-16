@@ -14,9 +14,14 @@ edl_netrc(
 )
 }
 \arguments{
-\item{username}{EarthData Login User}
+\item{username}{Earthdata Login user name. Defaults to the
+\code{EARTHDATA_USER} environment variable, or else the login stored for
+\code{urs.earthdata.nasa.gov} in \verb{~/.netrc}. Register for a free account at
+\url{https://urs.earthdata.nasa.gov}.}
 
-\item{password}{EarthData Login Password}
+\item{password}{Earthdata Login password. Defaults to the
+\code{EARTHDATA_PASSWORD} environment variable, or else the password stored
+for \code{urs.earthdata.nasa.gov} in \verb{~/.netrc}.}
 
 \item{netrc_path}{Path to the .netrc file to be created. Defaults to the
 appropriate R package configuration location given by \code{\link[tools:R_user_dir]{tools::R_user_dir()}}.}

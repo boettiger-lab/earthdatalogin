@@ -12,3 +12,4 @@
 .Renviron
 [.]code-workspace$
 ^\.claude$
+^DISCLOSURE\.md$

@@ -52,8 +52,8 @@ edl_netrc <- function(username = default("user"),
 
   # Don't clobber stored credentials.  If the caller did not explicitly
   # supply a username/password and the netrc file already holds earthdata
-  # credentials, keep them rather than overwriting with the bundled
-  # defaults (#13, #27).
+  # credentials, keep them rather than overwriting them with the
+  # EARTHDATA_USER / EARTHDATA_PASSWORD defaults (#13, #27).
   if (!missing(username) || !missing(password) ||
       !has_edl_netrc(netrc_path)) {
 

@@ -11,9 +11,14 @@ edl_revoke_token(
 )
 }
 \arguments{
-\item{username}{EarthData Login User}
+\item{username}{Earthdata Login user name. Defaults to the
+\code{EARTHDATA_USER} environment variable, or else the login stored for
+\code{urs.earthdata.nasa.gov} in \verb{~/.netrc}. Register for a free account at
+\url{https://urs.earthdata.nasa.gov}.}
 
-\item{password}{EarthData Login Password}
+\item{password}{Earthdata Login password. Defaults to the
+\code{EARTHDATA_PASSWORD} environment variable, or else the password stored
+for \code{urs.earthdata.nasa.gov} in \verb{~/.netrc}.}
 
 \item{token_number}{Which token (1 or 2)}
 }
@@ -27,7 +32,7 @@ retrieve your tokens with your user name and password.  However,
 should you want to revoke a token, you can do so with this function.
 }
 \examples{
-\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 edl_revoke_token()
 \dontshow{\}) # examplesIf}
 }
