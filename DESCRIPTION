@@ -54,7 +54,8 @@ Suggests:
     readr,
     spelling,
     gdalcubes,
-    rstac
+    rstac,
+    withr
 URL: https://boettiger-lab.github.io/earthdatalogin/, https://github.com/boettiger-lab/earthdatalogin
 BugReports: https://github.com/boettiger-lab/earthdatalogin/issues
 VignetteBuilder: knitr
