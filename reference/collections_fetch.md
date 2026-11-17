@@ -43,9 +43,9 @@ please use that instead.
 ``` r
 if (FALSE) { # interactive()
 
- rstac::stac("https://cmr.earthdata.nasa.gov/stac/LPCLOUD") |> 
-   rstac::collections() |> 
-   rstac::get_request() |> 
+ rstac::stac("https://cmr.earthdata.nasa.gov/stac/LPCLOUD") |>
+   rstac::collections() |>
+   rstac::get_request() |>
    collections_fetch()
 }
 ```
