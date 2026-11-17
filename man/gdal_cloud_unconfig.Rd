@@ -13,7 +13,7 @@ invisible TRUE if successful.
 Unsets GDAL environmental variables set by \code{\link[=gdal_cloud_config]{gdal_cloud_config()}}
 }
 \examples{
-\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 gdal_cloud_config()
 
 # remove settings:

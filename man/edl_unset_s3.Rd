@@ -14,7 +14,7 @@ This function unsets the AWS S3-related environment variables:
 \code{AWS_ACCESS_KEY_ID}, \code{AWS_SECRET_ACCESS_KEY}, and \code{AWS_SESSION_TOKEN}.
 }
 \examples{
-\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 edl_unset_s3()
 \dontshow{\}) # examplesIf}
 }

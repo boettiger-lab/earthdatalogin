@@ -20,7 +20,7 @@ gdalcubes, which calls GDAL in an isolated environment
 and does not respect the global environmental variables.
 }
 \examples{
-\dontshow{if (requireNamespace("gdalcubes", quietly = TRUE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (requireNamespace("gdalcubes", quietly = TRUE)) withAutoprint(\{ # examplesIf}
  with_gdalcubes()
 \dontshow{\}) # examplesIf}
 }
