@@ -49,7 +49,7 @@ Adding this extra routing gives NASA a mechanism for imposing rate-limits -- red
 This routing requires users to register and provide an authentication token, both which are freely available through the EarthDataLogin platform and API.
 I prefer this mechanism as the default, because code written to use this mechanism is portable to any compute where a network connection is available.
 This approach actually supports a two different implementations.
-One approach is to use HTTP Basic Auth, supplying a user name and password (typically using a `.netrc` file). Another uses a `Bearer <token>` in the request header, an authentication mechanism introduced by [HTTP OAuth 2.0](https://www.rfc-editor.org/rfc/rfc6750).  
+One approach is to use HTTP Basic Auth, supplying a user name and password (typically using a `.netrc` file). Another uses a `Bearer <token>` in the request header, an authentication mechanism introduced by [HTTP OAuth 2.0](https://datatracker.ietf.org/doc/html/rfc6750).  
 
 
 If users are willing to pay Amazon for compute inside `us-west-2`, they can take advantage

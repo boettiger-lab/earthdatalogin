@@ -13,3 +13,4 @@
 [.]code-workspace$
 ^\.claude$
 ^DISCLOSURE\.md$
+^\.ipynb_checkpoints$
