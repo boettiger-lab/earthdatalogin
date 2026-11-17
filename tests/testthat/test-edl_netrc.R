@@ -75,9 +75,10 @@ test_that("netcdf access", {
     # Sys.setenv(GDAL_SKIP="netCDF") # doesn't work
   }
 
-  # PODAAC sometimes returns an error page instead of the file, which GDAL
-  # reports as an unsupported format. Retry a few times, and turn off GDAL's
-  # cache for this URL so each attempt makes a new request.
+  # On some CI runs GDAL reports this file as an unsupported format, which
+  # usually means the server sent something other than the file. Retry a few
+  # times with GDAL's cache off for this URL, and if every attempt fails,
+  # report what the server returns so the cause can be found.
   withr::local_envvar(CPL_VSIL_CURL_NON_CACHED = paste0("/vsicurl/", url))
   for (attempt in 1:3) {
     r <- tryCatch(terra::rast(url, vsi = TRUE, drivers = driver),
@@ -85,7 +86,10 @@ test_that("netcdf access", {
     if (!inherits(r, "error")) break
     Sys.sleep(5)
   }
-  if (inherits(r, "error")) stop(r)
+  if (inherits(r, "error")) {
+    stop(conditionMessage(r), "\n\n", edl_request_diagnostics(url),
+         call. = FALSE)
+  }
   expect_true(inherits(r, "SpatRaster"))
 
   edl_unset_netrc()
