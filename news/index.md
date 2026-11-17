@@ -49,6 +49,19 @@
   [`collections_fetch()`](https://boettiger-lab.github.io/earthdatalogin/reference/collections_fetch.md)
   warns once instead of once per page.
 
+- [`edl_download()`](https://boettiger-lab.github.io/earthdatalogin/reference/edl_download.md)
+  now stops with an error when the server returns an HTTP error, and
+  removes the partial file. Previously the `"httr"` method saved the
+  server’s error page to `dest` without complaint, and the `"curl"`
+  method did the same. The `"httr"` method also retries brief connection
+  failures and server errors up to three times.
+
+- [`edl_netrc()`](https://boettiger-lab.github.io/earthdatalogin/reference/edl_netrc.md)
+  no longer writes to `~/.netrc` unless GDAL is older than 3.7, which
+  cannot read a netrc file from any other location. Even then it links
+  its own netrc there for the session only when `~/.netrc` does not
+  exist, and it never appends to an existing `~/.netrc`.
+
 ## earthdatalogin 0.0.5
 
 CRAN release: 2026-06-19
@@ -68,7 +81,7 @@ CRAN release: 2026-06-19
 - [`edl_extract_urls()`](https://boettiger-lab.github.io/earthdatalogin/reference/edl_extract_urls.md)
   (and `edl_search(parse_results = TRUE)`) now handle granules with
   multiple data assets, e.g. one GeoTIFF per band. Previously these
-  errored with “Result must be length 1”
+  failed with “Result must be length 1”
   ([\#15](https://github.com/boettiger-lab/earthdatalogin/issues/15)).
 
 - [`collections_fetch()`](https://boettiger-lab.github.io/earthdatalogin/reference/collections_fetch.md)
@@ -85,7 +98,7 @@ CRAN release: 2026-06-12
   test now skips on CRAN and when offline, and the
   [`get_nasa_stac_url()`](https://boettiger-lab.github.io/earthdatalogin/reference/get_nasa_stac_url.md)
   error-path test is mocked so it runs without network access. This
-  resolves the CRAN check ERRORs introduced when the protected NetCDF
+  resolves the CRAN check errors introduced when the protected NetCDF
   download ran on CRAN machines.
 
 ## earthdatalogin 0.0.3
