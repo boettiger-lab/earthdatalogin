@@ -85,7 +85,7 @@ approach actually supports a two different implementations. One approach
 is to use HTTP Basic Auth, supplying a user name and password (typically
 using a `.netrc` file). Another uses a `Bearer <token>` in the request
 header, an authentication mechanism introduced by [HTTP OAuth
-2.0](https://www.rfc-editor.org/rfc/rfc6750).
+2.0](https://datatracker.ietf.org/doc/html/rfc6750).
 
 If users are willing to pay Amazon for compute inside `us-west-2`, they
 can take advantage of extremely fast network without paying egress

@@ -1,6 +1,6 @@
 # Changelog
 
-## earthdatalogin (development version)
+## earthdatalogin 0.0.6
 
 ### Breaking changes
 
