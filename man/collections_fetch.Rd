@@ -8,7 +8,7 @@ collections_fetch(collections, ...)
 }
 \arguments{
 \item{collections}{an object of class \code{doc_collections} as returned
-by calling \code{\link[rstac:request]{rstac::get_request()}} on an \code{\link[rstac:collections]{rstac::collections()}} query}
+by calling \code{\link[rstac:get_request]{rstac::get_request()}} on an \code{\link[rstac:collections]{rstac::collections()}} query}
 
 \item{...}{Optional arguments passed on to \code{\link[httr:GET]{httr::GET()}}}
 }
@@ -26,11 +26,11 @@ the collections and return them all.
 \code{\link[rstac:collections_fetch]{rstac::collections_fetch()}}; please use that instead.
 }
 \examples{
-\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 
- rstac::stac("https://cmr.earthdata.nasa.gov/stac/LPCLOUD") |> 
-   rstac::collections() |> 
-   rstac::get_request() |> 
+ rstac::stac("https://cmr.earthdata.nasa.gov/stac/LPCLOUD") |>
+   rstac::collections() |>
+   rstac::get_request() |>
    collections_fetch()
 \dontshow{\}) # examplesIf}
 }

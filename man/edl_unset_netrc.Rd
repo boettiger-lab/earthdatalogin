@@ -12,11 +12,11 @@ edl_unset_netrc(
 }
 \arguments{
 \item{netrc_path}{Path to the .netrc file to be created. Defaults to the
-appropriate R package configuration location given by \code{\link[tools:userdir]{tools::R_user_dir()}}.}
+appropriate R package configuration location given by \code{\link[tools:R_user_dir]{tools::R_user_dir()}}.}
 
 \item{cookie_path}{Path to the file where cookies will be stored.  Defaults
 to the appropriate R package configuration location given by
-\code{\link[tools:userdir]{tools::R_user_dir()}}.}
+\code{\link[tools:R_user_dir]{tools::R_user_dir()}}.}
 
 \item{cloud_config}{set \code{\link[=gdal_cloud_config]{gdal_cloud_config()}} env vars as well? logical,
 default \code{TRUE}.}
@@ -41,7 +41,7 @@ path argument to \code{""} (see examples)
 Note that GDAL_HTTP_NETRC defaults to YES.
 }
 \examples{
-\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 
  edl_unset_netrc()
 

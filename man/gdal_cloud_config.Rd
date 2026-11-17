@@ -19,7 +19,7 @@ Based on
 \url{https://gdalcubes.github.io/source/concepts/config.html#recommended-settings-for-cloud-access}
 }
 \examples{
-\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 gdal_cloud_config()
 
 # remove settings:
