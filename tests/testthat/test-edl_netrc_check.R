@@ -12,7 +12,7 @@ local_netrc <- function(env = parent.frame()) {
 # temporary directory and restore the env vars afterwards.
 local_edl_sandbox <- function(env = parent.frame()) {
   home <- withr::local_tempdir(.local_envir = env)
-  withr::local_envvar(HOME = home, R_USER = home,
+  withr::local_envvar(HOME = home, R_USER = home, USERPROFILE = home,
                       GDAL_HTTP_NETRC = NA, GDAL_HTTP_NETRC_FILE = NA,
                       GDAL_HTTP_COOKIEFILE = NA, GDAL_HTTP_COOKIEJAR = NA,
                       .local_envir = env)

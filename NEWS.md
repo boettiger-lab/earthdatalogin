@@ -1,13 +1,21 @@
 # earthdatalogin (development version)
 
-* Requests to the Earthdata Login API (`edl_set_token()`,
-  `edl_revoke_token()` and `edl_netrc_check()`) retry brief connection
-  failures and server errors up to three times. They never retry 4xx
-  responses such as a 401 for bad credentials, which could lock the account.
+## Breaking changes
 
-* The deprecated `collections_fetch()` warns once instead of once per page.
+* `earthdatalogin` no longer supplies shared default credentials. The shared
+  account has expired, and NASA asks that each user log in with their own
+  Earthdata Login account. Credentials now come from the `username` and
+  `password` arguments, the `EARTHDATA_USER` and `EARTHDATA_PASSWORD`
+  environment variables, or the `urs.earthdata.nasa.gov` entry in
+  `~/.netrc`. If none of these provides credentials, functions that need
+  them stop with an error explaining how to register. The package no longer
+  downloads `inst/.Renviron` from GitHub or falls back to hard-coded
+  credentials.
 
-# earthdatalogin (development version)
+* `edl_search()` searches CMR anonymously when no credentials are
+  available, since CMR search does not require a login.
+
+## New features
 
 * New `edl_netrc_check()` verifies the credentials stored in a netrc file
   against Earthdata Login. `edl_netrc()` now runs this check and warns if
@@ -15,6 +23,15 @@
   `TRUE` if they were accepted, `FALSE` if they are missing or rejected, and
   `NA` if they could not be verified, all invisibly. Use `check = FALSE` to
   skip the request (#30, #31, @rupesh2).
+
+## Minor improvements and fixes
+
+* Requests to the Earthdata Login API (`edl_set_token()`,
+  `edl_revoke_token()` and `edl_netrc_check()`) retry brief connection
+  failures and server errors up to three times. They never retry 4xx
+  responses such as a 401 for bad credentials, which could lock the account.
+
+* The deprecated `collections_fetch()` warns once instead of once per page.
 
 # earthdatalogin 0.0.5
 

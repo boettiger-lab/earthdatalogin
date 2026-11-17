@@ -15,11 +15,14 @@ edl_s3_token(
 \item{daac}{Character string. The base URL for the DAAC (Data Archive Access Center).
 Defaults to "https://data.lpdaac.earthdatacloud.nasa.gov".}
 
-\item{username}{Character string. EarthDataLogin username. Defaults to the
-value returned by \code{default("user")}.}
+\item{username}{Earthdata Login user name. Defaults to the
+\code{EARTHDATA_USER} environment variable, or else the login stored for
+\code{urs.earthdata.nasa.gov} in \verb{~/.netrc}. Register for a free account at
+\url{https://urs.earthdata.nasa.gov}.}
 
-\item{password}{Character string. EarthDataLogin password. Defaults to the
-value returned by \code{default("password")}.}
+\item{password}{Earthdata Login password. Defaults to the
+\code{EARTHDATA_PASSWORD} environment variable, or else the password stored
+for \code{urs.earthdata.nasa.gov} in \verb{~/.netrc}.}
 
 \item{prompt_for_netrc}{Logical. Often netrc is preferable, so this function will by
 default prompt the user to switch. Set to FALSE to silence this.
@@ -64,7 +67,7 @@ The function automatically sets the following environment variables:
 }
 }
 \examples{
-\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 edl_s3_token()
 \dontshow{\}) # examplesIf}
 }

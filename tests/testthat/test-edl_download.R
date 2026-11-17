@@ -1,6 +1,7 @@
 test_that("edl_download", {
 
   skip_online()
+  skip_if_no_edl_credentials()
 
   edl_unset_netrc()
 
@@ -21,6 +22,7 @@ test_that("edl_download", {
 test_that("edl_download via token", {
 
   skip_online()
+  skip_if_no_edl_credentials()
   edl_unset_netrc()
 
   url <- lpdacc_example_url()
@@ -41,6 +43,7 @@ test_that("edl_download via token", {
 test_that("edl_download, netrc+libcurl", {
 
   skip_online()
+  skip_if_no_edl_credentials()
 
   edl_unset_netrc()
 

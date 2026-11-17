@@ -14,10 +14,7 @@
 #'
 #' @param daac Character string. The base URL for the DAAC (Data Archive Access Center).
 #'   Defaults to "https://data.lpdaac.earthdatacloud.nasa.gov".
-#' @param username Character string. EarthDataLogin username. Defaults to the
-#'   value returned by `default("user")`.
-#' @param password Character string. EarthDataLogin password. Defaults to the
-#'   value returned by `default("password")`.
+#' @inheritParams edl_set_token
 #' @param prompt_for_netrc Logical. Often netrc is preferable, so this function will by
 #'   default prompt the user to switch. Set to FALSE to silence this.
 #'   Defaults to `interactive()`.

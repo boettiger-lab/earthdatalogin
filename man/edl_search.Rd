@@ -47,16 +47,21 @@ to determine url links to data objects.  Set to FALSE to return
 the full API response object, but be wary of large object sizes
 when search returns many results.}
 
-\item{username}{EarthData Login User}
+\item{username}{Earthdata Login user name. Defaults to the
+\code{EARTHDATA_USER} environment variable, or else the login stored for
+\code{urs.earthdata.nasa.gov} in \verb{~/.netrc}. Register for a free account at
+\url{https://urs.earthdata.nasa.gov}.}
 
-\item{password}{EarthData Login Password}
+\item{password}{Earthdata Login password. Defaults to the
+\code{EARTHDATA_PASSWORD} environment variable, or else the password stored
+for \code{urs.earthdata.nasa.gov} in \verb{~/.netrc}.}
 
 \item{netrc_path}{Path to the .netrc file to be created. Defaults to the
-appropriate R package configuration location given by \code{\link[tools:userdir]{tools::R_user_dir()}}.}
+appropriate R package configuration location given by \code{\link[tools:R_user_dir]{tools::R_user_dir()}}.}
 
 \item{cookie_path}{Path to the file where cookies will be stored.  Defaults
 to the appropriate R package configuration location given by
-\code{\link[tools:userdir]{tools::R_user_dir()}}.}
+\code{\link[tools:R_user_dir]{tools::R_user_dir()}}.}
 
 \item{...}{additional query parameters}
 }
@@ -73,7 +78,7 @@ NASA and many other providers, and can be searched using the feature-rich
 \code{rstac} package.  STAC return items can be more easily parsed as well.
 }
 \examples{
-\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 
 items <- edl_search(short_name = "MUR-JPL-L4-GLOB-v4.1",
                    temporal = c("2002-01-01", "2021-12-31"),
