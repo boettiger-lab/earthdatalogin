@@ -2,7 +2,7 @@
 
 local_no_credentials <- function(env = parent.frame()) {
   home <- withr::local_tempdir(.local_envir = env)
-  withr::local_envvar(HOME = home, R_USER = home,
+  withr::local_envvar(HOME = home, R_USER = home, USERPROFILE = home,
                       EARTHDATA_USER = NA, EARTHDATA_PASSWORD = NA,
                       .local_envir = env)
   home

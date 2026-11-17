@@ -3,7 +3,8 @@
 #' Users must supply their own Earthdata Login credentials. They are read,
 #' in order, from the `EARTHDATA_USER` and `EARTHDATA_PASSWORD` environment
 #' variables and then from the `urs.earthdata.nasa.gov` entry of the user's
-#' `~/.netrc` file (`~/_netrc` on Windows). If neither holds credentials,
+#' `.netrc` file in the user's home directory (also `_netrc` and
+#' `%USERPROFILE%` on Windows, as curl does). If neither holds credentials,
 #' an error explains how to register and store them.
 #' @noRd
 default <- function(what = c("user", "password")) {
@@ -35,10 +36,21 @@ edl_default_credentials <- function() {
   NULL
 }
 
+#' Netrc files curl reads by default: $HOME/.netrc, and on Windows also
+#' %USERPROFILE% and _netrc. R's "~" is not used because on Windows it
+#' points at the Documents folder rather than the user's home.
+#' @noRd
 home_netrc_paths <- function() {
-  paths <- "~/.netrc"
-  if (.Platform$OS.type == "windows") paths <- c(paths, "~/_netrc")
-  paths
+  if (.Platform$OS.type == "windows") {
+    homes <- Sys.getenv(c("HOME", "USERPROFILE"))
+    names <- c(".netrc", "_netrc")
+  } else {
+    homes <- Sys.getenv("HOME")
+    names <- ".netrc"
+  }
+  homes <- unique(homes[nzchar(homes)])
+  if (length(homes) == 0) return(character(0))
+  as.vector(outer(homes, names, file.path))
 }
 
 #' Read the login and password for a machine from a netrc file
