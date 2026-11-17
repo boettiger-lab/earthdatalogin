@@ -25,13 +25,16 @@ edl_s3_token(
 
 - username:
 
-  Character string. EarthDataLogin username. Defaults to the value
-  returned by `default("user")`.
+  Earthdata Login user name. Defaults to the `EARTHDATA_USER`
+  environment variable, or else the login stored for
+  `urs.earthdata.nasa.gov` in `~/.netrc`. Register for a free account at
+  <https://urs.earthdata.nasa.gov>.
 
 - password:
 
-  Character string. EarthDataLogin password. Defaults to the value
-  returned by `default("password")`.
+  Earthdata Login password. Defaults to the `EARTHDATA_PASSWORD`
+  environment variable, or else the password stored for
+  `urs.earthdata.nasa.gov` in `~/.netrc`.
 
 - prompt_for_netrc:
 

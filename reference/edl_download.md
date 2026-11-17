@@ -45,11 +45,16 @@ edl_download(
 
 - username:
 
-  EarthData Login User
+  Earthdata Login user name. Defaults to the `EARTHDATA_USER`
+  environment variable, or else the login stored for
+  `urs.earthdata.nasa.gov` in `~/.netrc`. Register for a free account at
+  <https://urs.earthdata.nasa.gov>.
 
 - password:
 
-  EarthData Login Password
+  Earthdata Login password. Defaults to the `EARTHDATA_PASSWORD`
+  environment variable, or else the password stored for
+  `urs.earthdata.nasa.gov` in `~/.netrc`.
 
 - netrc_path:
 

@@ -21,7 +21,7 @@
 
     <a class="navbar-brand me-2" href="index.html">earthdatalogin</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.5.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -76,14 +76,17 @@
 <div class="section level2">
 <h2 id="getting-started">Getting started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
 </h2>
-<p>Access to EarthData is free, but users are required to <a href="https://urs.earthdata.nasa.gov/home" class="external-link">register</a>. Currently, <code>earthdatalogin</code> provides it’s own default credentials for a quick start. Users are still encouraged to <strong><a href="https://urs.earthdata.nasa.gov/home" class="external-link">register</a></strong> their own credentials!</p>
+<p>Access to EarthData is free, but each user needs their own Earthdata Login account. <strong><a href="https://urs.earthdata.nasa.gov/home" class="external-link">Register</a></strong> for an account before using <code>earthdatalogin</code>.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://boettiger-lab.github.io/earthdatalogin/">earthdatalogin</a></span><span class="op">)</span></span></code></pre></div>
-<p>The easiest and most portable method of access is using the netrc basic authentication protocol for HTTP. Call <code><a href="reference/edl_netrc.html">edl_netrc()</a></code> to set this up given your username and password (passed as optional arguments or read from the environmental variables. If neither provides credentials, <code>earthdatalogin</code> will provide it’s own credentials, but you may experience rate limits more readily):</p>
+<p>The easiest and most portable method of access is using the netrc basic authentication protocol for HTTP. Call <code><a href="reference/edl_netrc.html">edl_netrc()</a></code> once with your username and password to store them and check them with Earthdata Login:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/edl_netrc.html">edl_netrc</a></span><span class="op">(</span>username <span class="op">=</span> <span class="st">"your_user_name"</span>, password <span class="op">=</span> <span class="st">"your_password"</span><span class="op">)</span></span></code></pre></div>
+<p>Later sessions can call <code><a href="reference/edl_netrc.html">edl_netrc()</a></code> with no arguments to reuse the stored credentials. You can instead set the <code>EARTHDATA_USER</code> and <code>EARTHDATA_PASSWORD</code> environment variables (e.g. in <code>~/.Renviron</code>), or add an entry for <code>urs.earthdata.nasa.gov</code> to your <code>~/.netrc</code> file, and <code><a href="reference/edl_netrc.html">edl_netrc()</a></code> will read them from there:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/edl_netrc.html">edl_netrc</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>If <code><a href="reference/edl_netrc.html">edl_netrc()</a></code> has been called, then most existing spatial data packages in R can then seamlessly access NASA Earthdata over HTTP links.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">url</span> <span class="op">&lt;-</span> <span class="st">"https://data.lpdaac.earthdatacloud.nasa.gov/lp-prod-protected/HLSL30.020/HLS.L30.T56JKT.2023246T235950.v2.0/HLS.L30.T56JKT.2023246T235950.v2.0.SAA.tif"</span></span>
 <span></span>
 <span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">url</span>, vsi<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>

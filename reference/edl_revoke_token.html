@@ -13,7 +13,7 @@ should you want to revoke a token, you can do so with this function."></head><bo
 
     <a class="navbar-brand me-2" href="../index.html">earthdatalogin</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.5.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -68,11 +68,16 @@ should you want to revoke a token, you can do so with this function.</p>
 
 
 <dl><dt id="arg-username">username<a class="anchor" aria-label="anchor" href="#arg-username"></a></dt>
-<dd><p>EarthData Login User</p></dd>
+<dd><p>Earthdata Login user name. Defaults to the
+<code>EARTHDATA_USER</code> environment variable, or else the login stored for
+<code>urs.earthdata.nasa.gov</code> in <code>~/.netrc</code>. Register for a free account at
+<a href="https://urs.earthdata.nasa.gov" class="external-link">https://urs.earthdata.nasa.gov</a>.</p></dd>
 
 
 <dt id="arg-password">password<a class="anchor" aria-label="anchor" href="#arg-password"></a></dt>
-<dd><p>EarthData Login Password</p></dd>
+<dd><p>Earthdata Login password. Defaults to the
+<code>EARTHDATA_PASSWORD</code> environment variable, or else the password stored
+for <code>urs.earthdata.nasa.gov</code> in <code>~/.netrc</code>.</p></dd>
 
 
 <dt id="arg-token-number">token_number<a class="anchor" aria-label="anchor" href="#arg-token-number"></a></dt>

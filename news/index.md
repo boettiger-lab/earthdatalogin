@@ -2,20 +2,23 @@
 
 ## earthdatalogin (development version)
 
-- Requests to the Earthdata Login API
-  ([`edl_set_token()`](https://boettiger-lab.github.io/earthdatalogin/reference/edl_set_token.md),
-  [`edl_revoke_token()`](https://boettiger-lab.github.io/earthdatalogin/reference/edl_revoke_token.md)
-  and
-  [`edl_netrc_check()`](https://boettiger-lab.github.io/earthdatalogin/reference/edl_netrc_check.md))
-  retry brief connection failures and server errors up to three times.
-  They never retry 4xx responses such as a 401 for bad credentials,
-  which could lock the account.
+### Breaking changes
 
-- The deprecated
-  [`collections_fetch()`](https://boettiger-lab.github.io/earthdatalogin/reference/collections_fetch.md)
-  warns once instead of once per page.
+- `earthdatalogin` no longer supplies shared default credentials. The
+  shared account has expired, and NASA asks that each user log in with
+  their own Earthdata Login account. Credentials now come from the
+  `username` and `password` arguments, the `EARTHDATA_USER` and
+  `EARTHDATA_PASSWORD` environment variables, or the
+  `urs.earthdata.nasa.gov` entry in `~/.netrc`. If none of these
+  provides credentials, functions that need them stop with an error
+  explaining how to register. The package no longer downloads
+  `inst/.Renviron` from GitHub or falls back to hard-coded credentials.
 
-## earthdatalogin (development version)
+- [`edl_search()`](https://boettiger-lab.github.io/earthdatalogin/reference/edl_search.md)
+  searches CMR anonymously when no credentials are available, since CMR
+  search does not require a login.
+
+### New features
 
 - New
   [`edl_netrc_check()`](https://boettiger-lab.github.io/earthdatalogin/reference/edl_netrc_check.md)
@@ -30,6 +33,21 @@
   ([\#30](https://github.com/boettiger-lab/earthdatalogin/issues/30),
   [\#31](https://github.com/boettiger-lab/earthdatalogin/issues/31),
   [@rupesh2](https://github.com/rupesh2)).
+
+### Minor improvements and fixes
+
+- Requests to the Earthdata Login API
+  ([`edl_set_token()`](https://boettiger-lab.github.io/earthdatalogin/reference/edl_set_token.md),
+  [`edl_revoke_token()`](https://boettiger-lab.github.io/earthdatalogin/reference/edl_revoke_token.md)
+  and
+  [`edl_netrc_check()`](https://boettiger-lab.github.io/earthdatalogin/reference/edl_netrc_check.md))
+  retry brief connection failures and server errors up to three times.
+  They never retry 4xx responses such as a 401 for bad credentials,
+  which could lock the account.
+
+- The deprecated
+  [`collections_fetch()`](https://boettiger-lab.github.io/earthdatalogin/reference/collections_fetch.md)
+  warns once instead of once per page.
 
 ## earthdatalogin 0.0.5
 
