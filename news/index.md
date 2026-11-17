@@ -2,6 +2,21 @@
 
 ## earthdatalogin (development version)
 
+- Requests to the Earthdata Login API
+  ([`edl_set_token()`](https://boettiger-lab.github.io/earthdatalogin/reference/edl_set_token.md),
+  [`edl_revoke_token()`](https://boettiger-lab.github.io/earthdatalogin/reference/edl_revoke_token.md)
+  and
+  [`edl_netrc_check()`](https://boettiger-lab.github.io/earthdatalogin/reference/edl_netrc_check.md))
+  retry brief connection failures and server errors up to three times.
+  They never retry 4xx responses such as a 401 for bad credentials,
+  which could lock the account.
+
+- The deprecated
+  [`collections_fetch()`](https://boettiger-lab.github.io/earthdatalogin/reference/collections_fetch.md)
+  warns once instead of once per page.
+
+## earthdatalogin (development version)
+
 - New
   [`edl_netrc_check()`](https://boettiger-lab.github.io/earthdatalogin/reference/edl_netrc_check.md)
   verifies the credentials stored in a netrc file against Earthdata
