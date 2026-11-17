@@ -39,8 +39,7 @@ test_that("edl_netrc and edl_download do not overwrite stored credentials", {
 })
 
 test_that("edl_netrc", {
-  skip_on_cran()
-  skip_if_offline()
+  skip_online()
 
   # test in clean setting
   edl_unset_token()
@@ -58,8 +57,7 @@ test_that("edl_netrc", {
 
 
 test_that("netcdf access", {
-  skip_on_cran()
-  skip_if_offline()
+  skip_online()
 
   # Since GDAL 2.4 libnetcdf >= 4.5, Mac and Windos lack netcdf vsi support
   # https://gdal.org/en/stable/drivers/raster/netcdf.html#vsi-virtual-file-system-api-support

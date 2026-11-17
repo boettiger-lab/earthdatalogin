@@ -2,8 +2,7 @@
 test_that("edl_s3", {
 
   skip("Only works inside AWS US-West-2")
-  skip_on_cran()
-  skip_if_offline()
+  skip_online()
   # tokens can only be used inside S3
   p <- edl_s3_token(prompt_for_netrc = FALSE)
   expect_type(p, "list")

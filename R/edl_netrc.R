@@ -149,13 +149,17 @@ edl_netrc_check <- function(netrc_path = edl_netrc_path(),
 #' @return list(status = HTTP status code, reason = EDL error text or "")
 #' @noRd
 urs_auth_response <- function(netrc_path = edl_netrc_path(), timeout = 10) {
-  resp <- httr::GET("https://urs.earthdata.nasa.gov/api/users/tokens",
-                    httr::config(netrc = 1L,
-                                 netrc_file = normalizePath(netrc_path),
-                                 httpauth = 1L),
-                    httr::accept_json(),
-                    httr::user_agent(edl_user_agent()),
-                    httr::timeout(timeout))
+  # Retry brief connection failures and server errors, never 4xx responses
+  # such as 401 for bad credentials (a retry could lock the account).
+  resp <- httr::RETRY("GET", "https://urs.earthdata.nasa.gov/api/users/tokens",
+                      httr::config(netrc = 1L,
+                                   netrc_file = normalizePath(netrc_path),
+                                   httpauth = 1L),
+                      httr::accept_json(),
+                      httr::user_agent(edl_user_agent()),
+                      httr::timeout(timeout),
+                      times = 3, pause_base = 1, pause_cap = 5,
+                      terminate_on = 400:499, quiet = TRUE)
   list(status = httr::status_code(resp), reason = edl_error_reason(resp))
 }
 

@@ -97,9 +97,13 @@ edl_api <- function(endpoint,
                     method = httr::GET) {
 
   pw <- openssl::base64_encode(paste0(username, ":", password))
-  resp <- method(paste0(base, endpoint),
-  #                  ...,
-                    httr::add_headers(Authorization = paste("Basic", pw)))
+  verb <- if (identical(method, httr::POST)) "POST" else "GET"
+  # Retry brief connection failures and server errors, never 4xx responses
+  # such as 401 for bad credentials (a retry could lock the account).
+  resp <- httr::RETRY(verb, paste0(base, endpoint),
+                      httr::add_headers(Authorization = paste("Basic", pw)),
+                      times = 3, pause_base = 1, pause_cap = 5,
+                      terminate_on = 400:499, quiet = TRUE)
   httr::stop_for_status(resp)
   p <- httr::content(resp, "parsed", "application/json")
   p

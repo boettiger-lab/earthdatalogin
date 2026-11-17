@@ -29,6 +29,12 @@ collections_fetch <- function(collections, ...) {
                            "deprecated; use `rstac::collections_fetch()` ",
                            "instead."))
 
+  fetch_collection_pages(collections)
+}
+
+# Follow "next" links, appending each page of collections. Kept separate
+# from collections_fetch() so the deprecation warning is raised only once.
+fetch_collection_pages <- function(collections) {
   if (!inherits(collections, "doc_collections")) {
     stop("'collections' must be a `doc_collections` object from the `rstac` package", 
     call. = FALSE)
@@ -66,7 +72,7 @@ collections_fetch <- function(collections, ...) {
   
   collections$collections <- c(prev_collections, collections$collections)
   
-  collections_fetch(collections)
+  fetch_collection_pages(collections)
 }
 
 get_next_url <- function(collections) {
