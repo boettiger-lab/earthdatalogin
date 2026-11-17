@@ -1,9 +1,8 @@
 test_that("list_nasa_stacs() works", {
-  skip_on_cran()
-  skip_if_offline()
+  skip_online()
 
-  ret_cloud <- list_nasa_stacs()
-  ret <- list_nasa_stacs(cloud_only = FALSE)
+  ret_cloud <- skip_on_server_error(list_nasa_stacs())
+  ret <- skip_on_server_error(list_nasa_stacs(cloud_only = FALSE))
 
   expect_s3_class(ret, "data.frame")
   expect_s3_class(ret_cloud, "data.frame")
@@ -11,10 +10,9 @@ test_that("list_nasa_stacs() works", {
 })
 
 test_that("get_nasa_stac_url() works", {
-  skip_on_cran()
-  skip_if_offline()
+  skip_online()
 
-  url <- get_nasa_stac_url("LPCLOUD")
+  url <- skip_on_server_error(get_nasa_stac_url("LPCLOUD"))
   expect_type(url, "character")
   expect_length(url, 1)
   expect_match(url, "https://.+LPCLOUD")

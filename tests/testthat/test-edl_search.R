@@ -1,7 +1,6 @@
 test_that("edl_search", {
 
-  skip_if_offline()
-  skip_on_cran()
+  skip_online()
 
   resp <- edl_search(short_name = "MUR-JPL-L4-GLOB-v4.1",
                      temporal = c("2020-01-01", "2021-12-31"),
@@ -23,8 +22,7 @@ test_that("edl_search", {
 
 test_that("edl_search with bounding box", {
 
-  skip_if_offline()
-  skip_on_cran()
+  skip_online()
 
   bbox_results <- edl_search(
     short_name = "ATL08",

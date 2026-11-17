@@ -1,5 +1,14 @@
 # earthdatalogin (development version)
 
+* Requests to the Earthdata Login API (`edl_set_token()`,
+  `edl_revoke_token()` and `edl_netrc_check()`) retry brief connection
+  failures and server errors up to three times. They never retry 4xx
+  responses such as a 401 for bad credentials, which could lock the account.
+
+* The deprecated `collections_fetch()` warns once instead of once per page.
+
+# earthdatalogin (development version)
+
 * New `edl_netrc_check()` verifies the credentials stored in a netrc file
   against Earthdata Login. `edl_netrc()` now runs this check and warns if
   the credentials are missing, rejected, or cannot be verified. It returns
