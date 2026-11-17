@@ -20,7 +20,9 @@ for (i in 1:3) {
   hops <- vapply(r$all_headers, function(h) paste(h$status), "")
   hosts <- vapply(r$all_headers, function(h) {
     loc <- h$headers$location
-    if (is.null(loc)) "-" else httr::parse_url(loc)$hostname
+    if (is.null(loc)) return("-")
+    host <- httr::parse_url(loc[[1]])$hostname
+    if (is.null(host) || !nzchar(host)) "relative" else host
   }, "")
   cat("httr", i, "status chain:", paste(hops, collapse = " > "),
       "| redirect hosts:", paste(hosts, collapse = " > "),
