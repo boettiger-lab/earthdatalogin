@@ -16,5 +16,8 @@ jobs:
           use-public-rspm: true
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::pkgload, any::terra
-      - run: Rscript .github/diag/podaac.R
+          extra-packages: any::pkgload, any::terra, any::testthat
+      - run: Rscript .github/diag/podaac.R netrc_only
+      - run: Rscript .github/diag/podaac.R download_then_netrc
+      - run: Rscript .github/diag/podaac.R netrc_only
+      - run: Rscript .github/diag/podaac.R download_then_netrc
