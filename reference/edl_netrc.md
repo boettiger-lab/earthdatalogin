@@ -12,7 +12,8 @@ edl_netrc(
   password = default("password"),
   netrc_path = edl_netrc_path(),
   cookie_path = edl_cookie_path(),
-  cloud_config = TRUE
+  cloud_config = TRUE,
+  check = TRUE
 )
 ```
 
@@ -44,9 +45,18 @@ edl_netrc(
   [`gdal_cloud_config()`](https://boettiger-lab.github.io/earthdatalogin/reference/gdal_cloud_config.md)
   env vars as well? logical, default `TRUE`.
 
+- check:
+
+  verify the stored credentials with Earthdata Login using
+  [`edl_netrc_check()`](https://boettiger-lab.github.io/earthdatalogin/reference/edl_netrc_check.md)?
+  logical, default `TRUE`. Set to `FALSE` to skip the network request,
+  e.g. when working offline.
+
 ## Value
 
-TRUE invisibly if successful
+Invisibly, `TRUE` if the credentials were accepted by Earthdata Login,
+`FALSE` if they are missing or were rejected, or `NA` if they could not
+be verified (e.g. no network access, or `check = FALSE`).
 
 ## Details
 
@@ -58,6 +68,11 @@ set to allow the authentication to store and read access cookies.
 Additionally, it manages the creation of a symbolic link to the .netrc
 file if GDAL version is less than 3.7.0 (and thus does not support
 GDAL_HTTP_NETRC_FILE location).
+
+Unless `check = FALSE`, the credentials stored in the .netrc file are
+verified against Earthdata Login (see
+[`edl_netrc_check()`](https://boettiger-lab.github.io/earthdatalogin/reference/edl_netrc_check.md)).
+A warning is issued if they are rejected or cannot be verified.
 
 ## Examples
 

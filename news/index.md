@@ -1,6 +1,24 @@
 # Changelog
 
+## earthdatalogin (development version)
+
+- New
+  [`edl_netrc_check()`](https://boettiger-lab.github.io/earthdatalogin/reference/edl_netrc_check.md)
+  verifies the credentials stored in a netrc file against Earthdata
+  Login.
+  [`edl_netrc()`](https://boettiger-lab.github.io/earthdatalogin/reference/edl_netrc.md)
+  now runs this check and warns if the credentials are missing,
+  rejected, or cannot be verified. It returns `TRUE` if they were
+  accepted, `FALSE` if they are missing or rejected, and `NA` if they
+  could not be verified, all invisibly. Use `check = FALSE` to skip the
+  request
+  ([\#30](https://github.com/boettiger-lab/earthdatalogin/issues/30),
+  [\#31](https://github.com/boettiger-lab/earthdatalogin/issues/31),
+  [@rupesh2](https://github.com/rupesh2)).
+
 ## earthdatalogin 0.0.5
+
+CRAN release: 2026-06-19
 
 - [`edl_download()`](https://boettiger-lab.github.io/earthdatalogin/reference/edl_download.md),
   [`edl_search()`](https://boettiger-lab.github.io/earthdatalogin/reference/edl_search.md),

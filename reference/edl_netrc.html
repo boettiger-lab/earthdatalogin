@@ -58,7 +58,8 @@ to use the .netrc file.</p>
 <span>  password <span class="op">=</span> <span class="fu">default</span><span class="op">(</span><span class="st">"password"</span><span class="op">)</span>,</span>
 <span>  netrc_path <span class="op">=</span> <span class="fu">edl_netrc_path</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  cookie_path <span class="op">=</span> <span class="fu">edl_cookie_path</span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  cloud_config <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  cloud_config <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  check <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -89,10 +90,18 @@ to the appropriate R package configuration location given by
 <dd><p>set <code><a href="gdal_cloud_config.html">gdal_cloud_config()</a></code> env vars as well? logical,
 default <code>TRUE</code>.</p></dd>
 
+
+<dt id="arg-check">check<a class="anchor" aria-label="anchor" href="#arg-check"></a></dt>
+<dd><p>verify the stored credentials with Earthdata Login using
+<code><a href="edl_netrc_check.html">edl_netrc_check()</a></code>? logical, default <code>TRUE</code>. Set to <code>FALSE</code> to skip
+the network request, e.g. when working offline.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>TRUE invisibly if successful</p>
+    <p>Invisibly, <code>TRUE</code> if the credentials were accepted by Earthdata
+Login, <code>FALSE</code> if they are missing or were rejected, or <code>NA</code> if they
+could not be verified (e.g. no network access, or <code>check = FALSE</code>).</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -103,6 +112,9 @@ set to allow the authentication to store and read access cookies.</p>
 <p>Additionally, it manages the creation of a symbolic
 link to the .netrc file if GDAL version is less than 3.7.0 (and thus
 does not support GDAL_HTTP_NETRC_FILE location).</p>
+<p>Unless <code>check = FALSE</code>, the credentials stored in the .netrc file are
+verified against Earthdata Login (see <code><a href="edl_netrc_check.html">edl_netrc_check()</a></code>). A warning is
+issued if they are rejected or cannot be verified.</p>
     </div>
 
     <div class="section level2">
@@ -124,7 +136,7 @@ does not support GDAL_HTTP_NETRC_FILE location).</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

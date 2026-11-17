@@ -223,6 +223,9 @@ purpose.
 - [`edl_netrc()`](https://boettiger-lab.github.io/earthdatalogin/reference/edl_netrc.md)
   : Set up Earthdata Login (EDL) credentials using a .netrc file
 
+- [`edl_netrc_check()`](https://boettiger-lab.github.io/earthdatalogin/reference/edl_netrc_check.md)
+  : Check if netrc credentials are accepted by Earthdata Login (EDL)
+
 - [`edl_revoke_token()`](https://boettiger-lab.github.io/earthdatalogin/reference/edl_revoke_token.md)
   : Revoke an EarthData token
 
