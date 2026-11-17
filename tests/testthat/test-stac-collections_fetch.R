@@ -11,8 +11,10 @@ test_that("collections_fetch works", {
   expect_gt(length(coll1$collections), 2)
 
   # collections_fetch() is deprecated in favour of rstac::collections_fetch()
-  coll2 <- skip_on_server_error(
-    expect_warning(collections_fetch(coll1), "deprecated")
+  # In testthat edition 3, expect_warning() returns the warning, not the
+  # value, so assign inside it.
+  skip_on_server_error(
+    expect_warning(coll2 <- collections_fetch(coll1), "deprecated")
   )
   expect_s3_class(coll2, c("doc_collections", "rstac_doc", "list"))
 
