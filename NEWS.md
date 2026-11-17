@@ -33,6 +33,17 @@
 
 * The deprecated `collections_fetch()` warns once instead of once per page.
 
+* `edl_download()` now stops with an error when the server returns an HTTP
+  error, and removes the partial file. Previously the `"httr"` method saved
+  the server's error page to `dest` without complaint, and the `"curl"`
+  method did the same. The `"httr"` method also retries brief connection
+  failures and server errors up to three times.
+
+* `edl_netrc()` no longer writes to `~/.netrc` unless GDAL is older than 3.7,
+  which cannot read a netrc file from any other location. Even then it links
+  its own netrc there for the session only when `~/.netrc` does not exist,
+  and it never appends to an existing `~/.netrc`.
+
 # earthdatalogin 0.0.5
 
 * `edl_download()`, `edl_search()`, and `edl_netrc()` no longer overwrite
@@ -44,7 +55,7 @@
 
 * `edl_extract_urls()` (and `edl_search(parse_results = TRUE)`) now handle
   granules with multiple data assets, e.g. one GeoTIFF per band. Previously
-  these errored with "Result must be length 1" (#15).
+  these failed with "Result must be length 1" (#15).
 
 * `collections_fetch()` is deprecated in favor of `rstac::collections_fetch()`,
   which now provides this functionality upstream (#17).
@@ -54,7 +65,7 @@
 * Tests no longer attempt network access on CRAN. The `netcdf access` test now
   skips on CRAN and when offline, and the `get_nasa_stac_url()` error-path test
   is mocked so it runs without network access. This resolves the CRAN check
-  ERRORs introduced when the protected NetCDF download ran on CRAN machines.
+  errors introduced when the protected NetCDF download ran on CRAN machines.
 
 # earthdatalogin 0.0.3
 

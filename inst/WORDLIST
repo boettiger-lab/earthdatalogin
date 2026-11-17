@@ -1,5 +1,6 @@
 ATL
 Auth
+Bugfix
 CMD
 CMR
 COGs
@@ -18,6 +19,7 @@ Earthdata
 GDAL
 GDAL's
 GRIB
+GeoTIFF
 Geotiff
 HDF
 HTTPS
@@ -27,6 +29,7 @@ MODIS
 NETRC
 NOAA
 NSIDC
+NetCDF
 OAuth
 PCI
 POCLOUD
@@ -41,11 +44,13 @@ VSI
 Zarr
 asia
 auth
+bugfix
 catalogue
 cpu
 downscaled
 dr
 earthdata
+earthdatacloud
 edl
 env
 filesystem
@@ -62,7 +67,9 @@ india
 kb
 landsat
 lon
+lpdaac
 modis
+nasa
 native’
 ndvi
 netcdf

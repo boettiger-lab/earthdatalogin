@@ -50,18 +50,17 @@ edl_download <- function(href,
 
 
     if (method == "httr") {
-      httr::GET(href,
-              httr::config(netrc = TRUE,
-                           netrc_file = netrc_path,
-                           cookiefile = cookie_path,
-                           cookiejar = cookie_path),
-              httr::write_disk(dest, overwrite = TRUE))
+      httr_download(href, dest,
+                    httr::config(netrc = TRUE,
+                                 netrc_file = netrc_path,
+                                 cookiefile = cookie_path,
+                                 cookiejar = cookie_path))
     } else {
       ## check syntax, curl_args not working properly
       curl_args <- paste("--netrc-file", netrc_path,
                          "-b", cookie_path,
                          "-c", cookie_path,
-                         "-L")
+                         "-L", "--fail")
       utils::download.file(href, dest, method = "curl",
                            extra = curl_args, quiet = quiet, ...)
     }
@@ -77,11 +76,25 @@ download_using_token <- function(href, dest, method, quiet, ...) {
   header <- edl_set_token()
   bearer <- paste("Bearer", header)
   if (method == "httr") {
-    httr::GET(href,
-              httr::write_disk(dest, overwrite = TRUE),
-              httr::add_headers(Authorization = bearer))
+    httr_download(href, dest, httr::add_headers(Authorization = bearer))
   } else {
     utils::download.file(href, dest, quiet = quiet, ...,
                          header = list(Authorization = bearer))
   }
+}
+
+
+# Download `href` to `dest`, retrying brief connection failures and server
+# errors. On an HTTP error, remove `dest` rather than leave the server's error
+# page there, and stop.
+httr_download <- function(href, dest, ...) {
+  resp <- httr::RETRY("GET", href, ...,
+                      httr::write_disk(dest, overwrite = TRUE),
+                      times = 3, pause_base = 1, pause_cap = 5,
+                      terminate_on = 400:499, quiet = TRUE)
+  if (httr::http_error(resp)) {
+    unlink(dest)
+    httr::stop_for_status(resp, paste("download", href))
+  }
+  invisible(resp)
 }
