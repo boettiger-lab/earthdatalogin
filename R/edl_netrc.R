@@ -63,7 +63,7 @@ edl_netrc <- function(username = default("user"),
     writeLines(contents, netrc_path)
 
     # GDAL < 3.7 cannot use an alternative location for .netrc
-    old_gdal_compatibility(netrc_path, contents)
+    old_gdal_compatibility(netrc_path)
   }
 
   # set GDAL env vars to use this netrc
@@ -237,23 +237,40 @@ edl_unset_netrc <- function(netrc_path = edl_netrc_path(),
 }
 
 
-old_gdal_compatibility <- function (netrc_path, contents) {
-  if (!file.exists("~/.netrc")) {
-    file.link(netrc_path, "~/.netrc")
-
-    ## clean up on exit -- packages shouldn't persist files to `~`
-    e <- .GlobalEnv
-    f <- function(e) { unlink("~/.netrc") }
-    reg.finalizer(e, f, onexit = TRUE)
-
-  } else {
-    ## append to an existing netrc file -- only once
-    current <- readLines("~/.netrc")
-    if (!any(grepl("machine urs.earthdata.nasa.gov", current))) {
-      write(contents,file="~/.netrc",append=TRUE)
-    }
+# GDAL < 3.7 ignores GDAL_HTTP_NETRC_FILE and reads only ~/.netrc. For those
+# versions only, link our netrc to ~/.netrc for the rest of the session. An
+# existing ~/.netrc is never modified.
+old_gdal_compatibility <- function(netrc_path) {
+  version <- gdal_version()
+  if (is.null(version) || version >= "3.7.0") {
+    return(invisible(FALSE))
   }
 
+  home_netrc <- path.expand("~/.netrc")
+  if (file.exists(home_netrc)) {
+    if (!has_edl_netrc(home_netrc)) {
+      message("GDAL ", version, " reads credentials only from ", home_netrc,
+              ", which has no urs.earthdata.nasa.gov entry. Add one, or ",
+              "upgrade to GDAL 3.7 or later.")
+    }
+    return(invisible(FALSE))
+  }
+
+  file.link(netrc_path, home_netrc)
+  # Packages should not leave files in the home directory.
+  reg.finalizer(.GlobalEnv, function(e) unlink(home_netrc), onexit = TRUE)
+  invisible(TRUE)
+}
+
+# The GDAL version used by terra or sf, or NULL if neither is installed.
+gdal_version <- function() {
+  if (requireNamespace("terra", quietly = TRUE)) {
+    return(package_version(terra::gdal()))
+  }
+  if (requireNamespace("sf", quietly = TRUE)) {
+    return(package_version(sf::sf_extSoftVersion()[["GDAL"]]))
+  }
+  NULL
 }
 
 edl_cookie_path <- function() {
