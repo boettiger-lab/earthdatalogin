@@ -11,6 +11,8 @@ Authors@R:
          comment = c(ORCID = "0000-0002-5306-9963")),
     person("Andy", "Teucher", role = "ctb",
          comment = c(ORCID = "0000-0002-7840-692X")),
+    person("Rupesh", "Shrestha", role = "ctb",
+         comment = c(ORCID = "0000-0002-3140-6623")),
     person("Openscapes", role = "fnd")
          )
 Description: Providing easy, portable access to NASA 'EarthData' products
