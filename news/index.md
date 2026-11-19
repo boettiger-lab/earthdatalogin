@@ -2,6 +2,8 @@
 
 ## earthdatalogin 0.0.6
 
+CRAN release: 2026-11-18
+
 ### Breaking changes
 
 - `earthdatalogin` no longer supplies shared default credentials. The

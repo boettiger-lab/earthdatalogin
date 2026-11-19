@@ -41,7 +41,7 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.0.6" id="earthdatalogin-006">earthdatalogin 0.0.6<a class="anchor" aria-label="anchor" href="#earthdatalogin-006"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.0.6" id="earthdatalogin-006">earthdatalogin 0.0.6<a class="anchor" aria-label="anchor" href="#earthdatalogin-006"></a></h2><p class="text-muted">CRAN release: 2026-11-18</p>
 <div class="section level3">
 <h3 id="breaking-changes-0-0-6">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-0-0-6"></a></h3>
 <ul><li><p><code>earthdatalogin</code> no longer supplies shared default credentials. The shared account has expired, and NASA asks that each user log in with their own Earthdata Login account. Credentials now come from the <code>username</code> and <code>password</code> arguments, the <code>EARTHDATA_USER</code> and <code>EARTHDATA_PASSWORD</code> environment variables, or the <code>urs.earthdata.nasa.gov</code> entry in <code>~/.netrc</code>. If none of these provides credentials, functions that need them stop with an error explaining how to register. The package no longer downloads <code>inst/.Renviron</code> from GitHub or falls back to hard-coded credentials.</p></li>

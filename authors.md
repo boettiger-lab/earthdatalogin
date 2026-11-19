@@ -15,6 +15,9 @@
 - **Andy Teucher**. Contributor.
   [](https://orcid.org/0000-0002-7840-692X)
 
+- **Rupesh Shrestha**. Contributor.
+  [](https://orcid.org/0000-0002-3140-6623)
+
 - **[![Openscapes](https://nasa-openscapes.github.io/images/nasa-openscapes.png)](https://openscapes.org)**.
   Funder.
 
