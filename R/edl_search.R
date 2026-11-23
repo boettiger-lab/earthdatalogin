@@ -18,7 +18,9 @@
 #' @param doi DOI for a dataset, e.g. "10.5067/HLS/HLSL30.002" 
 #' @param daac NSIDC or PODAAC
 #' @param provider particular to each DAAC, e.g. POCLOUD, LPDAAC etc.
-#' @param temporal c("yyyy-mm-dd", "yyyy-mm-dd")
+#' @param temporal c(start, end), e.g. c("yyyy-mm-dd", "yyyy-mm-dd"). Each
+#'  element may be a "Date", a "POSIXct", or a character string. Strings with
+#' a time are passed to CMR unchanged. Use "NA" or "" for an open-ended range.
 #' @param bounding_box c(lower_left_lon, lower_left_lat, upper_right_lon, upper_right_lat)
 #' @param page_size maximum number of results to return per query.
 #' @param ... additional query parameters
@@ -85,7 +87,7 @@ edl_search <- function(short_name = NULL,
   }
 
   query <- list(short_name = short_name,
-                temporal = paste(as.character(temporal), collapse=","),
+                temporal = cmr_temporal(temporal),
                 version = version,
                 daac = daac,
                 provider = provider,
@@ -175,6 +177,35 @@ cmr_collection_search <- function(query, config = NULL) {
                     query = c(query, page_size = 2000), config)
   httr::stop_for_status(resp)
   httr::content(resp, "parsed")$feed$entry
+}
+
+#' Format a temporal range for CMR
+#'
+#' CMR reads a date with no time as midnight, so `temporal = c("2025-07-01", "2025-07-01")``
+#' will become zero length, with both start and end at midnight. This extends a 
+#' date-only end to the end of the day 23:59:59.
+#' @return "start,end" string, or NULL if `temporal` is NULL
+#' @noRd
+cmr_temporal <- function(temporal) {
+  if (is.null(temporal)) return(NULL)
+  if (length(temporal) < 1 || length(temporal) > 2) {
+    stop("`temporal` must be c(start, end) or a single start date.",
+         call. = FALSE)
+  }
+  as_cmr_time <- function(x, end) {
+    if (is.null(x) || is.na(x)) return("")
+    if (inherits(x, "POSIXt")) {
+      return(format(x, "%Y-%m-%dT%H:%M:%SZ", tz = "UTC"))
+    }
+    x <- trimws(as.character(x))
+    if (grepl("^\\d{4}-\\d{2}-\\d{2}$", x)) {
+      x <- paste0(x, if (end) "T23:59:59Z" else "T00:00:00Z")
+    }
+    x
+  }
+  start <- as_cmr_time(temporal[1], end = FALSE)
+  end <- if (length(temporal) == 2) as_cmr_time(temporal[2], end = TRUE) else ""
+  paste0(start, ",", end)
 }
 
 #' @export
