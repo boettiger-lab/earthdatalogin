@@ -15,7 +15,7 @@
 #'
 #' @param short_name dataset short name e.g. ATL08
 #' @param version dataset version
-#' @param doi DOI for a dataset
+#' @param doi DOI for a dataset, e.g. "10.5067/HLS/HLSL30.002" 
 #' @param daac NSIDC or PODAAC
 #' @param provider particular to each DAAC, e.g. POCLOUD, LPDAAC etc.
 #' @param temporal c("yyyy-mm-dd", "yyyy-mm-dd")
@@ -87,13 +87,19 @@ edl_search <- function(short_name = NULL,
   query <- list(short_name = short_name,
                 temporal = paste(as.character(temporal), collapse=","),
                 version = version,
-                doi = doi,
                 daac = daac,
                 provider = provider,
                 bounding_box = paste(as.character(bounding_box), collapse = ","),
                 page_size = page_size,
                 ...)
   query <- purrr::compact(query)
+
+  # CMR granule search rejects `doi`. When `doi` is provided, retrieve
+  # the collection concept id and search granules using that instead.
+  if (!is.null(doi)) {
+    query$collection_concept_id <-
+      doi_concept_id(doi, provider = provider, config = netrc_config)
+  }
 
   url <- "https://cmr.earthdata.nasa.gov/search/granules"
   resp <- httr::GET(url,  query = query, netrc_config)
@@ -127,6 +133,48 @@ edl_search <- function(short_name = NULL,
   }
 
   edl_extract_urls(entry)
+}
+
+#' Retrieve the CMR collection concept id for a DOI
+#'
+#' @return the concept id (e.g. "C2021957657-LPCLOUD") of the first matching
+#'   collection, with a warning if several collections match, or errors if
+#'   no collections match.
+#' @noRd
+doi_concept_id <- function(doi, provider = NULL, config = NULL) {
+  stopifnot(is.character(doi), length(doi) == 1)
+
+  entries <- cmr_collection_search(
+    purrr::compact(list(doi = doi, provider = provider)),
+    config = config
+  )
+  if (length(entries) == 0) {
+    stop("No CMR collection found for DOI '", doi, "'",
+         if (!is.null(provider)) paste0(" and provider '", provider, "'"),
+         ".", call. = FALSE)
+  }
+  if (length(entries) > 1) {
+    found <- vapply(entries, function(e) {
+      paste0(e$id, " (", e$short_name %||% "?", " v", e$version_id %||% "?",
+             ", provider ", e$data_center %||% "?", ")")
+    }, character(1))
+    warning("Multiple CMR collections found for DOI '", doi, "':\n  ",
+            paste(found, collapse = "\n  "),
+            "\nUsing the first: ", entries[[1]]$id,
+            ". Use `collection_concept_id` instead of `doi` to choose a different one.",
+            call. = FALSE)
+  }
+  entries[[1]]$id
+}
+
+#' Search the CMR collection endpoint
+#' @return list of collection entries
+#' @noRd
+cmr_collection_search <- function(query, config = NULL) {
+  resp <- httr::GET("https://cmr.earthdata.nasa.gov/search/collections.json",
+                    query = c(query, page_size = 2000), config)
+  httr::stop_for_status(resp)
+  httr::content(resp, "parsed")$feed$entry
 }
 
 #' @export
