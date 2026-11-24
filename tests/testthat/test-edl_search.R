@@ -77,6 +77,37 @@ test_that("edl_search by DOI matches search by short_name", {
   expect_setequal(by_doi, by_name)
 })
 
+test_that("cmr_temporal includes the whole end day", {
+  expect_null(cmr_temporal(NULL))
+  # single day with no time is extended to the end of the day
+  expect_equal(cmr_temporal(c("2025-07-01", "2025-07-01")),
+               "2025-07-01T00:00:00Z,2025-07-01T23:59:59Z")
+  expect_equal(cmr_temporal(as.Date(c("2025-07-01", "2025-07-03"))),
+               "2025-07-01T00:00:00Z,2025-07-03T23:59:59Z")
+  # date times in UTC are kept as it is
+  expect_equal(cmr_temporal(c("2025-07-01T06:00:00Z", "2025-07-01T12:00:00Z")),
+               "2025-07-01T06:00:00Z,2025-07-01T12:00:00Z")
+  expect_equal(
+    cmr_temporal(as.POSIXct(c("2025-07-01 06:00", "2025-07-01 12:00"),
+                            tz = "UTC")),
+    "2025-07-01T06:00:00Z,2025-07-01T12:00:00Z")
+  # POSIXct in another time zone is converted to UTC
+  expect_equal(
+    cmr_temporal(as.POSIXct("2025-07-01 06:00", tz = "America/New_York")),
+    "2025-07-01T10:00:00Z,")
+  # NA, "NA" and "" are all treated as open-ended
+  expect_equal(cmr_temporal("2025-07-01"), "2025-07-01T00:00:00Z,")
+  expect_equal(cmr_temporal(c(NA, "2025-07-01")), ",2025-07-01T23:59:59Z")
+  expect_equal(cmr_temporal(c("NA", "2025-07-01")), ",2025-07-01T23:59:59Z")
+  expect_equal(cmr_temporal(c("", "2025-07-01")), ",2025-07-01T23:59:59Z")
+  expect_equal(cmr_temporal(c("2025-07-01", "NA")), "2025-07-01T00:00:00Z,")
+  expect_equal(cmr_temporal(c("2025-07-01", NA)), "2025-07-01T00:00:00Z,")
+  expect_equal(cmr_temporal(c("2025-07-01", "")), "2025-07-01T00:00:00Z,")
+  # length must be 1 or 2
+  expect_error(cmr_temporal(character(0)), "temporal")
+  expect_error(cmr_temporal(c("a", "b", "c")), "temporal")
+})
+
 test_that("edl_extract_urls flattens multi-asset granules (#15)", {
   # No network: a granule with several data links (e.g. one tif per band)
   # must not error and should return all data URLs.
