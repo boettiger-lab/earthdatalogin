@@ -1,3 +1,15 @@
+# earthdatalogin (development version)
+
+## Breaking changes
+
+* `edl_search()` with an end date given without a time in `temporal` now
+  includes that whole day, and converted as `T23:59:59Z` rather than as
+  midnight at the start of the day. A date-only start still begins at
+  `T00:00:00Z`. Previously, `c("2025-07-01", "2025-07-01")` returned no
+  granules, and every date-only range left out a day. Times given
+  explicitly in POSIXct `YYYY-MM-DDTHH:MM:SSZ` format are kept unchanged.
+  Literal `NA`, string `"NA"` or `""` leave that end of the range open.
+
 # earthdatalogin 0.0.6
 
 ## Breaking changes
