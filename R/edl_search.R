@@ -20,7 +20,7 @@
 #' @param provider particular to each DAAC, e.g. POCLOUD, LPDAAC etc.
 #' @param temporal c(start, end), e.g. c("yyyy-mm-dd", "yyyy-mm-dd"). Each
 #'  element may be a "Date", a "POSIXct", or a character string. Strings with
-#' a time are passed to CMR unchanged. Use "NA" or "" for an open-ended range.
+#'  a time are passed to CMR unchanged. Use "NA" or "" for an open-ended range.
 #' @param bounding_box c(lower_left_lon, lower_left_lat, upper_right_lon, upper_right_lat)
 #' @param page_size maximum number of results to return per query.
 #' @param ... additional query parameters
@@ -181,7 +181,7 @@ cmr_collection_search <- function(query, config = NULL) {
 
 #' Format a temporal range for CMR
 #'
-#' CMR reads a date with no time as midnight, so `temporal = c("2025-07-01", "2025-07-01")``
+#' CMR reads a date with no time as midnight, so `temporal = c("2025-07-01", "2025-07-01")`
 #' will become zero length, with both start and end at midnight. This extends a 
 #' date-only end to the end of the day 23:59:59.
 #' @return "start,end" string, or NULL if `temporal` is NULL
@@ -198,6 +198,8 @@ cmr_temporal <- function(temporal) {
       return(format(x, "%Y-%m-%dT%H:%M:%SZ", tz = "UTC"))
     }
     x <- trimws(as.character(x))
+    # treat "NA" as empty string
+    if (identical(toupper(x), "NA")) return("")
     if (grepl("^\\d{4}-\\d{2}-\\d{2}$", x)) {
       x <- paste0(x, if (end) "T23:59:59Z" else "T00:00:00Z")
     }
